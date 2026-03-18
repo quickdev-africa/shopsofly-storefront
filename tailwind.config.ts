@@ -12,6 +12,8 @@ const config: Config = {
       fontFamily: {
         integralCF: ["var(--font-integralCF)"],
         satoshi: ["var(--font-satoshi)"],
+        heading: ["var(--font-heading)", "Plus Jakarta Sans", "sans-serif"],
+        body:    ["var(--font-body)", "Inter", "sans-serif"],
       },
       screens: {
         xs: "375px",
@@ -33,6 +35,12 @@ const config: Config = {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        brand: {
+          primary:       "#4A7C59",
+          "primary-dark":  "#2D4A32",
+          "primary-light": "#E8F0E9",
+          accent:        "#F97316",
+        },
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
@@ -76,25 +84,22 @@ const config: Config = {
       },
       keyframes: {
         "accordion-down": {
-          from: {
-            height: "0",
-          },
-          to: {
-            height: "var(--radix-accordion-content-height)",
-          },
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
-          from: {
-            height: "var(--radix-accordion-content-height)",
-          },
-          to: {
-            height: "0",
-          },
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        marquee: {
+          "0%":   { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        marquee: "marquee 30s linear infinite",
       },
     },
   },
