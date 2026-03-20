@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { logout, selectIsAuthenticated, selectUser } from "@/lib/features/auth/authSlice";
@@ -20,25 +20,27 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
 
+  const isAuthPage = pathname === "/account/login" || pathname === "/account/register";
+
+  // ALL hooks must be called before any early return
+  useEffect(() => {
+    if (!isAuthPage && !isAuthenticated) {
+      router.push("/account/login");
+    }
+  }, [isAuthPage, isAuthenticated, router]);
+
   const handleLogout = () => {
     dispatch(logout());
     dispatch(clearCart());
     router.push("/");
   };
 
-  // Don't apply auth guard to login and register pages
-  const isAuthPage = pathname === "/account/login" || pathname === "/account/register";
+  // Auth pages — no layout wrapper
   if (isAuthPage) {
     return <>{children}</>;
   }
 
-  // Redirect unauthenticated users from protected pages
-  useEffect(() => {
-    if (!isAuthenticated) {
-      router.push("/account/login");
-    }
-  }, [isAuthenticated, router]);
-
+  // Protected pages — show nothing while redirecting
   if (!isAuthenticated) {
     return null;
   }
@@ -46,12 +48,8 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   return (
     <div className="min-h-screen bg-[#F8FAF8]">
       <div className="max-w-6xl mx-auto px-4 py-8">
-
-        {/* Page heading */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-[#1A1A1A]">
-            My Account
-          </h1>
+          <h1 className="text-2xl font-bold text-[#1A1A1A]">My Account</h1>
           {user && (
             <p className="text-[#555555] text-sm mt-1">
               Welcome back, {user.first_name || user.email}
@@ -60,7 +58,6 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-
           {/* Sidebar — desktop */}
           <aside className="hidden lg:block w-56 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -129,7 +126,6 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
           <main className="flex-1 min-w-0">
             {children}
           </main>
-
         </div>
       </div>
     </div>
