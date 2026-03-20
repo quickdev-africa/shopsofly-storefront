@@ -1,9 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getStore, getProducts, getTaxons, getBundles } from "@/lib/api";
-import AnnouncementBar from "@/components/AnnouncementBar";
-import WhatsAppButton from "@/components/WhatsAppButton";
-import CookieConsent from "@/components/CookieConsent";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+import BundleBuilder from "@/components/BundleBuilder";
 
 async function fetchHomeData() {
   try {
@@ -14,46 +13,36 @@ async function fetchHomeData() {
       getBundles(),
     ]);
     return {
-      store:    storeRes.status === "fulfilled"   ? storeRes.value.data.store       : null,
-      products: productsRes.status === "fulfilled" ? productsRes.value.data.products : [],
-      taxons:   taxonsRes.status === "fulfilled"   ? taxonsRes.value.data.taxons     : [],
-      bundles:  bundlesRes.status === "fulfilled"  ? bundlesRes.value.data.bundles   : [],
+      store:         storeRes.status === "fulfilled"   ? storeRes.value.data.store              : null,
+      products:      productsRes.status === "fulfilled" ? productsRes.value.data.products        : [],
+      taxons:        taxonsRes.status === "fulfilled"   ? taxonsRes.value.data.taxons            : [],
+      bundles:       bundlesRes.status === "fulfilled"  ? bundlesRes.value.data.bundles          : [],
+      storeProducts: bundlesRes.status === "fulfilled"  ? (bundlesRes.value.data.store_products ?? []) : [],
     };
   } catch {
-    return { store: null, products: [], taxons: [], bundles: [] };
+    return { store: null, products: [], taxons: [], bundles: [], storeProducts: [] };
   }
 }
 
 export default async function HomePage() {
-  const { store, products, taxons, bundles } = await fetchHomeData();
+  const { store, products, taxons, bundles, storeProducts } = await fetchHomeData();
   const theme = store?.theme_settings || {};
-
-  const announcementText = theme.announcement_text || "Free delivery on orders over ₦50,000 • Shop the latest wellness products";
-  const whatsappPhone    = theme.whatsapp_phone || "";
-  const whatsappMessage  = theme.whatsapp_message || "Hello! I'd like to place an order.";
 
   const featuredProducts = products.slice(0, 8);
   const newArrivals      = products.slice(0, 8);
 
   return (
-    <main className="min-h-screen font-body">
-      {/* Announcement Bar */}
-      <AnnouncementBar
-        text={announcementText}
-        bgColor={theme.announcement_bg || "#4A7C59"}
-        textColor={theme.announcement_text_color || "#ffffff"}
-        visible={theme.announcement_visible !== false}
-      />
+    <div className="min-h-screen font-body">
 
       {/* Hero Banner */}
-      <section className="bg-brand-primary-light py-20 px-4">
+      <section className="bg-[#E8F0E9] py-12 md:py-20 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8">
           <div className="flex-1 space-y-6">
-            <h1 className="font-heading text-4xl md:text-6xl font-bold text-[#1A1A1A] leading-tight">
+            <h1 className="font-heading text-3xl md:text-6xl font-bold text-[#1A1A1A] leading-tight">
               {theme.hero_heading || "Discover Premium Wellness Products"}
             </h1>
             <p className="text-lg text-[#555555]">
-              {theme.hero_subheading || "Curated products for your health, beauty and lifestyle."}
+              {theme.hero_subtext || "Curated products for your health, beauty and lifestyle."}
             </p>
             <div className="flex gap-4 flex-wrap">
               <Link
@@ -70,14 +59,14 @@ export default async function HomePage() {
               </Link>
             </div>
           </div>
-          <div className="flex-1 flex justify-center">
-            {theme.hero_image_url ? (
-              <Image src={theme.hero_image_url} alt="Hero" width={600} height={500} className="rounded-xl object-cover" />
-            ) : (
-              <div className="w-full max-w-md h-80 bg-[#4A7C59] rounded-xl flex items-center justify-center">
-                <span className="text-white text-2xl font-heading font-bold">{store?.name || "Shopsofly"}</span>
-              </div>
-            )}
+          <div className="flex-1 flex justify-center w-full">
+            <Image
+              src={theme.hero_image_url || "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1440&q=80"}
+              alt="Hero"
+              width={600}
+              height={500}
+              className="w-full rounded-xl object-cover h-48 md:h-80"
+            />
           </div>
         </div>
       </section>
@@ -86,10 +75,10 @@ export default async function HomePage() {
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
           {[
-            { label: "Happy Customers",   value: "10,000+" },
-            { label: "Products Available", value: "500+"   },
-            { label: "States Delivered",  value: "36"      },
-            { label: "Support Hours",     value: "24/7"    },
+            { label: "Happy Customers",    value: "10,000+" },
+            { label: "Products Available", value: "500+"    },
+            { label: "States Delivered",   value: "36"      },
+            { label: "Support Hours",      value: "24/7"    },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-3xl font-heading font-bold text-[#F97316]">{stat.value}</div>
@@ -105,22 +94,29 @@ export default async function HomePage() {
           <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">Featured Products</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {featuredProducts.map((p: any) => (
-              <Link key={p.id} href={`/products/${p.slug}`} className="group">
-                <div className="bg-gray-100 rounded-xl overflow-hidden aspect-square mb-3">
-                  {p.image_url ? (
-                    <Image src={p.image_url} alt={p.name} width={300} height={300} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{p.name}</div>
-                  )}
-                </div>
-                <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
-                <div className="flex items-center gap-2 mt-1">
-                  {p.compare_at_price && p.compare_at_price > p.price && (
-                    <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
-                  )}
-                  <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString()}</span>
-                </div>
-              </Link>
+              <div key={p.id} className="group">
+                <Link href={`/products/${p.slug}`}>
+                  <div className="bg-gray-100 rounded-xl overflow-hidden aspect-square mb-3 relative">
+                    {p.image_url ? (
+                      <Image src={p.image_url} alt={p.name} width={300} height={300} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    ) : (
+                      <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{p.name}</div>
+                    )}
+                    <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <button className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-semibold py-3 text-sm">
+                        Quick Buy
+                      </button>
+                    </div>
+                  </div>
+                  <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
+                  <div className="flex items-center gap-2 mt-1">
+                    {p.compare_at_price && p.compare_at_price > p.price && (
+                      <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
+                    )}
+                    <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
+                  </div>
+                </Link>
+              </div>
             ))}
           </div>
           <div className="text-center mt-10">
@@ -154,6 +150,33 @@ export default async function HomePage() {
         </section>
       )}
 
+      {/* Bundle Builder */}
+      {bundles.length > 0 && (
+        <BundleBuilder bundles={bundles} storeProducts={storeProducts} />
+      )}
+
+      {/* Promotional Banner */}
+      <section className="bg-[#2D4A32] py-20 px-4 text-center">
+        <div className="max-w-3xl mx-auto">
+          <span className="text-[#F97316] font-semibold uppercase tracking-widest text-sm">Limited Time Offer</span>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
+            Up to 30% Off Wellness Products
+          </h2>
+          <p className="text-gray-300 text-lg mb-8">
+            Stock up on your favourite health and lifestyle products before the sale ends.
+          </p>
+          <Link
+            href="/products"
+            className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-lg transition-colors text-lg"
+          >
+            Shop the Sale →
+          </Link>
+        </div>
+      </section>
+
+      {/* Testimonials Carousel */}
+      <TestimonialsCarousel />
+
       {/* New Arrivals */}
       {newArrivals.length > 0 && (
         <section className="py-16 px-4 max-w-6xl mx-auto">
@@ -169,31 +192,9 @@ export default async function HomePage() {
                   )}
                 </div>
                 <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
-                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString()}</span>
+                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
               </Link>
             ))}
-          </div>
-        </section>
-      )}
-
-      {/* Bundles */}
-      {bundles.length > 0 && (
-        <section className="py-16 px-4 bg-[#E8F0E9]">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">Product Bundles</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {bundles.map((b: any) => (
-                <Link key={b.id} href={`/bundles`} className="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-shadow">
-                  <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">{b.name}</h3>
-                  <p className="text-[#555555] text-sm mb-4 line-clamp-2">{b.description}</p>
-                  {b.discount_percent > 0 && (
-                    <span className="inline-block bg-[#F97316] text-white text-xs font-bold px-3 py-1 rounded-full">
-                      Save {b.discount_percent}%
-                    </span>
-                  )}
-                </Link>
-              ))}
-            </div>
           </div>
         </section>
       )}
@@ -203,28 +204,19 @@ export default async function HomePage() {
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-bold mb-4">Stay in the Loop</h2>
           <p className="text-[#E8F0E9] mb-8">Get exclusive deals and new arrivals straight to your inbox.</p>
-          <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Your email address"
               className="flex-1 px-4 py-3 rounded-lg text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#F97316]"
             />
-            <button type="submit" className="bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
+            <button className="bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
               Subscribe
             </button>
-          </form>
+          </div>
         </div>
       </section>
 
-      {/* Cookie Consent */}
-      <CookieConsent />
-
-      {/* WhatsApp Button */}
-      <WhatsAppButton
-        phone={whatsappPhone}
-        message={whatsappMessage}
-        visible={!!whatsappPhone}
-      />
-    </main>
+    </div>
   );
 }

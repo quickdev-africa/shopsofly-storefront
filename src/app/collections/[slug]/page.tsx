@@ -59,9 +59,9 @@ export default async function CollectionPage({ params, searchParams }: Props) {
               <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 {p.compare_at_price && p.compare_at_price > p.price && (
-                  <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price.toLocaleString()}</span>
+                  <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
                 )}
-                <span className="font-bold text-[#1A1A1A]">₦{p.price.toLocaleString()}</span>
+                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
               </div>
             </Link>
           ))}

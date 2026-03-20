@@ -151,9 +151,9 @@ export default function ProductsPage() {
               <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
               <div className="flex items-center gap-2 mt-1">
                 {p.compare_at_price && p.compare_at_price > p.price && (
-                  <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price.toLocaleString()}</span>
+                  <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
                 )}
-                <span className="font-bold text-[#1A1A1A]">₦{p.price.toLocaleString()}</span>
+                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
                 {p.compare_at_price && p.compare_at_price > p.price && (
                   <span className="text-xs bg-[#F97316] text-white px-1.5 py-0.5 rounded">
                     -{Math.round((1 - p.price / p.compare_at_price) * 100)}%
