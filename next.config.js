@@ -8,7 +8,4 @@ const nextConfig = {
   },
 };
 
-// Explicitly delete target if somehow injected
-delete nextConfig.target;
-
-export default nextConfig;
+module.exports = nextConfig;
