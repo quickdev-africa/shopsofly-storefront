@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { logout, selectIsAuthenticated, selectUser } from "@/lib/features/auth/authSlice";
@@ -32,10 +33,13 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   }
 
   // Redirect unauthenticated users from protected pages
-  if (!isAuthenticated) {
-    if (typeof window !== "undefined") {
+  useEffect(() => {
+    if (!isAuthenticated) {
       router.push("/account/login");
     }
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
     return null;
   }
 

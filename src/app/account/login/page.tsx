@@ -21,7 +21,7 @@ export default function LoginPage() {
     try {
       const res = await loginCustomer({ email, password });
       dispatch(setCredentials({ token: res.data.token, user: res.data.user }));
-      router.push("/account/profile");
+      setTimeout(() => router.push("/account/profile"), 100);
     } catch (err: any) {
       setError(err?.response?.data?.error ?? "Invalid email or password. Please try again.");
     } finally {
