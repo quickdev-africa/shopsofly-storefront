@@ -1,79 +1,52 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useState, useEffect } from "react";
 import { useAppSelector } from "@/lib/hooks/redux";
 import { selectToken } from "@/lib/features/auth/authSlice";
-import { getAddresses, createAddress, updateAddress, deleteAddress } from "@/lib/api";
-import { STATE_NAMES, getLGAs } from "@/lib/nigeria-locations";
+import { getAddresses, createAddress, deleteAddress } from "@/lib/api";
 
-interface Address {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  address1: string;
-  address2?: string;
-  city: string;
-  state_name: string;
-  lga: string;
-  is_default?: boolean;
-}
+const NIGERIAN_STATES = [
+  "Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno",
+  "Cross River","Delta","Ebonyi","Edo","Ekiti","Enugu","FCT","Gombe","Imo",
+  "Jigawa","Kaduna","Kano","Katsina","Kebbi","Kogi","Kwara","Lagos","Nasarawa",
+  "Niger","Ogun","Ondo","Osun","Oyo","Plateau","Rivers","Sokoto","Taraba",
+  "Yobe","Zamfara"
+];
 
-const blank = (): Omit<Address, "id"> => ({
-  first_name: "", last_name: "", phone: "", address1: "", address2: "",
-  city: "", state_name: "", lga: "", is_default: false,
-});
+const emptyForm = {
+  firstname: "", lastname: "", address1: "", address2: "",
+  city: "", state_name: "", lga: "", phone: "", country: "Nigeria"
+};
 
-export default function AccountAddressesPage() {
+export default function AddressesPage() {
   const token = useAppSelector(selectToken);
-  const [addresses, setAddresses] = useState<Address[]>([]);
-  const [loading,   setLoading]   = useState(true);
-  const [showForm,  setShowForm]  = useState(false);
-  const [editing,   setEditing]   = useState<Address | null>(null);
-  const [form,      setForm]      = useState(blank());
-  const [saving,    setSaving]    = useState(false);
-  const [error,     setError]     = useState("");
-
-  const lgas = getLGAs(form.state_name);
+  const [addresses, setAddresses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!token) return;
     getAddresses(token)
-      .then((r) => setAddresses(r.data.addresses ?? r.data ?? []))
+      .then((res) => setAddresses(res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false));
   }, [token]);
 
-  const openNew = () => {
-    setEditing(null);
-    setForm(blank());
-    setShowForm(true);
-    setError("");
-  };
-
-  const openEdit = (addr: Address) => {
-    setEditing(addr);
-    setForm({ ...addr });
-    setShowForm(true);
-    setError("");
-  };
-
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!token) return;
-    setSaving(true);
     setError("");
+    setSaving(true);
     try {
-      if (editing) {
-      const res = await updateAddress(token, editing.id, form);
-        const updated = res.data.address ?? res.data;
-        setAddresses((prev) => prev.map((a) => (a.id === editing.id ? updated : a)));
-      } else {
       const res = await createAddress(token, form);
-        const created = res.data.address ?? res.data;
-        setAddresses((prev) => [...prev, created]);
-      }
+      setAddresses((prev) => [res.data, ...prev]);
+      setForm(emptyForm);
       setShowForm(false);
-    } catch {
-      setError("Could not save address. Please check all fields.");
+    } catch (err: any) {
+      setError(err?.response?.data?.errors?.join(", ") || "Failed to save address.");
     } finally {
       setSaving(false);
     }
@@ -86,95 +59,174 @@ export default function AccountAddressesPage() {
       await deleteAddress(token, id);
       setAddresses((prev) => prev.filter((a) => a.id !== id));
     } catch {
-      alert("Could not delete address.");
+      alert("Failed to delete address.");
     }
   };
 
-  if (loading) return <div className="animate-pulse text-[#4A7C59] font-semibold">Loading addresses…</div>;
-
   return (
-    <div className="space-y-5">
-      <div className="flex items-center justify-between">
-        <h2 className="font-heading font-bold text-xl text-[#1A1A1A]">Saved Addresses</h2>
-        {!showForm && (
-          <button onClick={openNew} className="bg-[#4A7C59] hover:bg-green-800 text-white font-bold px-5 py-2 rounded-lg text-sm transition-colors">
-            + Add New
-          </button>
-        )}
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 className="text-lg font-bold text-[#1A1A1A]">Saved Addresses</h2>
+          <p className="text-sm text-[#555555]">{addresses.length} address{addresses.length !== 1 ? "es" : ""} saved</p>
+        </div>
+        <button
+          onClick={() => setShowForm(!showForm)}
+          className="bg-[#4A7C59] hover:bg-[#2D4A32] text-white font-semibold py-2 px-4 rounded-lg text-sm transition-colors"
+        >
+          {showForm ? "Cancel" : "+ Add Address"}
+        </button>
       </div>
 
-      {/* Form */}
+      {/* Add form */}
       {showForm && (
-        <div className="bg-white border border-gray-100 rounded-xl p-6 space-y-4">
-          <h3 className="font-bold">{editing ? "Edit Address" : "New Address"}</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            {([["first_name","First Name"],["last_name","Last Name"],["phone","Phone"],["address1","Address Line 1"],["address2","Address Line 2 (optional)"],["city","City"]] as [keyof typeof form, string][]).map(([key, label]) => (
-              <div key={key} className={key === "address1" ? "sm:col-span-2" : ""}>
-                <label className="block font-semibold mb-1">{label}</label>
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <h3 className="font-bold text-[#1A1A1A] mb-5">New Address</h3>
+          <form onSubmit={handleSave} className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { label: "First Name", key: "firstname", placeholder: "First name" },
+                { label: "Last Name", key: "lastname", placeholder: "Last name" },
+              ].map(({ label, key, placeholder }) => (
+                <div key={key}>
+                  <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">{label}</label>
+                  <input
+                    type="text"
+                    value={(form as any)[key]}
+                    onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+                    required
+                    placeholder={placeholder}
+                    className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">Address Line 1</label>
+              <input
+                type="text"
+                value={form.address1}
+                onChange={(e) => setForm((f) => ({ ...f, address1: e.target.value }))}
+                required
+                placeholder="Street address"
+                className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">Address Line 2 <span className="font-normal text-[#555555]">(optional)</span></label>
+              <input
+                type="text"
+                value={form.address2}
+                onChange={(e) => setForm((f) => ({ ...f, address2: e.target.value }))}
+                placeholder="Apartment, suite, etc."
+                className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">City</label>
                 <input
                   type="text"
-                  value={(form as any)[key] as string}
-                  onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                  className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-2.5 focus:outline-none"
+                  value={form.city}
+                  onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+                  required
+                  placeholder="City"
+                  className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
                 />
               </div>
-            ))}
-            <div>
-              <label className="block font-semibold mb-1">State</label>
-              <select
-                value={form.state_name}
-                onChange={(e) => setForm((f) => ({ ...f, state_name: e.target.value, lga: "" }))}
-                className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-2.5 focus:outline-none bg-white"
-              >
-                <option value="">Select state</option>
-                {STATE_NAMES.map((s) => <option key={s} value={s}>{s}</option>)}
-              </select>
+              <div>
+                <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">State</label>
+                <select
+                  value={form.state_name}
+                  onChange={(e) => setForm((f) => ({ ...f, state_name: e.target.value }))}
+                  required
+                  className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors bg-white"
+                >
+                  <option value="">Select state</option>
+                  {NIGERIAN_STATES.map((s) => (
+                    <option key={s} value={s}>{s}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">LGA</label>
+                <input
+                  type="text"
+                  value={form.lga}
+                  onChange={(e) => setForm((f) => ({ ...f, lga: e.target.value }))}
+                  placeholder="LGA"
+                  className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
+                />
+              </div>
             </div>
             <div>
-              <label className="block font-semibold mb-1">LGA</label>
-              <select
-                value={form.lga}
-                onChange={(e) => setForm((f) => ({ ...f, lga: e.target.value }))}
-                disabled={!form.state_name}
-                className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-2.5 focus:outline-none bg-white"
-              >
-                <option value="">Select LGA</option>
-                {lgas.map((l) => <option key={l} value={l}>{l}</option>)}
-              </select>
+              <label className="block text-sm font-semibold text-[#1A1A1A] mb-2">Phone</label>
+              <input
+                type="tel"
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                required
+                placeholder="080XXXXXXXX"
+                className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 focus:outline-none transition-colors"
+              />
             </div>
-          </div>
-          {error && <p className="text-sm text-red-500">{error}</p>}
-          <div className="flex gap-3">
-            <button onClick={handleSave} disabled={saving} className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-2.5 rounded-lg text-sm disabled:opacity-50 transition-colors">
-              {saving ? "Saving…" : "Save Address"}
-            </button>
-            <button onClick={() => setShowForm(false)} className="border-2 border-gray-200 hover:border-gray-400 text-[#555555] font-bold px-6 py-2.5 rounded-lg text-sm transition-colors">
-              Cancel
-            </button>
-          </div>
+            {error && (
+              <p className="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg px-4 py-3">{error}</p>
+            )}
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={saving}
+                className="bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {saving ? "Saving..." : "Save Address"}
+              </button>
+              <button
+                type="button"
+                onClick={() => { setShowForm(false); setForm(emptyForm); setError(""); }}
+                className="bg-gray-100 hover:bg-gray-200 text-[#555555] font-semibold py-3 px-6 rounded-lg transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
       )}
 
-      {/* Address cards */}
-      {addresses.length === 0 && !showForm ? (
-        <div className="text-center py-12 space-y-3">
-          <p className="text-4xl">📍</p>
-          <p className="text-[#555555]">No saved addresses yet.</p>
+      {/* Address list */}
+      {loading ? (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+          <div className="animate-spin w-8 h-8 border-4 border-[#4A7C59] border-t-transparent rounded-full mx-auto" />
+        </div>
+      ) : addresses.length === 0 && !showForm ? (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center">
+          <div className="text-5xl mb-4">📍</div>
+          <h3 className="font-bold text-[#1A1A1A] mb-2">No saved addresses</h3>
+          <p className="text-[#555555] text-sm">Add an address to speed up checkout.</p>
         </div>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2">
-          {addresses.map((addr) => (
-            <div key={addr.id} className="bg-white border border-gray-100 rounded-xl p-5 text-sm space-y-1 relative">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {addresses.map((addr: any) => (
+            <div key={addr.id} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
               {addr.is_default && (
-                <span className="absolute top-3 right-3 bg-[#E8F0E9] text-[#4A7C59] text-xs font-bold px-2 py-0.5 rounded-full">Default</span>
+                <span className="inline-block text-xs font-semibold bg-[#E8F0E9] text-[#4A7C59] px-2 py-0.5 rounded-full mb-3">
+                  Default
+                </span>
               )}
-              <p className="font-bold">{addr.first_name} {addr.last_name}</p>
-              <p className="text-[#555555]">{addr.address1}{addr.address2 ? `, ${addr.address2}` : ""}</p>
-              <p className="text-[#555555]">{addr.city}, {addr.state_name} — {addr.lga}</p>
-              <p className="text-[#555555]">{addr.phone}</p>
-              <div className="flex gap-3 pt-2">
-                <button onClick={() => openEdit(addr)} className="text-[#4A7C59] font-semibold hover:underline text-xs">Edit</button>
-                <button onClick={() => handleDelete(addr.id)} className="text-red-500 font-semibold hover:underline text-xs">Delete</button>
+              <p className="font-semibold text-[#1A1A1A]">{addr.firstname} {addr.lastname}</p>
+              <p className="text-sm text-[#555555] mt-1">{addr.address1}</p>
+              {addr.address2 && <p className="text-sm text-[#555555]">{addr.address2}</p>}
+              <p className="text-sm text-[#555555]">{addr.city}, {addr.state_name}</p>
+              {addr.lga && <p className="text-sm text-[#555555]">{addr.lga}</p>}
+              <p className="text-sm text-[#555555]">{addr.phone}</p>
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={() => handleDelete(addr.id)}
+                  className="text-sm text-red-500 hover:text-red-700 font-medium transition-colors"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
