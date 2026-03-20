@@ -2,6 +2,7 @@ import { getProduct } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import ProductActions from "@/components/product-page/ProductActions";
 
 type Props = {
   params: { slug: string };
@@ -22,7 +23,6 @@ export default async function ProductDetailPage({ params }: Props) {
       ? Math.round((1 - product.price / product.compare_at_price) * 100)
       : null;
 
-  // JSON-LD structured data
   const jsonLd = {
     "@context": "https://schema.org/",
     "@type": "Product",
@@ -39,7 +39,6 @@ export default async function ProductDetailPage({ params }: Props) {
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
-      {/* JSON-LD */}
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* Breadcrumb */}
@@ -95,57 +94,8 @@ export default async function ProductDetailPage({ params }: Props) {
             </div>
           </div>
 
-          {/* Variants */}
-          {product.variants?.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-[#1A1A1A] mb-3">Options</h3>
-              <div className="flex flex-wrap gap-2">
-                {product.variants.map((v: any) => (
-                  <button
-                    key={v.id}
-                    className="border-2 border-gray-200 hover:border-[#4A7C59] rounded-lg px-4 py-2 text-sm font-medium transition-colors focus:border-[#4A7C59] focus:outline-none"
-                  >
-                    {v.sku}
-                    {v.stock_count === 0 && <span className="ml-1 text-red-400 text-xs">(Out)</span>}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Quantity + Add to Cart */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center border-2 border-gray-200 rounded-lg overflow-hidden">
-              <button className="px-4 py-3 text-lg font-bold hover:bg-gray-100 transition-colors">−</button>
-              <span className="px-6 py-3 font-semibold">1</span>
-              <button className="px-4 py-3 text-lg font-bold hover:bg-gray-100 transition-colors">+</button>
-            </div>
-            <button className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors active:scale-95">
-              Add to Cart
-            </button>
-          </div>
-
-          {/* Action Row */}
-          <div className="flex gap-3">
-            <button className="flex items-center gap-2 border border-gray-200 rounded-lg px-4 py-2 text-sm hover:border-[#4A7C59] transition-colors">
-              ♡ Wishlist
-            </button>
-            <a
-              href={`https://wa.me/?text=Check this out: ${product.name} - ${typeof window !== "undefined" ? window.location.href : ""}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 border border-gray-200 rounded-lg px-4 py-2 text-sm hover:border-[#25D366] transition-colors"
-            >
-              Share on WhatsApp
-            </a>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="flex gap-4 flex-wrap text-sm text-[#555555]">
-            {["🚚 Free Delivery", "✅ Genuine Product", "🔄 Easy Returns", "🔒 Secure Payment"].map(b => (
-              <span key={b} className="flex items-center gap-1">{b}</span>
-            ))}
-          </div>
+          {/* Interactive Add to Cart (client component) */}
+          <ProductActions product={product} />
 
           {/* Description */}
           {product.description && (
@@ -155,7 +105,6 @@ export default async function ProductDetailPage({ params }: Props) {
             </div>
           )}
 
-          {/* Delivery & Returns Accordion */}
           <details className="border rounded-lg p-4">
             <summary className="font-semibold text-[#1A1A1A] cursor-pointer">Delivery & Returns</summary>
             <p className="text-sm text-[#555555] mt-3">
@@ -166,7 +115,6 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Testimonials */}
       {product.testimonials?.length > 0 && (
         <section className="mt-16">
           <h2 className="font-heading text-2xl font-bold text-[#1A1A1A] mb-8">Customer Reviews</h2>
@@ -183,3 +131,4 @@ export default async function ProductDetailPage({ params }: Props) {
     </main>
   );
 }
+

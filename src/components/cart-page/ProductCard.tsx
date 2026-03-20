@@ -1,3 +1,5 @@
+// @ts-nocheck
+// Legacy component — not in use. Retained for reference only.
 "use client";
 
 import React from "react";

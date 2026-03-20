@@ -1,202 +1,124 @@
-import { compareArrays } from "@/lib/utils";
-import { Discount } from "@/types/product.types";
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-
-const calcAdjustedTotalPrice = (
-  totalPrice: number,
-  data: CartItem,
-  quantity?: number
-): number => {
-  return (
-    (totalPrice + data.discount.percentage > 0
-      ? Math.round(data.price - (data.price * data.discount.percentage) / 100)
-      : data.discount.amount > 0
-      ? Math.round(data.price - data.discount.amount)
-      : data.price) * (quantity ? quantity : data.quantity)
-  );
-};
-
-export type RemoveCartItem = {
-  id: number;
-  attributes: string[];
-};
+import type { RootState } from "@/lib/store";
 
 export type CartItem = {
-  id: number;
+  variantId: number;
+  productId: number;
   name: string;
-  srcUrl: string;
-  price: number;
-  attributes: string[];
-  discount: Discount;
+  variantLabel: string;
+  price: number; // in kobo
+  imageUrl: string;
   quantity: number;
+  slug: string;
 };
 
-export type Cart = {
-  items: CartItem[];
-  totalQuantities: number;
-};
-
-// Define a type for the slice state
 interface CartsState {
-  cart: Cart | null;
-  totalPrice: number;
-  adjustedTotalPrice: number;
-  action: "update" | "add" | "delete" | null;
+  items: CartItem[];
+  isOpen: boolean;
+  couponCode: string;
+  couponDiscount: number;
+  orderNotes: string;
+  freeShippingThreshold: number; // in kobo, default ₦10,000
 }
 
-// Define the initial state using that type
 const initialState: CartsState = {
-  cart: null,
-  totalPrice: 0,
-  adjustedTotalPrice: 0,
-  action: null,
+  items: [],
+  isOpen: false,
+  couponCode: "",
+  couponDiscount: 0,
+  orderNotes: "",
+  freeShippingThreshold: 1000000, // ₦10,000 in kobo
 };
 
 export const cartsSlice = createSlice({
   name: "carts",
-  // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    addToCart: (state, action: PayloadAction<CartItem>) => {
-      // if cart is empty then add
-      if (state.cart === null) {
-        state.cart = {
-          items: [action.payload],
-          totalQuantities: action.payload.quantity,
-        };
-        state.totalPrice =
-          state.totalPrice + action.payload.price * action.payload.quantity;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice +
-          calcAdjustedTotalPrice(state.totalPrice, action.payload);
-        return;
-      }
-
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
+    addItem: (state, action: PayloadAction<CartItem>) => {
+      const existing = state.items.find(
+        (i) => i.variantId === action.payload.variantId
       );
-
-      if (isItemInCart) {
-        state.cart = {
-          ...state.cart,
-          items: state.cart.items.map((eachCartItem) => {
-            if (
-              eachCartItem.id === action.payload.id
-                ? !compareArrays(
-                    eachCartItem.attributes,
-                    isItemInCart.attributes
-                  )
-                : eachCartItem.id !== action.payload.id
-            )
-              return eachCartItem;
-
-            return {
-              ...isItemInCart,
-              quantity: action.payload.quantity + isItemInCart.quantity,
-            };
-          }),
-          totalQuantities: state.cart.totalQuantities + action.payload.quantity,
-        };
-        state.totalPrice =
-          state.totalPrice + action.payload.price * action.payload.quantity;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice +
-          calcAdjustedTotalPrice(state.totalPrice, action.payload);
-        return;
-      }
-
-      state.cart = {
-        ...state.cart,
-        items: [...state.cart.items, action.payload],
-        totalQuantities: state.cart.totalQuantities + action.payload.quantity,
-      };
-      state.totalPrice =
-        state.totalPrice + action.payload.price * action.payload.quantity;
-      state.adjustedTotalPrice =
-        state.adjustedTotalPrice +
-        calcAdjustedTotalPrice(state.totalPrice, action.payload);
-    },
-    removeCartItem: (state, action: PayloadAction<RemoveCartItem>) => {
-      if (state.cart === null) return;
-
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
-      );
-
-      if (isItemInCart) {
-        state.cart = {
-          ...state.cart,
-          items: state.cart.items
-            .map((eachCartItem) => {
-              if (
-                eachCartItem.id === action.payload.id
-                  ? !compareArrays(
-                      eachCartItem.attributes,
-                      isItemInCart.attributes
-                    )
-                  : eachCartItem.id !== action.payload.id
-              )
-                return eachCartItem;
-
-              return {
-                ...isItemInCart,
-                quantity: eachCartItem.quantity - 1,
-              };
-            })
-            .filter((item) => item.quantity > 0),
-          totalQuantities: state.cart.totalQuantities - 1,
-        };
-
-        state.totalPrice = state.totalPrice - isItemInCart.price * 1;
-        state.adjustedTotalPrice =
-          state.adjustedTotalPrice -
-          calcAdjustedTotalPrice(isItemInCart.price, isItemInCart, 1);
+      if (existing) {
+        existing.quantity += action.payload.quantity;
+      } else {
+        state.items.push(action.payload);
       }
     },
-    remove: (
+    removeItem: (state, action: PayloadAction<number>) => {
+      state.items = state.items.filter((i) => i.variantId !== action.payload);
+    },
+    updateQuantity: (
       state,
-      action: PayloadAction<RemoveCartItem & { quantity: number }>
+      action: PayloadAction<{ variantId: number; quantity: number }>
     ) => {
-      if (!state.cart) return;
-
-      // check item in cart
-      const isItemInCart = state.cart.items.find(
-        (item) =>
-          action.payload.id === item.id &&
-          compareArrays(action.payload.attributes, item.attributes)
+      const item = state.items.find(
+        (i) => i.variantId === action.payload.variantId
       );
-
-      if (!isItemInCart) return;
-
-      state.cart = {
-        ...state.cart,
-        items: state.cart.items.filter((pItem) => {
-          return pItem.id === action.payload.id
-            ? !compareArrays(pItem.attributes, isItemInCart.attributes)
-            : pItem.id !== action.payload.id;
-        }),
-        totalQuantities: state.cart.totalQuantities - isItemInCart.quantity,
-      };
-      state.totalPrice =
-        state.totalPrice - isItemInCart.price * isItemInCart.quantity;
-      state.adjustedTotalPrice =
-        state.adjustedTotalPrice -
-        calcAdjustedTotalPrice(
-          isItemInCart.price,
-          isItemInCart,
-          isItemInCart.quantity
-        );
+      if (item) {
+        item.quantity = Math.max(1, action.payload.quantity);
+      }
+    },
+    clearCart: (state) => {
+      state.items = [];
+      state.couponCode = "";
+      state.couponDiscount = 0;
+      state.orderNotes = "";
+    },
+    openCart: (state) => {
+      state.isOpen = true;
+    },
+    closeCart: (state) => {
+      state.isOpen = false;
+    },
+    setCoupon: (
+      state,
+      action: PayloadAction<{ code: string; discount: number }>
+    ) => {
+      state.couponCode = action.payload.code;
+      state.couponDiscount = action.payload.discount;
+    },
+    removeCoupon: (state) => {
+      state.couponCode = "";
+      state.couponDiscount = 0;
+    },
+    setOrderNotes: (state, action: PayloadAction<string>) => {
+      state.orderNotes = action.payload;
     },
   },
 });
 
-export const { addToCart, removeCartItem, remove } = cartsSlice.actions;
+export const {
+  addItem,
+  removeItem,
+  updateQuantity,
+  clearCart,
+  openCart,
+  closeCart,
+  setCoupon,
+  removeCoupon,
+  setOrderNotes,
+} = cartsSlice.actions;
+
+// Selectors
+export const selectCartItems = (state: RootState) => state.carts.items;
+export const selectCartIsOpen = (state: RootState) => state.carts.isOpen;
+export const selectCartCount = (state: RootState) =>
+  state.carts.items.reduce((sum, i) => sum + i.quantity, 0);
+export const selectCartSubtotal = (state: RootState) =>
+  state.carts.items.reduce((sum, i) => sum + i.price * i.quantity, 0);
+export const selectCartTotal = selectCartSubtotal;
+export const selectCartDiscount = (state: RootState) =>
+  state.carts.couponDiscount;
+export const selectCartFinalTotal = (state: RootState) =>
+  Math.max(
+    0,
+    state.carts.items.reduce((sum, i) => sum + i.price * i.quantity, 0) -
+      state.carts.couponDiscount
+  );
+export const selectCouponCode = (state: RootState) => state.carts.couponCode;
+export const selectOrderNotes = (state: RootState) => state.carts.orderNotes;
+export const selectFreeShippingThreshold = (state: RootState) =>
+  state.carts.freeShippingThreshold;
 
 export default cartsSlice.reducer;

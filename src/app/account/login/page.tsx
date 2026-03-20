@@ -1,17 +1,32 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/hooks/redux";
+import { setCredentials } from "@/lib/features/auth/authSlice";
+import { loginCustomer } from "@/lib/api";
 
 export default function LoginPage() {
+  const dispatch  = useAppDispatch();
+  const router    = useRouter();
   const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
   const [error,    setError]    = useState("");
+  const [loading,  setLoading]  = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    // TODO: Integrate with customer auth endpoint in Batch 3
-    setError("Customer login not yet available. Coming soon in Batch 3.");
+    setLoading(true);
+    try {
+      const res = await loginCustomer({ email, password });
+      dispatch(setCredentials({ token: res.data.token, user: res.data.user }));
+      router.push("/account/profile");
+    } catch (err: any) {
+      setError(err?.response?.data?.error ?? "Invalid email or password. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -65,9 +80,10 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors"
+              disabled={loading}
+              className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors disabled:opacity-50"
             >
-              Sign In
+              {loading ? "Signing in…" : "Sign In"}
             </button>
           </form>
 

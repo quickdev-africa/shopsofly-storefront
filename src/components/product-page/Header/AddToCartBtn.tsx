@@ -1,3 +1,5 @@
+// @ts-nocheck
+// Legacy component — superseded by ProductActions.tsx.
 "use client";
 
 import { addToCart } from "@/lib/features/carts/cartsSlice";

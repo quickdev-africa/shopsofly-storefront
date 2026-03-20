@@ -1,12 +1,19 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/lib/hooks/redux";
+import { setCredentials } from "@/lib/features/auth/authSlice";
+import { registerCustomer } from "@/lib/api";
 
 export default function RegisterPage() {
+  const dispatch = useAppDispatch();
+  const router   = useRouter();
   const [form, setForm] = useState({
     first_name: "", last_name: "", email: "", password: "", phone: "",
   });
-  const [error, setError] = useState("");
+  const [error,   setError]   = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -14,8 +21,16 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    // TODO: Integrate with customer registration endpoint in Batch 3
-    setError("Customer registration coming soon in Batch 3.");
+    setLoading(true);
+    try {
+      const res = await registerCustomer(form);
+      dispatch(setCredentials({ token: res.data.token, user: res.data.user }));
+      router.push("/account/profile");
+    } catch (err: any) {
+      setError(err?.response?.data?.error ?? "Registration failed. Please check your details.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -107,9 +122,10 @@ export default function RegisterPage() {
 
             <button
               type="submit"
-              className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors"
+              disabled={loading}
+              className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors disabled:opacity-50"
             >
-              Create Account
+              {loading ? "Creating account…" : "Create Account"}
             </button>
           </form>
 

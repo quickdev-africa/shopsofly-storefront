@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import CookieConsent from "@/components/CookieConsent";
+import CartDrawer from "@/components/CartDrawer";
 import Script from "next/script";
 
 async function fetchStore() {
@@ -33,6 +34,7 @@ export default async function GlobalLayout({
         link={theme.announcement_link}
       />
       <Header storeName={store?.name || "Shopsofly"} navLinks={[]} />
+      <CartDrawer />
       <main className="min-h-screen">
         {children}
       </main>
