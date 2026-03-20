@@ -26,8 +26,8 @@ export const sendContact    = (data: object)  => api.post("/contact_messages", {
 // Auth
 export const loginCustomer    = (data: object) => api.post("/customers/sessions", data);
 export const registerCustomer = (data: object) => api.post("/customers", data);
-export const getAccount       = (token: string) => api.get("/account", { headers: authHeader(token) });
-export const updateAccount    = (token: string, data: object) => api.patch("/account", data, { headers: authHeader(token) });
+export const getAccount       = (token: string) => api.get("/account/profile", { headers: authHeader(token) });
+export const updateAccount    = (token: string, data: object) => api.patch("/account/profile", data, { headers: authHeader(token) });
 
 // Orders
 export const getOrders     = (token: string, params = {}) => api.get("/orders", { headers: authHeader(token), params });
