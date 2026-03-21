@@ -1,8 +1,10 @@
 import { getProduct } from "@/lib/api";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductActions from "@/components/product-page/ProductActions";
+import ProductGallery from "@/components/product-page/ProductGallery";
+import ProductTestimonials from "@/components/ProductTestimonials";
+import ProductFAQ from "@/components/ProductFAQ";
 
 type Props = {
   params: { slug: string };
@@ -59,22 +61,7 @@ export default async function ProductDetailPage({ params }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Image Gallery */}
         <div className="space-y-4">
-          <div className="bg-gray-100 rounded-xl overflow-hidden aspect-square relative">
-            {product.image_url ? (
-              <Image src={product.image_url} alt={product.name} fill className="object-cover" priority />
-            ) : (
-              <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold">{product.name}</div>
-            )}
-          </div>
-          {product.images?.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.slice(0, 4).map((img: any, i: number) => (
-                <div key={i} className="bg-gray-100 rounded-lg overflow-hidden aspect-square relative">
-                  <Image src={img.url} alt={img.alt_text || product.name} fill className="object-cover" />
-                </div>
-              ))}
-            </div>
-          )}
+          <ProductGallery product={product} />
         </div>
 
         {/* Product Info */}
@@ -115,19 +102,10 @@ export default async function ProductDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {product.testimonials?.length > 0 && (
-        <section className="mt-16">
-          <h2 className="font-heading text-2xl font-bold text-[#1A1A1A] mb-8">Customer Reviews</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {product.testimonials.map((t: any) => (
-              <div key={t.id} className="bg-gray-50 rounded-xl p-6">
-                <p className="text-[#555555] italic">"{t.body}"</p>
-                <p className="font-semibold text-[#1A1A1A] mt-4">— {t.author}</p>
-              </div>
-            ))}
-          </div>
-        </section>
+      {product.testimonials && product.testimonials.length > 0 && (
+        <ProductTestimonials testimonials={product.testimonials} />
       )}
+      <ProductFAQ />
     </main>
   );
 }

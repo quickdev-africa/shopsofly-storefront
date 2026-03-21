@@ -3,6 +3,9 @@ import Image from "next/image";
 import { getStore, getProducts, getTaxons, getBundles } from "@/lib/api";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import BundleBuilder from "@/components/BundleBuilder";
+import StarProduct from "@/components/StarProduct";
+import PopularSection from "@/components/PopularSection";
+import ProductCard from "@/components/ProductCard";
 
 async function fetchHomeData() {
   try {
@@ -29,7 +32,6 @@ export default async function HomePage() {
   const theme = store?.theme_settings || {};
 
   const featuredProducts = products.slice(0, 8);
-  const newArrivals      = products.slice(0, 8);
 
   return (
     <div className="min-h-screen font-body">
@@ -71,6 +73,8 @@ export default async function HomePage() {
         </div>
       </section>
 
+      <StarProduct products={products} />
+
       {/* Stats / Trust Bar */}
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
@@ -94,29 +98,7 @@ export default async function HomePage() {
           <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">Featured Products</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {featuredProducts.map((p: any) => (
-              <div key={p.id} className="group">
-                <Link href={`/products/${p.slug}`}>
-                  <div className="bg-gray-100 rounded-xl overflow-hidden aspect-square mb-3 relative">
-                    {p.image_url ? (
-                      <Image src={p.image_url} alt={p.name} width={300} height={300} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                    ) : (
-                      <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{p.name}</div>
-                    )}
-                    <div className="absolute bottom-0 left-0 right-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                      <button className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-semibold py-3 text-sm">
-                        Quick Buy
-                      </button>
-                    </div>
-                  </div>
-                  <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
-                  <div className="flex items-center gap-2 mt-1">
-                    {p.compare_at_price && p.compare_at_price > p.price && (
-                      <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
-                    )}
-                    <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
-                  </div>
-                </Link>
-              </div>
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
           <div className="text-center mt-10">
@@ -177,27 +159,7 @@ export default async function HomePage() {
       {/* Testimonials Carousel */}
       <TestimonialsCarousel />
 
-      {/* New Arrivals */}
-      {newArrivals.length > 0 && (
-        <section className="py-16 px-4 max-w-6xl mx-auto">
-          <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">New Arrivals</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {newArrivals.map((p: any) => (
-              <Link key={p.id} href={`/products/${p.slug}`} className="group">
-                <div className="bg-gray-100 rounded-xl overflow-hidden aspect-square mb-3">
-                  {p.image_url ? (
-                    <Image src={p.image_url} alt={p.name} width={300} height={300} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{p.name}</div>
-                  )}
-                </div>
-                <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
-                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
-              </Link>
-            ))}
-          </div>
-        </section>
-      )}
+      <PopularSection products={products} />
 
       {/* Newsletter */}
       <section className="py-16 px-4 bg-[#4A7C59] text-white">
