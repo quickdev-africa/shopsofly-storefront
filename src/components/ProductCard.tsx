@@ -71,16 +71,15 @@ export default function ProductCard({ product }: { product: Product }) {
               -{discPct}%
             </div>
           )}
-          {v && (
-            <div className="absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-              <button
-                onClick={handleQuickBuy}
-                className="w-full bg-white hover:bg-[#4A7C59] text-[#1A1A1A] hover:text-white font-bold py-3 px-4 rounded-xl text-sm transition-colors shadow-lg border border-gray-200 hover:border-[#4A7C59]"
-              >
-                Add To Cart
-              </button>
-            </div>
-          )}
+
+        </div>
+        <div className="px-3 pb-3">
+          <button
+            onClick={handleQuickBuy}
+            className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-colors"
+          >
+            Add To Cart
+          </button>
         </div>
         <div className="p-4 flex flex-col gap-1">
           {category && <p className="text-[10px] font-bold text-[#888] uppercase tracking-widest">{category}</p>}

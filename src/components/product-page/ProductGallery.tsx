@@ -33,7 +33,7 @@ export default function ProductGallery({ product }: Props) {
   const navMedia = (dir: number) => setMediaIdx((i) => (i + dir + media.length) % media.length);
 
   return (
-    <div className={`flex gap-3 items-start ${media.length > 1 ? "flex-row" : "flex-col"}`}>
+    <div className={`flex gap-3 items-start ${media.length > 1 ? "flex-row" : "flex-col"} w-full`}>
       {media.length > 1 && (
         <div className="flex flex-col gap-2 flex-shrink-0">
           {media.map((m, i) => (
@@ -52,7 +52,7 @@ export default function ProductGallery({ product }: Props) {
           ))}
         </div>
       )}
-      <div className="relative rounded-2xl overflow-hidden bg-gray-50 flex-1" style={{ aspectRatio: "1/1" }}>
+      <div className="relative rounded-2xl overflow-hidden bg-gray-50 w-full" style={{ aspectRatio: "1/1" }}>
         {currentMedia.type === "video" ? (
           <iframe src={`https://www.youtube.com/embed/${currentMedia.videoId}`}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
