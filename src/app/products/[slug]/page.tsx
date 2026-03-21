@@ -2,7 +2,14 @@ import { getProduct } from "@/lib/api";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductActions from "@/components/product-page/ProductActions";
-import ProductGallery from "@/components/product-page/ProductGallery";
+import Image from "next/image";
+import { useState } from "react";
+function extractYouTubeId(url: string): string {
+  const match = url.match(
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+  );
+  return match ? match[1] : "";
+}
 import ProductTestimonials from "@/components/ProductTestimonials";
 import ProductFAQ from "@/components/ProductFAQ";
 
@@ -60,9 +67,59 @@ export default async function ProductDetailPage({ params }: Props) {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* Image Gallery */}
-        <div className="space-y-4">
-          <ProductGallery product={product} />
+        <div className="space-y-3">
+          {/* Main image */}
+          <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
+            <Image
+              src={activeImage}
+              alt={product.name}
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* Thumbnail strip — only shows if multiple images */}
+          {product.images && product.images.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto">
+              {product.images.map((img: any, idx: number) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveImage(img.url)}
+                  className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-colors ${
+                    activeImage === img.url
+                      ? "border-[#4A7C59]"
+                      : "border-transparent"
+                  }`}
+                >
+                  <Image
+                    src={img.url}
+                    alt={img.alt_text || product.name}
+                    width={64}
+                    height={64}
+                    className="object-cover w-full h-full"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+      {/* Product Video — only shows if video_url is set */}
+      {product.video_url && (
+        <div className="mt-6">
+          <h3 className="font-heading font-semibold text-lg text-[#1A1A1A] mb-3">
+            Product Video
+          </h3>
+          <div className="relative aspect-video rounded-xl overflow-hidden">
+            <iframe
+              src={`https://www.youtube.com/embed/${extractYouTubeId(product.video_url)}`}
+              title={product.name}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            />
+          </div>
+        </div>
+      )}
 
         {/* Product Info */}
         <div className="space-y-6">
