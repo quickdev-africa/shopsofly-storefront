@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
@@ -19,15 +19,21 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
   const dispatch = useAppDispatch();
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const user = useAppSelector(selectUser);
+  const [hydrated, setHydrated] = useState(false);
 
   const isAuthPage = pathname === "/account/login" || pathname === "/account/register";
 
-  // ALL hooks must be called before any early return
+  // Wait for redux-persist to rehydrate before checking auth
   useEffect(() => {
-    if (!isAuthPage && !isAuthenticated) {
+    const timer = setTimeout(() => setHydrated(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (hydrated && !isAuthPage && !isAuthenticated) {
       router.push("/account/login");
     }
-  }, [isAuthPage, isAuthenticated, router]);
+  }, [hydrated, isAuthPage, isAuthenticated, router]);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -35,12 +41,21 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
     router.push("/");
   };
 
-  // Auth pages — no layout wrapper
+  // Auth pages — no layout wrapper needed
   if (isAuthPage) {
     return <>{children}</>;
   }
 
-  // Protected pages — show nothing while redirecting
+  // Show loading spinner while redux-persist rehydrates
+  if (!hydrated) {
+    return (
+      <div className="min-h-screen bg-[#F8FAF8] flex items-center justify-center">
+        <div className="animate-spin w-10 h-10 border-4 border-[#4A7C59] border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
+  // Not authenticated after hydration — redirect happening
   if (!isAuthenticated) {
     return null;
   }
