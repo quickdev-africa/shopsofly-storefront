@@ -166,7 +166,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
         {/* Heading */}
         <div className="mb-8 md:mb-10">
           <p className="text-[#555555] mt-2 text-sm md:text-base">
-            Pick {slotsNeeded} more product{slotsNeeded !== 1 ? 's' : ''} to complete your bundle and save {discountPercent}%
+            Pick {slotsNeeded} more product{slotsNeeded !== 1 ? 's' : ''} to complete your bundle and save {Math.round(discountPercent)}%
           </p>
         </div>
 
@@ -182,7 +182,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                   : 'bg-white text-[#4A7C59] hover:bg-[#E8F0E9]'
               }`}
             >
-              Bundle of {size} — Save {size === 2 ? (firstBundle?.discount_percent ?? 6) : Math.min((firstBundle?.discount_percent ?? 6) * 2, 12)}%
+              Bundle of {size} — Save {Math.round(size === 2 ? (firstBundle?.discount_percent ?? 6) : Math.min((firstBundle?.discount_percent ?? 6) * 2, 12))}%
             </button>
           ))}
         </div>
@@ -302,7 +302,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                 <span className="text-gray-400 line-through text-sm">{fmt(subtotal)}</span>
                 {bundleComplete && (
                   <span className="bg-[#F97316] text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    Save {fmt(savingsAmount)} ({discountPercent}%)
+                    Save {fmt(savingsAmount)} ({Math.round(discountPercent)}%)
                   </span>
                 )}
               </div>
@@ -408,7 +408,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                   <span className="line-through">{fmt(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm text-[#22C55E] font-semibold">
-                  <span>Bundle discount ({discountPercent}%)</span>
+                  <span>Bundle discount ({Math.round(discountPercent)}%)</span>
                   <span>- {fmt(savingsAmount)}</span>
                 </div>
                 <div className="flex justify-between font-heading font-bold text-lg text-[#1A1A1A]">
@@ -467,7 +467,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                 <div>
                   <p className="font-heading font-bold text-xl text-[#1A1A1A] mb-1">Bundle of {bundleSize} added</p>
                   <p className="text-[#555555] text-sm">
-                    You saved {fmt(savingsAmount)} ({discountPercent}% off)
+                    You saved {fmt(savingsAmount)} ({Math.round(discountPercent)}% off)
                   </p>
                 </div>
                 <div className="w-full space-y-3">
