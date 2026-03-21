@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { openCart, selectCartCount } from "@/lib/features/carts/cartsSlice";
 import MobileMenu from "@/components/MobileMenu";
@@ -12,8 +12,18 @@ interface Props {
 
 export default function Header({ storeName, navLinks }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuProducts, setMenuProducts] = useState<any[]>([]);
   const dispatch   = useAppDispatch();
   const cartCount  = useAppSelector(selectCartCount);
+
+  useEffect(() => {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v2/storefront/products?per_page=6`, {
+      headers: { "X-Store-Subdomain": process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "" }
+    })
+      .then(r => r.json())
+      .then(d => setMenuProducts(d.products || []))
+      .catch(() => {});
+  }, []);
 
   const defaultLinks = [
     { title: "Shop",    url: "/products"    },
@@ -95,7 +105,7 @@ export default function Header({ storeName, navLinks }: Props) {
         isOpen={menuOpen}
         onClose={() => setMenuOpen(false)}
         navLinks={links}
-        featuredProducts={[]}
+        featuredProducts={menuProducts}
       />
     </header>
   );
