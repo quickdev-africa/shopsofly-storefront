@@ -165,9 +165,6 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
         <div className="mb-8 md:mb-10">
-          <h2 className="font-heading text-2xl md:text-4xl font-bold text-[#1A1A1A]">
-            Better Living Bundles
-          </h2>
           <p className="text-[#555555] mt-2 text-sm md:text-base">
             Pick {slotsNeeded} more product{slotsNeeded !== 1 ? 's' : ''} to complete your bundle and save {discountPercent}%
           </p>
