@@ -107,24 +107,71 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* Collections Grid */}
-      {taxons.length > 0 && (
-        <section className="py-16 px-4 bg-gray-50">
+      {/* Shop by Collection — icon grid */}
+      {taxons && taxons.length > 0 && (
+        <section className="py-14 px-4 bg-[#F8FAF8]">
           <div className="max-w-6xl mx-auto">
-            <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">Shop by Collection</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {taxons.slice(0, 5).map((t: any) => (
-                <Link key={t.id} href={`/collections/${t.slug}`} className="group relative rounded-xl overflow-hidden h-48">
-                  {t.image_url ? (
-                    <Image src={t.image_url} alt={t.name} fill className="object-cover group-hover:scale-105 transition-transform" />
-                  ) : (
-                    <div className="w-full h-full bg-[#4A7C59]" />
-                  )}
-                  <div className="absolute inset-0 bg-black/40 flex items-end p-4">
-                    <span className="text-white font-heading font-bold text-xl">{t.name}</span>
-                  </div>
-                </Link>
-              ))}
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-bold text-[#1A1A1A]">
+                  Shop by collection
+                </h2>
+                <p className="text-sm text-[#555] mt-1">
+                  Find exactly what you&apos;re looking for
+                </p>
+              </div>
+              <Link
+                href="/collections"
+                className="text-sm font-semibold text-[#4A7C59] hover:underline whitespace-nowrap"
+              >
+                View all →
+              </Link>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
+              {taxons.map((taxon: any) => {
+                const iconMap: Record<string, string> = {
+                  "tableware": "🍽",
+                  "cookware": "🍽",
+                  "wearables": "⌚",
+                  "accessories": "⌚",
+                  "wellness": "💚",
+                  "health": "💚",
+                  "personal": "✨",
+                  "care": "✨",
+                  "eyewear": "👓",
+                };
+                const icon = Object.entries(iconMap).find(([key]) =>
+                  taxon.name.toLowerCase().includes(key)
+                )?.[1] ?? "🛍";
+
+                return (
+                  <Link
+                    key={taxon.id}
+                    href={`/collections/${taxon.slug}`}
+                    className="group block"
+                  >
+                    <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#4A7C59] hover:bg-[#F8FAF8] transition-all duration-200 flex flex-col gap-3">
+                      <div className="w-11 h-11 bg-[#E8F0E9] rounded-xl flex items-center justify-center text-xl flex-shrink-0">
+                        {icon}
+                      </div>
+                      <div>
+                        <p className="font-bold text-[#1A1A1A] text-sm leading-tight mb-1">
+                          {taxon.name}
+                        </p>
+                        <p className="text-xs text-[#888]">
+                          {taxon.products_count
+                            ? `${taxon.products_count} products`
+                            : "Explore range"}
+                        </p>
+                      </div>
+                      <p className="text-xs font-semibold text-[#4A7C59] group-hover:underline mt-auto">
+                        Shop →
+                      </p>
+                    </div>
+                  </Link>
+                );
+              })}
             </div>
           </div>
         </section>
