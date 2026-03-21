@@ -127,11 +127,46 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
             </div>
           )}
         </div>
-        <div className="px-5 py-4 border-t border-gray-100">
-          <Link href="/products" onClick={onClose}
-            className="block w-full text-center bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl transition-colors">
-            Shop All Products
-          </Link>
+        <div className="border-t border-gray-100 px-4 py-4">
+          <p className="text-xs font-bold text-[#1A1A1A] uppercase tracking-wider mb-3">
+            Quick Shop
+          </p>
+          <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+            {(featuredProducts || []).slice(0, 3).map((product) => {
+              const v = product.variants?.[0];
+              return (
+                <div key={product.id} className="flex-shrink-0 w-28 bg-[#F5F4F0] rounded-2xl overflow-hidden border border-gray-100">
+                  <div className="relative w-full bg-[#EFEFEB]" style={{ aspectRatio: "1/1" }}>
+                    <Image
+                      src={product.image_url}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                      sizes="112px"
+                    />
+                  </div>
+                  <div className="p-2">
+                    <p className="text-xs font-semibold text-[#1A1A1A] line-clamp-1 mb-1">
+                      {product.name}
+                    </p>
+                    <p className="text-xs font-bold text-[#1A1A1A] mb-2">
+                      {product.price
+                        ? `₦${Number(product.price).toLocaleString("en-NG")}`
+                        : ""}
+                    </p>
+                    {v && (
+                      <button
+                        onClick={(e) => handleAdd(product, e)}
+                        className="w-full bg-[#F97316] hover:bg-orange-600 text-white text-[10px] font-bold py-1.5 rounded-lg transition-colors"
+                      >
+                        Add
+                      </button>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </>

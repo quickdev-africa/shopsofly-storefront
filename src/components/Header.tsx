@@ -95,6 +95,7 @@ export default function Header({ storeName, navLinks }: Props) {
         isOpen={menuOpen}
         onClose={() => setMenuOpen(false)}
         navLinks={links}
+        featuredProducts={[]}
       />
     </header>
   );
