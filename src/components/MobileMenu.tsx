@@ -76,7 +76,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
           <nav className="px-4 py-3">
             {navLinks.map((link) => (
               <Link key={link.url} href={link.url} onClick={onClose}
-                className={`flex items-center justify-between px-4 py-3.5 rounded-xl text-base font-medium transition-colors mb-1 ${
+                className={`flex items-center justify-between px-4 py-2.5 rounded-xl text-base font-medium transition-colors mb-0.5 ${
                   pathname === link.url ? "bg-[#E8F0E9] text-[#4A7C59]" : "text-[#1A1A1A] hover:bg-gray-50"
                 }`}>
                 {link.title} <span className="text-gray-400">›</span>
@@ -92,7 +92,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
               { icon: "🔍", label: "Track Order", href: "/pages/track-order" },
             ].map((item) => (
               <Link key={item.href} href={item.href} onClick={onClose}
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-[#555] hover:bg-gray-50 transition-colors">
+                className="flex items-center gap-3 px-4 py-2 rounded-xl text-sm font-medium text-[#555] hover:bg-gray-50 transition-colors">
                 <span className="text-base">{item.icon}</span>{item.label}
               </Link>
             ))}
@@ -161,7 +161,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
                           className="w-7 h-7 bg-[#F97316] hover:bg-orange-600 text-white rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
                           aria-label="Add to cart"
                         >
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
                             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                           </svg>
