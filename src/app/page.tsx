@@ -151,7 +151,7 @@ export default async function HomePage() {
                     href={`/collections/${taxon.slug}`}
                     className="group block"
                   >
-                    <div className="bg-white border border-gray-100 rounded-2xl p-5 hover:border-[#4A7C59] hover:bg-[#F8FAF8] transition-all duration-200 flex flex-col gap-3">
+                    <div className="bg-[#E8F0E9] border border-[#c8ddd0] rounded-2xl p-5 hover:border-[#4A7C59] hover:bg-[#F8FAF8] transition-all duration-200 flex flex-col gap-3">
                       <div className="w-11 h-11 bg-[#E8F0E9] rounded-xl flex items-center justify-center text-xl flex-shrink-0">
                         {icon}
                       </div>
