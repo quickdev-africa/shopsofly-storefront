@@ -73,8 +73,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <StarProduct products={products} />
-
       {/* Stats / Trust Bar */}
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
@@ -131,6 +129,8 @@ export default async function HomePage() {
           </div>
         </section>
       )}
+
+      <StarProduct products={products} />
 
       {/* Bundle Builder */}
       {bundles.length > 0 && (

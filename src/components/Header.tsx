@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { openCart, selectCartCount } from "@/lib/features/carts/cartsSlice";
+import MobileMenu from "@/components/MobileMenu";
 
 interface Props {
   storeName: string;
@@ -81,7 +82,7 @@ export default function Header({ storeName, navLinks }: Props) {
           {/* Mobile menu button */}
           <button
             className="md:hidden text-[#1A1A1A]"
-            onClick={() => setMenuOpen(!menuOpen)}
+            onClick={() => setMenuOpen(true)}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={menuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
@@ -90,21 +91,11 @@ export default function Header({ storeName, navLinks }: Props) {
         </div>
       </div>
 
-      {/* Mobile Nav */}
-      {menuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 flex flex-col gap-4">
-          {links.map((link) => (
-            <Link
-              key={link.title}
-              href={link.url}
-              className="text-[#1A1A1A] hover:text-[#4A7C59] font-medium"
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.title}
-            </Link>
-          ))}
-        </div>
-      )}
+      <MobileMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        navLinks={links}
+      />
     </header>
   );
 }

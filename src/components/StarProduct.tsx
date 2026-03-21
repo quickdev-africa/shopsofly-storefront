@@ -167,10 +167,16 @@ export default function StarProduct({ products }: { products: Product[] }) {
             </div>
             {v && <p className="text-xs text-[#555]">{v.stock_count > 0 ? `${v.stock_count} in stock` : "Out of stock"}</p>}
             <div className="flex gap-3">
-              <button onClick={handleAdd} className="flex-1 bg-[#4A7C59] hover:bg-[#2D4A32] text-white font-bold py-4 rounded-xl text-sm transition-colors">
+              <button
+                onClick={handleAdd}
+                className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+              >
                 Add To Cart
               </button>
-              <Link href={`/products/${star.slug}`} className="flex-1 text-center bg-[#2D4A32] hover:bg-[#1a2e1f] text-white font-bold py-4 rounded-xl text-sm transition-colors flex items-center justify-center">
+              <Link
+                href={`/products/${star.slug}`}
+                className="flex-1 text-center bg-[#1A1A1A] hover:bg-[#333] text-white font-bold py-4 rounded-xl text-sm transition-colors flex items-center justify-center"
+              >
                 Buy It Now
               </Link>
             </div>

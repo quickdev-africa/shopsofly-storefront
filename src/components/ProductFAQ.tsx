@@ -19,8 +19,8 @@ export default function ProductFAQ({ faqs, whatsappNumber }: { faqs?: FAQItem[];
   return (
     <section className="py-10 border-t border-gray-100">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-8">
-        {/* Left — dark red help panel */}
-        <div className="bg-[#c0392b] rounded-2xl p-7 flex flex-col justify-between min-h-[260px]">
+        {/* Left — help panel */}
+        <div className="bg-[#F97316] rounded-2xl p-7 flex flex-col justify-between min-h-[260px]">
           <div>
             <h3 className="text-xl font-bold text-white mb-3 leading-tight">Still need help?</h3>
             <p className="text-sm text-white/80 leading-relaxed mb-6">
