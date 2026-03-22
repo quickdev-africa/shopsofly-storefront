@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ProductGallery({ product }: { product: any }) {
   const [activeImage, setActiveImage] = useState(
-    product.images?.[0]?.url || product.image_url
+    product.product_images?.[0]?.url || product.image_url
   );
 
   return (
@@ -12,9 +12,9 @@ export default function ProductGallery({ product }: { product: any }) {
       <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
         <Image src={activeImage} alt={product.name} fill className="object-cover" />
       </div>
-      {product.images && product.images.length > 1 && (
+      {product.product_images && product.product_images.length > 1 && (
         <div className="flex gap-2 overflow-x-auto">
-          {product.images.map((img: any, idx: number) => (
+          {product.product_images.map((img: any, idx: number) => (
             <button
               key={idx}
               onClick={() => setActiveImage(img.url)}
