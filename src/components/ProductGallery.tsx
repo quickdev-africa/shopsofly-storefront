@@ -3,7 +3,6 @@ import { useState } from "react";
 import Image from "next/image";
 
 export default function ProductGallery({ product }: { product: any }) {
-  // Build full image list — always include image_url as fallback
   const allImages = (() => {
     const imgs = product.product_images || [];
     if (imgs.length > 0) return imgs;
@@ -16,10 +15,19 @@ export default function ProductGallery({ product }: { product: any }) {
   );
 
   return (
-    <div className="flex gap-3">
-      {/* Thumbnail strip — vertical on left */}
+    <div className="space-y-3">
+      {/* Main image */}
+      <div className="relative aspect-square rounded-xl overflow-hidden bg-gray-100">
+        {activeImage ? (
+          <Image src={activeImage} alt={product.name} fill className="object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400">No image</div>
+        )}
+      </div>
+
+      {/* Thumbnails below — horizontal scroll */}
       {allImages.length > 1 && (
-        <div className="flex flex-col gap-2 overflow-y-auto max-h-[500px]">
+        <div className="flex gap-2 overflow-x-auto pb-1">
           {allImages.map((img: any, idx: number) => (
             <button
               key={idx}
@@ -41,22 +49,6 @@ export default function ProductGallery({ product }: { product: any }) {
           ))}
         </div>
       )}
-
-      {/* Main image */}
-      <div className="relative flex-1 aspect-square rounded-xl overflow-hidden bg-gray-100">
-        {activeImage ? (
-          <Image
-            src={activeImage}
-            alt={product.name}
-            fill
-            className="object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
-            No image
-          </div>
-        )}
-      </div>
     </div>
   );
 }

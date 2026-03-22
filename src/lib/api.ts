@@ -32,7 +32,7 @@ export const updateAccount    = (token: string, data: object) => api.patch("/acc
 // Orders
 export const getOrders     = (token: string, params = {}) => api.get("/orders", { headers: authHeader(token), params });
 export const getOrder      = (number: string, token?: string) => api.get(`/orders/${number}`, token ? { headers: authHeader(token) } : {});
-export const createOrder   = (data: object, token?: string) => api.post("/orders", data, token ? { headers: authHeader(token) } : {});
+export const createOrder   = (data: object, token?: string) => api.post("/checkout", data, token ? { headers: authHeader(token) } : {});
 
 // Shipping
 export const getShippingMethods   = () => api.get("/shipping_methods");
