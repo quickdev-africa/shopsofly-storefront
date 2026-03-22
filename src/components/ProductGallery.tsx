@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function ProductGallery({ product }: { product: any }) {
   const allImages = (() => {
-    const imgs = product.product_images || [];
+    const imgs = product.product_images || product.images || [];
     if (imgs.length > 0) return imgs;
     if (product.image_url) return [{ url: product.image_url, alt_text: product.name }];
     return [];
