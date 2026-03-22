@@ -139,19 +139,19 @@ export default function CheckoutPage() {
     setLoading(true);
     try {
       const res = await createOrder(buildOrderPayload({ payment_method: "paystack" }), token ?? undefined);
-      const order = res.data.order;
+      const order = res.data;
 
       const PaystackPop = (await import("@paystack/inline-js")).default;
       const handler = new PaystackPop();
       handler.newTransaction({
         key:      process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ?? "",
         email,
-        amount:   order.total,
+        amount:   order.total_kobo,
         ref:      order.paystack_reference,
         currency: "NGN",
         onSuccess: () => {
           dispatch(clearCart());
-          router.push(`/order-confirmation?order=${order.number}`);
+          router.push(`/order-confirmation?order=${order.order_number}`);
         },
         onCancel: () => setLoading(false),
       });
@@ -165,9 +165,9 @@ export default function CheckoutPage() {
     setLoading(true);
     try {
       const res = await createOrder(buildOrderPayload({ payment_method: "bank_transfer" }), token ?? undefined);
-      const order = res.data.order;
+      const order = res.data;
       dispatch(clearCart());
-      router.push(`/order-confirmation?order=${order.number}`);
+      router.push(`/order-confirmation?order=${order.order_number}`);
     } catch {
       alert("Could not create order. Please try again.");
       setLoading(false);
@@ -178,9 +178,9 @@ export default function CheckoutPage() {
     setLoading(true);
     try {
       const res = await createOrder(buildOrderPayload({ payment_method: "cod" }), token ?? undefined);
-      const order = res.data.order;
+      const order = res.data;
       dispatch(clearCart());
-      router.push(`/order-confirmation?order=${order.number}`);
+      router.push(`/order-confirmation?order=${order.order_number}`);
     } catch {
       alert("Could not create order. Please try again.");
       setLoading(false);
