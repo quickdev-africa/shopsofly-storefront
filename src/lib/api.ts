@@ -1,15 +1,33 @@
 import axios from "axios";
 
-const API_URL   = process.env.NEXT_PUBLIC_API_URL;
-const SUBDOMAIN = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+// Resolve subdomain dynamically from request hostname at runtime
+function getSubdomain(): string {
+  if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    const parts = hostname.split(".");
+    if (parts.length >= 3 && !hostname.includes("vercel.app") && !hostname.includes("localhost")) {
+      return parts[0];
+    }
+  }
+  return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+}
 
 const api = axios.create({
   baseURL: `${API_URL}/api/v2/storefront`,
   headers: {
     "Content-Type": "application/json",
-    "X-Store-Subdomain": SUBDOMAIN,
+    "X-Store-Subdomain": process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal",
   },
 });
+
+// Update subdomain header dynamically on every request
+api.interceptors.request.use((config) => {
+  config.headers["X-Store-Subdomain"] = getSubdomain();
+  return config;
+});
+
 
 // Auth header helper
 const authHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
