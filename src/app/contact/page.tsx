@@ -1,4 +1,4 @@
-export const revalidate = 60;
+export const revalidate = 60; // v2
 import { getStore } from "@/lib/api";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
