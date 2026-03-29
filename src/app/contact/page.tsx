@@ -1,12 +1,11 @@
-export const revalidate = 60; // v2
+export const revalidate = 60;
 import { getStore } from "@/lib/api";
 import Link from "next/link";
-import ContactForm from "@/components/ContactForm";
+
 
 export default async function ContactPage() {
   let store: any = null;
   try { const res = await getStore(); store = res.data.store; } catch {}
-  const storeName = store?.name || "Our Store";
   const theme = store?.theme_settings || {};
   const whatsapp = theme.whatsapp_number || store?.settings?.whatsapp_number || "";
 
@@ -21,7 +20,7 @@ export default async function ContactPage() {
       <p className="text-[#555555] mb-12">Have a question or need help? We are here for you.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div>
-          <ContactForm />
+          <div>Form coming soon</div>
         </div>
         <div className="space-y-8">
           {whatsapp && (
