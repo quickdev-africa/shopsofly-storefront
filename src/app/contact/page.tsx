@@ -19,22 +19,20 @@ export default async function ContactPage() {
       </nav>
 
       <h1 className="font-heading text-4xl font-bold text-[#1A1A1A] mb-3">Contact Us</h1>
-      <p className="text-[#555555] mb-12">Have a question or need help? We&apos;re here for you. Fill in the form below or reach us directly on WhatsApp.</p>
+      <p className="text-[#555555] mb-12">Have a question or need help? We are here for you. Fill in the form below or reach us directly on WhatsApp.</p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        {/* Contact Form */}
         <div>
           <ContactForm />
         </div>
 
-        {/* Contact Info */}
         <div className="space-y-8">
           {whatsapp && (
             <div className="bg-[#F8FAF8] rounded-2xl p-6">
               <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">WhatsApp</h3>
               <p className="text-[#555555] text-sm mb-4">Chat with us directly for the fastest response.</p>
               
-                href={`https://wa.me/${whatsapp.replace(/\D/g, "")}?text=Hello, I have a question about your products.`}
+                href={"https://wa.me/" + whatsapp.replace(/\D/g, "") + "?text=Hello, I have a question about your products."}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-3 rounded-xl transition-colors"
@@ -50,14 +48,14 @@ export default async function ContactPage() {
 
           <div className="bg-[#F8FAF8] rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">Response Time</h3>
-            <p className="text-[#555555] text-sm">We respond to all enquiries within 24 hours on business days (Monday–Friday).</p>
+            <p className="text-[#555555] text-sm">We respond to all enquiries within 24 hours on business days (Monday to Friday).</p>
           </div>
 
           <div className="bg-[#F8FAF8] rounded-2xl p-6">
             <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">Order Support</h3>
             <p className="text-[#555555] text-sm mb-3">For order-related questions, have your order number ready. You can also track your order directly.</p>
             <Link href="/pages/track-order" className="text-[#4A7C59] font-semibold hover:underline text-sm">
-              Track your order →
+              Track your order
             </Link>
           </div>
         </div>
