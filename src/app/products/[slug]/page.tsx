@@ -6,12 +6,6 @@ import { notFound } from "next/navigation";
 import ProductActions from "@/components/product-page/ProductActions";
 import Image from "next/image";
 import ProductGallery from "@/components/ProductGallery";
-function extractYouTubeId(url: string): string {
-  const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
-  );
-  return match ? match[1] : "";
-}
 import ProductTestimonials from "@/components/ProductTestimonials";
 import ProductFAQ from "@/components/ProductFAQ";
 
@@ -71,23 +65,6 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Image Gallery */}
         <ProductGallery product={product} />
 
-      {/* Product Video — only shows if video_url is set */}
-      {product.video_url && (
-        <div className="mt-6">
-          <h3 className="font-heading font-semibold text-lg text-[#1A1A1A] mb-3">
-            Product Video
-          </h3>
-          <div className="relative aspect-video rounded-xl overflow-hidden">
-            <iframe
-              src={`https://www.youtube.com/embed/${extractYouTubeId(product.video_url)}`}
-              title={product.name}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="w-full h-full"
-            />
-          </div>
-        </div>
-      )}
 
         {/* Product Info */}
         <div className="space-y-6">
