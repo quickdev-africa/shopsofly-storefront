@@ -4,7 +4,7 @@ import Image from "next/image";
 
 function extractYouTubeId(url: string): string {
   const match = url.match(
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/|youtube\.com\/shorts\/)([^&\n?#]+)/
   );
   return match ? match[1] : "";
 }
