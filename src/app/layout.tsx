@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";

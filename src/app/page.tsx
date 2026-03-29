@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import Link from "next/link";
 import Image from "next/image";
 import { getStore, getProducts, getTaxons, getBundles } from "@/lib/api";
@@ -44,7 +46,7 @@ export default async function HomePage() {
               {theme.hero_heading || "Discover Premium Wellness Products"}
             </h1>
             <p className="text-lg text-[#555555]">
-              {theme.hero_subtext || "Curated products for your health, beauty and lifestyle."}
+              {theme.hero_subheading || theme.hero_subtext || "Curated products for your health, beauty and lifestyle."}
             </p>
             <div className="flex gap-4 flex-wrap">
               <Link

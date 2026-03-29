@@ -8,6 +8,7 @@ import MobileMenu from "@/components/MobileMenu";
 interface Props {
   storeName: string;
   navLinks: { title: string; url: string }[];
+  theme?: any;
 }
 
 export default function Header({ storeName, navLinks }: Props) {

@@ -3,9 +3,19 @@ import Link from "next/link";
 interface Props {
   storeName: string;
   copyright: string;
+  theme?: any;
+  footerLinks?: { title: string; url: string; open_in_new_tab?: boolean }[];
 }
 
-export default function Footer({ storeName, copyright }: Props) {
+export default function Footer({ storeName, copyright, theme, footerLinks }: Props) {
+  const defaultLinks = [
+    { title: "Delivery Policy", url: "/pages/delivery-policy" },
+    { title: "Returns Policy", url: "/pages/returns-policy" },
+    { title: "Privacy Policy", url: "/pages/privacy-policy" },
+    { title: "Terms & Conditions", url: "/pages/terms" },
+    { title: "FAQ", url: "/pages/faq" },
+  ];
+  const links = footerLinks && footerLinks.length > 0 ? footerLinks : defaultLinks;
   return (
     <footer className="bg-[#2D4A32] text-white">
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
@@ -20,9 +30,9 @@ export default function Footer({ storeName, copyright }: Props) {
           </p>
           {/* Social Icons */}
           <div className="flex gap-3 mt-4">
-            {["Instagram", "Facebook", "Twitter", "TikTok"].map((s) => (
-              <a key={s} href="#" className="text-[#E8F0E9] hover:text-[#F97316] text-xs transition-colors">
-                {s}
+            {socialLinks.map((s) => (
+              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="text-[#E8F0E9] hover:text-[#F97316] text-xs transition-colors">
+                {s.name}
               </a>
             ))}
           </div>

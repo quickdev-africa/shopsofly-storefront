@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import { getStore } from "@/lib/api";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
@@ -28,21 +30,21 @@ export default async function GlobalLayout({
     <>
       <AnnouncementBar
         text={theme.announcement_text || "Free delivery on orders over ₦50,000"}
-        bgColor={theme.announcement_background_color || "#4A7C59"}
+        bgColor={theme.announcement_bg_color || "#4A7C59"}
         textColor={theme.announcement_text_color || "#ffffff"}
-        visible={theme.announcement_visible !== false}
+        visible={theme.announcement_enabled !== false}
         link={theme.announcement_link}
       />
-      <Header storeName={store?.name || "Shopsofly"} navLinks={[]} />
+      <Header storeName={store?.name || "Shopsofly"} theme={theme} navLinks={store?.header_links || []} />
       <CartDrawer />
       <main className="min-h-screen">
         {children}
       </main>
-      <Footer storeName={store?.name || "Shopsofly"} copyright={theme.footer_copyright || ""} />
+      <Footer storeName={store?.name || "Shopsofly"} copyright={theme.footer_copyright || ""} theme={theme} footerLinks={store?.footer_links || []} />
       <WhatsAppButton
-        phone={theme.whatsapp_chat_phone || ""}
-        message="Hello! I'd like to place an order."
-        visible={theme.whatsapp_chat_enabled === true}
+        phone={theme.whatsapp_number || ""}
+        message={theme.whatsapp_message || "Hello! I'd like to place an order."}
+        visible={theme.whatsapp_enabled !== false && !!theme.whatsapp_number}
       />
       <CookieConsent />
 

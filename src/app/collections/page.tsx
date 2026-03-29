@@ -1,3 +1,5 @@
+export const revalidate = 60;
+
 import { getTaxons } from "@/lib/api";
 import Link from "next/link";
 import Image from "next/image";
