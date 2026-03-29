@@ -8,6 +8,12 @@ interface Props {
 }
 
 export default function Footer({ storeName, copyright, theme, footerLinks }: Props) {
+  const socialLinks = [
+    { name: "Instagram", url: theme?.instagram_url },
+    { name: "Facebook", url: theme?.facebook_url },
+    { name: "Twitter", url: theme?.twitter_url },
+    { name: "TikTok", url: theme?.tiktok_url },
+  ].filter(s => s.url);
   const defaultLinks = [
     { title: "Delivery Policy", url: "/pages/delivery-policy" },
     { title: "Returns Policy", url: "/pages/returns-policy" },
