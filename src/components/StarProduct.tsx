@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 
@@ -38,6 +39,7 @@ function getYTId(url: string) {
 
 export default function StarProduct({ products }: { products: Product[] }) {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const [mediaIdx, setMediaIdx] = useState(0);
   const [qty, setQty] = useState(1);
 
@@ -177,12 +179,24 @@ export default function StarProduct({ products }: { products: Product[] }) {
               >
                 Add To Cart
               </button>
-              <Link
-                href={`/products/${star.slug}`}
-                className="flex-1 text-center bg-[#1A1A1A] hover:bg-[#333] text-white font-bold py-4 rounded-xl text-sm transition-colors flex items-center justify-center"
+              <button
+                onClick={() => {
+                  dispatch(addItem({
+                    variantId: v?.id ?? star.id * -1,
+                    productId: star.id,
+                    name: star.name,
+                    variantLabel: "Default",
+                    price: Number(v?.price ?? star.price),
+                    imageUrl: star.image_url,
+                    quantity: qty,
+                    slug: star.slug,
+                  }));
+                  router.push("/checkout");
+                }}
+                className="flex-1 bg-[#1A1A1A] hover:bg-[#333] text-white font-bold py-4 rounded-xl text-sm transition-colors"
               >
                 Buy It Now
-              </Link>
+              </button>
             </div>
           </div>
         </div>
