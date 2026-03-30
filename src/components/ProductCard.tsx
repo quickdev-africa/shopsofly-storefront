@@ -41,13 +41,12 @@ export default function ProductCard({ product }: { product: Product }) {
   const handleQuickBuy = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!v) return;
     dispatch(addItem({
-      variantId: v.id,
+      variantId: v?.id ?? product.id * -1,
       productId: product.id,
       name: product.name,
-      variantLabel: Object.entries(v.options || {}).map(([k, val]) => `${k}: ${val}`).join(" / ") || "Default",
-      price: Number(v.price),
+      variantLabel: v ? Object.entries(v.options || {}).map(([k, val]) => `${k}: ${val}`).join(" / ") || "Default" : "Default",
+      price: Number(v?.price ?? product.price),
       imageUrl: product.image_url,
       quantity: 1,
       slug: product.slug,
