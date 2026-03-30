@@ -76,9 +76,9 @@ export default async function ProductDetailPage({ params }: Props) {
                   Save {discount}%
                 </span>
               )}
-              <span className="text-2xl font-bold text-[#1A1A1A]">₦{product.price?.toLocaleString()}</span>
+              <span className="text-2xl font-bold text-[#1A1A1A]">₦{Number(product.price)?.toLocaleString("en-NG", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
               {product.compare_at_price && product.compare_at_price > product.price && (
-                <span className="text-gray-400 line-through text-lg">₦{product.compare_at_price?.toLocaleString()}</span>
+                <span className="text-gray-400 line-through text-lg">₦{Number(product.compare_at_price)?.toLocaleString("en-NG", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</span>
               )}
             </div>
           </div>

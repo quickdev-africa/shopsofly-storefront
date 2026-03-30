@@ -26,7 +26,7 @@ interface Product {
 function fmt(p: number | string | null) {
   if (!p) return "Price TBD";
   const n = typeof p === "string" ? parseFloat(p) : p;
-  return `₦${n.toLocaleString("en-NG", { minimumFractionDigits: 0 })}`;
+  return `₦${n.toLocaleString("en-NG", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 }
 
 export default function ProductCard({ product }: { product: Product }) {
