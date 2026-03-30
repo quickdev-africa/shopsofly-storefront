@@ -28,7 +28,7 @@ const initialState: CartsState = {
   couponCode: "",
   couponDiscount: 0,
   orderNotes: "",
-  freeShippingThreshold: 1000000, // ₦10,000 in kobo
+  freeShippingThreshold: 10000, // ₦10,000 in Naira
 };
 
 export const cartsSlice = createSlice({

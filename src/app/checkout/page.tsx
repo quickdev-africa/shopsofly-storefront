@@ -33,7 +33,7 @@ const PayPalSection = dynamic(() => import("@/components/checkout/PayPalSection"
 type PaymentMethod = "paystack" | "stripe" | "paypal" | "bank_transfer" | "cod";
 type DeliveryMethod = "delivery" | "pickup";
 
-const fmt = (kobo: number) => `₦${(kobo / 100).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
 export default function CheckoutPage() {
   const dispatch        = useAppDispatch();
