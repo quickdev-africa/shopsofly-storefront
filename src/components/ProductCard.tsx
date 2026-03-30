@@ -73,22 +73,26 @@ export default function ProductCard({ product }: { product: Product }) {
           )}
 
         </div>
-        <div className="px-3 pb-3">
-          <button
-            onClick={handleQuickBuy}
-            className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-2.5 px-4 rounded-xl text-xs transition-colors"
-          >
-            Add To Cart
-          </button>
-        </div>
+
         <div className="p-4 flex flex-col gap-1">
           {category && <p className="text-[10px] font-bold text-[#888] uppercase tracking-widest">{category}</p>}
           <h3 className="font-bold text-[#1A1A1A] text-sm leading-tight line-clamp-2 group-hover:text-[#4A7C59] transition-colors">
             {product.name}
           </h3>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="font-bold text-[#1A1A1A] text-sm">{fmt(product.price)}</span>
-            {hasDisc && <span className="text-xs text-[#888] line-through">{fmt(product.compare_at_price!)}</span>}
+          <div className="flex items-center justify-between mt-1">
+            <div className="flex items-center gap-2">
+              <span className="font-bold text-[#1A1A1A] text-sm">{fmt(product.price)}</span>
+              {hasDisc && <span className="text-xs text-[#888] line-through">{fmt(product.compare_at_price!)}</span>}
+            </div>
+            <button
+              onClick={handleQuickBuy}
+              className="bg-[#F97316] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0"
+              title="Add to Cart"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
