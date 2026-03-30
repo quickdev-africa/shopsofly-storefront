@@ -48,6 +48,22 @@ export default function ProductActions({ product }: Props) {
         .join(" / ")
     : "";
 
+  const handleBuyNow = () => {
+    dispatch(
+      addItem({
+        variantId:    selectedVariant?.id ?? product.id * -1,
+        productId:    product.id,
+        name:         product.name,
+        variantLabel: variantLabel || "Default",
+        price:        price,
+        imageUrl:     product.image_url ?? "",
+        quantity:     quantity,
+        slug:         product.slug,
+      })
+    );
+    router.push("/checkout");
+  };
+
   const handleAddToCart = () => {
     dispatch(
       addItem({
@@ -131,10 +147,7 @@ export default function ProductActions({ product }: Props) {
           Add to Cart
         </button>
         <button
-          onClick={() => {
-            handleAddToCart();
-            router.push("/checkout");
-          }}
+          onClick={handleBuyNow}
           className="flex-1 bg-[#1A1A1A] hover:bg-[#333] text-white font-bold py-4 rounded-lg transition-colors active:scale-95"
         >
           Buy It Now
