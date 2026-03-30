@@ -62,11 +62,15 @@ export default function StarProduct({ products }: { products: Product[] }) {
   const nav = (dir: number) => setMediaIdx((i) => (i + dir + media.length) % media.length);
 
   const handleAdd = () => {
-    if (!v) return;
     dispatch(addItem({
-      variantId: v.id, productId: star.id, name: star.name,
-      variantLabel: "Default", price: Number(v.price),
-      imageUrl: star.image_url, quantity: qty, slug: star.slug,
+      variantId: v?.id ?? star.id * -1,
+      productId: star.id,
+      name: star.name,
+      variantLabel: "Default",
+      price: Number(v?.price ?? star.price),
+      imageUrl: star.image_url,
+      quantity: qty,
+      slug: star.slug,
     }));
     dispatch(openCart());
   };

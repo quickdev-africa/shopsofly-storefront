@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
@@ -27,6 +28,7 @@ interface Props {
 
 export default function ProductActions({ product }: Props) {
   const dispatch         = useAppDispatch();
+  const router           = useRouter();
   const token            = useAppSelector(selectToken);
   const isAuthenticated  = useAppSelector(selectIsAuthenticated);
 
@@ -37,7 +39,7 @@ export default function ProductActions({ product }: Props) {
   const [wishlistMsg, setWishlistMsg]             = useState("");
 
   const selectedVariant = product.variants?.find((v) => v.id === selectedVariantId) ?? firstVariant;
-  const price = (selectedVariant?.price ?? product.price) * 100; // convert to kobo
+  const price = Number(selectedVariant?.price ?? product.price);
 
   const variantLabel = selectedVariant
     ? selectedVariant.sku ||
@@ -47,13 +49,12 @@ export default function ProductActions({ product }: Props) {
     : "";
 
   const handleAddToCart = () => {
-    if (!selectedVariant && product.variants?.length > 0) return;
     dispatch(
       addItem({
-        variantId:    selectedVariant?.id ?? product.id,
+        variantId:    selectedVariant?.id ?? product.id * -1,
         productId:    product.id,
         name:         product.name,
-        variantLabel: variantLabel,
+        variantLabel: variantLabel || "Default",
         price:        price,
         imageUrl:     product.image_url ?? "",
         quantity:     quantity,
@@ -128,6 +129,15 @@ export default function ProductActions({ product }: Props) {
           className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors active:scale-95"
         >
           Add to Cart
+        </button>
+        <button
+          onClick={() => {
+            handleAddToCart();
+            router.push("/checkout");
+          }}
+          className="flex-1 bg-[#1A1A1A] hover:bg-[#333] text-white font-bold py-4 rounded-lg transition-colors active:scale-95"
+        >
+          Buy It Now
         </button>
       </div>
 
