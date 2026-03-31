@@ -183,7 +183,15 @@ export default async function HomePage() {
 
       {/* Bundle Builder */}
       {bundles.length > 0 && (
-        <BundleBuilder bundles={bundles} storeProducts={storeProducts} />
+        <section className="py-16 px-4 bg-[#F8FAF8]">
+          <div className="max-w-6xl mx-auto mb-10 text-center">
+            <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-3">Better Living Bundles</h2>
+            <p className="text-[#555555] max-w-2xl mx-auto">
+              Pick your favourite products, bundle them together and save. The more you bundle, the more you save — mix and match any combination.
+            </p>
+          </div>
+          <BundleBuilder bundles={bundles} storeProducts={storeProducts} />
+        </section>
       )}
 
       {/* Promotional Banner */}
