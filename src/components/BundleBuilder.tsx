@@ -164,8 +164,8 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
     <section className="py-12 md:py-20 px-4 bg-[#F8FAF8]">
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
-        <div className="mb-8 md:mb-10">
-          <p className="text-[#555555] mt-2 text-sm md:text-base">
+        <div className="mb-4 md:mb-6 text-center">
+          <p className="text-[#1A1A1A] font-bold text-sm md:text-base">
             Pick {slotsNeeded} more product{slotsNeeded !== 1 ? 's' : ''} to complete your bundle and save {Math.round(discountPercent)}%
           </p>
         </div>
