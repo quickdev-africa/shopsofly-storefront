@@ -161,7 +161,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   }
 
   return (
-    <section className="py-12 md:py-20 px-4 bg-[#F8FAF8]">
+    <section className="py-4 px-4 bg-[#F8FAF8]">
       <div className="max-w-6xl mx-auto">
         {/* Heading */}
         <div className="mb-4 md:mb-6 text-center">
