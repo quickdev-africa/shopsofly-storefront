@@ -33,6 +33,7 @@ api.interceptors.request.use((config) => {
 const authHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 
 export const getStore       = ()              => api.get("/store");
+export const getLandingPage = (slug: string)  => api.get(`/landing_pages/${slug}`);
 export const getProducts    = (params = {})   => api.get("/products", { params });
 export const getProduct     = (slug: string)  => api.get(`/products/${slug}`);
 export const getTaxons      = ()              => api.get("/taxons");
