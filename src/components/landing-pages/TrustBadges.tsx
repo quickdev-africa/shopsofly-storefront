@@ -16,3 +16,4 @@ export default function TrustBadges() {
     </div>
   );
 }
+
