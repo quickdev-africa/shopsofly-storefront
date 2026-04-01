@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
-import { addToCart } from "@/lib/features/carts/cartsSlice";
+import { addItem } from "@/lib/features/carts/cartsSlice";
 import TrustBadges from "./TrustBadges";
 import VideoTestimonials from "./VideoTestimonials";
 import LandingFAQ from "./LandingFAQ";
@@ -22,13 +22,15 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
 
   function handleBuyNow() {
     if (!product) return;
-    dispatch(addToCart({
-      id: product.id,
-      variantId: selectedVariant?.id,
+    dispatch(addItem({
+      variantId: selectedVariant?.id || product.id,
+      productId: product.id,
       name: product.name,
+      variantLabel: selectedVariant?.sku || "",
       price: price,
-      image: product.image_url,
+      imageUrl: product.image_url || "",
       quantity: 1,
+      slug: product.slug || "",
     }));
     window.location.href = "/checkout";
   }

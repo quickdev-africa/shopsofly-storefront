@@ -3,7 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
-import { addToCart } from "@/lib/features/carts/cartsSlice";
+import { addItem } from "@/lib/features/carts/cartsSlice";
 import CountdownTimer from "./CountdownTimer";
 import TrustBadges from "./TrustBadges";
 import VideoTestimonials from "./VideoTestimonials";
@@ -19,13 +19,15 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
 
   function handleAddToCart(product: any) {
     const variant = product.variants?.[0];
-    dispatch(addToCart({
-      id: product.id,
-      variantId: variant?.id,
+    dispatch(addItem({
+      variantId: variant?.id || product.id,
+      productId: product.id,
       name: product.name,
+      variantLabel: variant?.sku || "",
       price: variant?.price || product.price,
-      image: product.image_url,
+      imageUrl: product.image_url || "",
       quantity: 1,
+      slug: product.slug || "",
     }));
     setAddedIds((prev) => [...prev, product.id]);
     setTimeout(() => { window.location.href = "/checkout"; }, 500);
