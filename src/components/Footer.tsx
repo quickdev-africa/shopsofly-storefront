@@ -23,7 +23,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
   ];
   const links = footerLinks && footerLinks.length > 0 ? footerLinks : defaultLinks;
   return (
-    <footer className="bg-[#2D4A32] text-white">
+    <footer className="text-white" style={{ backgroundColor: "var(--color-primary-dark)" }}>
       <div className="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
 
         {/* Brand */}
@@ -37,7 +37,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
           {/* Social Icons */}
           <div className="flex gap-3 mt-4">
             {socialLinks.map((s) => (
-              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="text-[#E8F0E9] hover:text-[#F97316] text-xs transition-colors">
+              <a key={s.name} href={s.url} target="_blank" rel="noopener noreferrer" className="text-[#E8F0E9] hover:opacity-70 text-xs transition-colors">
                 {s.name}
               </a>
             ))}
@@ -55,7 +55,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
               { label: "New Arrivals",  href: "/products?sort=newest" },
             ].map((l) => (
               <li key={l.label}>
-                <Link href={l.href} className="hover:text-[#F97316] transition-colors">
+                <Link href={l.href} className="hover:opacity-70 transition-colors">
                   {l.label}
                 </Link>
               </li>
@@ -74,7 +74,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
               { label: "Track Order",     href: "/pages/track-order"     },
             ].map((l) => (
               <li key={l.label}>
-                <Link href={l.href} className="hover:text-[#F97316] transition-colors">
+                <Link href={l.href} className="hover:opacity-70 transition-colors">
                   {l.label}
                 </Link>
               </li>
@@ -93,7 +93,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
               { label: "Terms & Conditions", href: "/pages/terms"         },
             ].map((l) => (
               <li key={l.label}>
-                <Link href={l.href} className="hover:text-[#F97316] transition-colors">
+                <Link href={l.href} className="hover:opacity-70 transition-colors">
                   {l.label}
                 </Link>
               </li>
@@ -103,7 +103,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-[#4A7C59] py-4 px-4">
+      <div className="border-t border-white/20 py-4 px-4">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
           <p className="text-[#E8F0E9] text-xs">
             {copyright || `© ${new Date().getFullYear()} ${storeName}. All rights reserved.`}
@@ -111,7 +111,7 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
           {/* Payment icons */}
           <div className="flex items-center gap-2 text-[#E8F0E9] text-xs">
             {["Paystack", "Visa", "Mastercard", "Verve"].map((p) => (
-              <span key={p} className="bg-[#4A7C59] px-2 py-1 rounded text-xs">
+              <span key={p} className="bg-white/20 px-2 py-1 rounded text-xs">
                 {p}
               </span>
             ))}

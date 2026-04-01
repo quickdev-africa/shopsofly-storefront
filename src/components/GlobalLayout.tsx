@@ -28,6 +28,15 @@ export default async function GlobalLayout({
 
   return (
     <>
+      <style>{`
+        :root {
+          --color-primary: ${theme.primary_color || '#4A7C59'};
+          --color-primary-dark: ${theme.footer_bg_color || '#2D4A32'};
+          --color-accent: ${theme.accent_color || '#F97316'};
+          --color-primary-light: ${theme.primary_color ? theme.primary_color + '20' : '#E8F0E9'};
+          --color-primary-bg: ${theme.background_color || '#F4F7F4'};
+        }
+      `}</style>
       <AnnouncementBar
         text={theme.announcement_text || "Free delivery on orders over ₦50,000"}
         bgColor={theme.announcement_bg_color || "#4A7C59"}

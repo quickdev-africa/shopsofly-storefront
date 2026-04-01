@@ -56,7 +56,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <Link href={`/products/${product.slug}`} className="group block">
-      <div className="bg-[#F5F4F0] rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-[#4A7C59]/20 flex flex-col">
+      <div className="bg-[#F5F4F0] rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-transparent hover:border-[var(--color-primary)]/20 flex flex-col">
         <div className="relative overflow-hidden bg-[#EFEFEB]" style={{ aspectRatio: "3/4" }}>
           <Image
             src={product.image_url || "/placeholder.jpg"}
@@ -66,7 +66,7 @@ export default function ProductCard({ product }: { product: Product }) {
             sizes="(max-width:640px) 80vw,(max-width:1024px) 40vw,25vw"
           />
           {hasDisc && (
-            <div className="absolute top-3 left-3 bg-[#F97316] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+            <div className="absolute top-3 left-3 bg-[var(--color-accent)] text-white text-xs font-bold px-2.5 py-1 rounded-full">
               -{discPct}%
             </div>
           )}
@@ -75,7 +75,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
         <div className="p-4 flex flex-col gap-1">
           {category && <p className="text-[10px] font-bold text-[#888] uppercase tracking-widest">{category}</p>}
-          <h3 className="font-bold text-[#1A1A1A] text-sm leading-tight line-clamp-2 group-hover:text-[#4A7C59] transition-colors">
+          <h3 className="font-bold text-[#1A1A1A] text-sm leading-tight line-clamp-2 group-hover:text-inherit transition-colors">
             {product.name}
           </h3>
           <div className="flex items-center justify-between mt-1">
@@ -85,7 +85,7 @@ export default function ProductCard({ product }: { product: Product }) {
             </div>
             <button
               onClick={handleQuickBuy}
-              className="bg-[#F97316] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0"
+              className="bg-[var(--color-accent)] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0"
               title="Add to Cart"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

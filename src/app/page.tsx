@@ -57,7 +57,8 @@ export default async function HomePage() {
               </Link>
               <Link
                 href="/collections"
-                className="inline-block border-2 border-[#4A7C59] text-[#4A7C59] font-semibold px-8 py-4 rounded-lg hover:bg-[#4A7C59] hover:text-white transition-colors"
+                className="inline-block border-2 font-semibold px-8 py-4 rounded-lg transition-colors hover:text-white"
+                style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}
               >
                 Browse Collections
               </Link>
@@ -124,7 +125,8 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/collections"
-                className="text-sm font-semibold text-[#4A7C59] hover:underline whitespace-nowrap"
+                className="text-sm font-semibold hover:underline whitespace-nowrap"
+                style={{ color: "var(--color-primary)" }}
               >
                 View all →
               </Link>
@@ -153,7 +155,7 @@ export default async function HomePage() {
                     href={`/collections/${taxon.slug}`}
                     className="group block"
                   >
-                    <div className="bg-[#E8F0E9] border border-[#c8ddd0] rounded-2xl p-5 hover:border-[#4A7C59] hover:bg-[#F8FAF8] transition-all duration-200 flex flex-col gap-3">
+                    <div className="border rounded-2xl p-5 transition-all duration-200 flex flex-col gap-3" style={{ backgroundColor: "var(--color-primary-light)", borderColor: "#c8ddd0" }}>
                       <div className="w-11 h-11 bg-[#E8F0E9] rounded-xl flex items-center justify-center text-xl flex-shrink-0">
                         {icon}
                       </div>
@@ -167,7 +169,7 @@ export default async function HomePage() {
                             : "Explore range"}
                         </p>
                       </div>
-                      <p className="text-xs font-semibold text-[#4A7C59] group-hover:underline mt-auto">
+                      <p className="text-xs font-semibold group-hover:underline mt-auto" style={{ color: "var(--color-primary)" }}>
                         Shop →
                       </p>
                     </div>
@@ -219,7 +221,7 @@ export default async function HomePage() {
       <PopularSection products={products} />
 
       {/* Newsletter */}
-      <section className="py-16 px-4 bg-[#4A7C59] text-white">
+      <section className="py-16 px-4 text-white" style={{ backgroundColor: "var(--color-primary)" }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-bold mb-4">Stay in the Loop</h2>
           <p className="text-[#E8F0E9] mb-8">Get exclusive deals and new arrivals straight to your inbox.</p>
