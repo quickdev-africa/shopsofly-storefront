@@ -68,7 +68,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
               {s.cta_text || "Buy Now"} — ₦{price.toLocaleString()}
             </button>
             {theme.whatsapp_number && (
-              
+              <a
                 href={"https://wa.me/" + theme.whatsapp_number.replace(/\D/g, "")}
                 className="bg-green-500 hover:bg-green-600 text-white font-bold px-10 py-4 rounded-xl text-lg transition-colors"
               >
