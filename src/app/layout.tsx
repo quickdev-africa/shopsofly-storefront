@@ -5,7 +5,6 @@ import "@/styles/globals.css";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
-import GlobalLayout from "@/components/GlobalLayout";
 import { getStore } from "@/lib/api";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
@@ -55,9 +54,7 @@ export default function RootLayout({
       <body className="font-body">
         <HolyLoader color="#F97316" />
         <Providers>
-          <GlobalLayout>
-            {children}
-          </GlobalLayout>
+          {children}
         </Providers>
       </body>
     </html>
