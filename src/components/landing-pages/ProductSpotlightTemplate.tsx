@@ -80,8 +80,8 @@ function CTAButton({ text, onClick }: { text: string; onClick: () => void }) {
 }
 
 function YoutubeEmbed({ url, className = "" }: { url: string; className?: string }) {
-  const match = url ? url.match(/youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^?]+)|youtube\.com\/embed\/([^?]+)/) : null;
-  const id = match ? match[1] : "";
+  const match = url ? url.match(/youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^?]+)|youtube\.com\/shorts\/([^?&]+)|youtube\.com\/embed\/([^?]+)/) : null;
+  const id = match ? (match[1] || match[2] || match[3] || match[4] || "") : "";
   if (!id) return (
     <div className={"bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400 text-sm aspect-video " + className}>
       Video coming soon

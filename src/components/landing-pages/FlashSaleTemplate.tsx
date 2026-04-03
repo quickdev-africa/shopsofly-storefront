@@ -7,8 +7,8 @@ import CountdownTimer from "./CountdownTimer";
 import LandingFAQ from "./LandingFAQ";
 
 function YoutubeEmbed({ url, className = "" }: { url: string; className?: string }) {
-  const match = url ? url.match(/youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^?]+)|youtube\.com\/embed\/([^?]+)/) : null;
-  const id = match ? match[1] : "";
+  const match = url ? url.match(/youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^?]+)|youtube\.com\/shorts\/([^?&]+)|youtube\.com\/embed\/([^?]+)/) : null;
+  const id = match ? (match[1] || match[2] || match[3] || match[4] || "") : "";
   if (!id) return null;
   return (
     <div className={"relative rounded-2xl overflow-hidden bg-black " + className}>
