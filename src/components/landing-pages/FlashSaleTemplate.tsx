@@ -8,12 +8,12 @@ import LandingFAQ from "./LandingFAQ";
 
 function YoutubeEmbed({ url, className = "" }: { url: string; className?: string }) {
   const match = url ? url.match(/youtube\.com\/watch\?v=([^&]+)|youtu\.be\/([^?]+)|youtube\.com\/embed\/([^?]+)/) : null;
-  const id = match ? (match[1] || match[2] || match[3] || "") : "";
+  const id = match ? match[1] : "";
   if (!id) return null;
   return (
     <div className={"relative rounded-2xl overflow-hidden bg-black " + className}>
       <div className="aspect-video">
-        <iframe src={"https://www.youtube.com/embed/" + id}
+        <iframe src={"https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id}
           className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen />
