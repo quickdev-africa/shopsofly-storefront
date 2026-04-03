@@ -41,6 +41,7 @@ export const getTaxon       = (slug: string)  => api.get(`/taxons/${slug}`);
 export const getBundles     = ()              => api.get("/bundles");
 export const searchProducts = (q: string)     => api.get("/search", { params: { q } });
 export const sendContact    = (data: object)  => api.post("/contact_messages", { contact_message: data });
+export const sendLandingPageLead = (data: object) => api.post("/landing_page_leads", data);
 
 // Auth
 export const loginCustomer    = (data: object) => api.post("/customers/sessions", data);
