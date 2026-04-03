@@ -337,7 +337,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
           ),
         };
 
-        return order.filter(k => k !== "hero").map(k => sectionMap[k] || null);
+        return order.filter((k: string) => k !== "hero").map((k: string) => sectionMap[k] || null);
       })()}
 
       {/* TRUST BADGES - always shown */}
