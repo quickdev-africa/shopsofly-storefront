@@ -182,146 +182,166 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
         </div>
       </section>
 
-      {/* PRODUCTS */}
-      {products.length > 0 && (
-        <section className="py-16 px-4 bg-gray-50">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="font-heading text-3xl md:text-4xl font-bold text-center text-[#1A1A1A] mb-3">
-              {s.products_section_title || "Featured Products"}
-            </h2>
-            <p className="text-gray-500 text-center mb-10">
-              {s.products_section_subtitle || "Premium quality products selected just for you"}
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products.map((product: any) => {
-                const price = product.variants?.[0]?.price || product.price || 0;
-                const comparePrice = product.variants?.[0]?.compare_at_price || product.compare_at_price;
-                return (
-                  <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    {product.image_url && (
-                      <div className="relative aspect-square">
-                        <Image src={product.image_url} alt={product.name} fill className="object-cover" />
-                        {comparePrice && comparePrice > price && (
-                          <div className="absolute top-3 left-3 bg-[#F97316] text-white text-xs font-bold px-2 py-1 rounded-full">
-                            Save ₦{(comparePrice - price).toLocaleString()}
+      {/* DYNAMIC SECTION ORDERING */}
+      {(() => {
+        const order = (s.section_order || "products,section1,videos1,section2,videos2,section3,urgency,faq,final_cta")
+          .split(",").map((x: string) => x.trim()).filter(Boolean);
+
+        const sectionMap: Record<string, React.ReactNode> = {
+          products: products.length > 0 ? (
+            <section key="products" className="py-16 px-4 bg-gray-50">
+              <div className="max-w-5xl mx-auto">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold text-center text-[#1A1A1A] mb-3">
+                  {s.products_section_title || "Featured Products"}
+                </h2>
+                <p className="text-gray-500 text-center mb-10">
+                  {s.products_section_subtitle || "Premium quality products selected just for you"}
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {products.map((product: any) => {
+                    const price = product.variants?.[0]?.price || product.price || 0;
+                    const comparePrice = product.variants?.[0]?.compare_at_price || product.compare_at_price;
+                    return (
+                      <div key={product.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                        {product.image_url && (
+                          <div className="relative aspect-square">
+                            <Image src={product.image_url} alt={product.name} fill className="object-cover" />
+                            {comparePrice && comparePrice > price && (
+                              <div className="absolute top-3 left-3 bg-[#F97316] text-white text-xs font-bold px-2 py-1 rounded-full">
+                                Save &#8358;{(comparePrice - price).toLocaleString()}
+                              </div>
+                            )}
                           </div>
                         )}
+                        <div className="p-5">
+                          <h3 className="font-semibold text-[#1A1A1A] mb-2 text-base leading-tight">{product.name}</h3>
+                          <div className="flex items-baseline gap-2 mb-4">
+                            <span className="text-2xl font-bold text-[#1A1A1A]">&#8358;{price.toLocaleString()}</span>
+                            {comparePrice && comparePrice > price && (
+                              <span className="text-gray-400 line-through text-sm">&#8358;{comparePrice.toLocaleString()}</span>
+                            )}
+                          </div>
+                          <button onClick={() => setShowPopup(true)}
+                            className="w-full border-2 border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
+                            {ctaText}
+                          </button>
+                        </div>
                       </div>
-                    )}
-                    <div className="p-5">
-                      <h3 className="font-semibold text-[#1A1A1A] mb-2 text-base leading-tight">{product.name}</h3>
-                      <div className="flex items-baseline gap-2 mb-4">
-                        <span className="text-2xl font-bold text-[#1A1A1A]">₦{price.toLocaleString()}</span>
-                        {comparePrice && comparePrice > price && (
-                          <span className="text-gray-400 line-through text-sm">₦{comparePrice.toLocaleString()}</span>
-                        )}
-                      </div>
-                      <button onClick={() => setShowPopup(true)}
-                        className="w-full border-2 border-[#F97316] text-[#F97316] hover:bg-[#F97316] hover:text-white font-semibold py-2.5 rounded-xl text-sm transition-colors">
-                        {ctaText}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </div>
+                <div className="text-center mt-10">
+                  <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
+                </div>
+              </div>
+            </section>
+          ) : null,
+
+          section1: (s.section1_image_url || s.section1_heading) ? (
+            <div key="section1">
+              <PictureTextSection imageUrl={s.section1_image_url} heading={s.section1_heading}
+                body={s.section1_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
             </div>
-            <div className="text-center mt-10">
-              <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
+          ) : null,
+
+          section2: (s.section2_image_url || s.section2_heading) ? (
+            <div key="section2" className="bg-gray-50">
+              <PictureTextSection imageUrl={s.section2_image_url} heading={s.section2_heading}
+                body={s.section2_body} imageLeft={false} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
             </div>
-          </div>
-        </section>
-      )}
+          ) : null,
 
-      {/* PICTURE + TEXT SECTION 1 */}
-      {(s.section1_image_url || s.section1_heading) && (
-        <PictureTextSection imageUrl={s.section1_image_url} heading={s.section1_heading}
-          body={s.section1_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
-      )}
+          section3: (s.section3_image_url || s.section3_heading) ? (
+            <div key="section3">
+              <PictureTextSection imageUrl={s.section3_image_url} heading={s.section3_heading}
+                body={s.section3_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
+            </div>
+          ) : null,
 
-      {/* PICTURE + TEXT SECTION 2 */}
-      {(s.section2_image_url || s.section2_heading) && (
-        <section className="bg-gray-50">
-          <PictureTextSection imageUrl={s.section2_image_url} heading={s.section2_heading}
-            body={s.section2_body} imageLeft={false} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
-        </section>
-      )}
-
-      {/* PICTURE + TEXT SECTION 3 */}
-      {(s.section3_image_url || s.section3_heading) && (
-        <PictureTextSection imageUrl={s.section3_image_url} heading={s.section3_heading}
-          body={s.section3_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
-      )}
-
-      {/* VIDEO TESTIMONIALS BLOCK 1 — 4 videos */}
-      {(s.video1_url || s.video2_url || s.video3_url || s.video4_url) && (
-        <section className="py-16 px-4 bg-gray-50">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="font-heading text-3xl font-bold text-center text-[#1A1A1A] mb-3">
-              {s.testimonials1_title || "What Our Customers Are Saying"}
-            </h2>
-            {s.testimonials1_subtitle && (
-              <p className="text-gray-500 text-center mb-10">{s.testimonials1_subtitle}</p>
-            )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              {[s.video1_url, s.video2_url, s.video3_url, s.video4_url].map((url, i) => (
-                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm">
-                  <YoutubeEmbed url={url || ""} className="w-full" />
-                  {s["video" + (i + 1) + "_caption"] && (
-                    <div className="p-4">
-                      <p className="text-sm font-semibold text-[#1A1A1A]">{s["video" + (i + 1) + "_caption"]}</p>
-                      {s["video" + (i + 1) + "_location"] && (
-                        <p className="text-xs text-gray-400">{s["video" + (i + 1) + "_location"]}</p>
+          videos1: (s.video1_url || s.video2_url || s.video3_url || s.video4_url) ? (
+            <section key="videos1" className="py-16 px-4 bg-gray-50">
+              <div className="max-w-5xl mx-auto">
+                <h2 className="font-heading text-3xl font-bold text-center text-[#1A1A1A] mb-3">
+                  {s.testimonials1_title || "What Our Customers Are Saying"}
+                </h2>
+                {s.testimonials1_subtitle && <p className="text-gray-500 text-center mb-10">{s.testimonials1_subtitle}</p>}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+                  {[s.video1_url, s.video2_url, s.video3_url, s.video4_url].map((url, i) => (
+                    <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm">
+                      <YoutubeEmbed url={url || ""} className="w-full" />
+                      {s["video" + (i + 1) + "_caption"] && (
+                        <div className="p-4">
+                          <p className="text-sm font-semibold text-[#1A1A1A]">{s["video" + (i + 1) + "_caption"]}</p>
+                          {s["video" + (i + 1) + "_location"] && <p className="text-xs text-gray-400">{s["video" + (i + 1) + "_location"]}</p>}
+                        </div>
                       )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
-            </div>
-          </div>
-        </section>
-      )}
+                <div className="text-center"><CTAButton text={ctaText} onClick={() => setShowPopup(true)} /></div>
+              </div>
+            </section>
+          ) : null,
 
-      {/* VIDEO TESTIMONIALS BLOCK 2 — 2 videos */}
-      {(s.video5_url || s.video6_url) && (
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="font-heading text-3xl font-bold text-center text-[#1A1A1A] mb-3">
-              {s.testimonials2_title || "More Success Stories"}
-            </h2>
-            {s.testimonials2_subtitle && (
-              <p className="text-gray-500 text-center mb-10">{s.testimonials2_subtitle}</p>
-            )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {[s.video5_url, s.video6_url].map((url, i) => (
-                <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                  <YoutubeEmbed url={url || ""} className="w-full" />
-                  {s["video" + (i + 5) + "_caption"] && (
-                    <div className="p-4">
-                      <p className="text-sm font-semibold text-[#1A1A1A]">{s["video" + (i + 5) + "_caption"]}</p>
+          videos2: (s.video5_url || s.video6_url) ? (
+            <section key="videos2" className="py-16 px-4">
+              <div className="max-w-4xl mx-auto">
+                <h2 className="font-heading text-3xl font-bold text-center text-[#1A1A1A] mb-3">
+                  {s.testimonials2_title || "More Success Stories"}
+                </h2>
+                {s.testimonials2_subtitle && <p className="text-gray-500 text-center mb-10">{s.testimonials2_subtitle}</p>}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {[s.video5_url, s.video6_url].map((url, i) => (
+                    <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+                      <YoutubeEmbed url={url || ""} className="w-full" />
+                      {s["video" + (i + 5) + "_caption"] && (
+                        <div className="p-4">
+                          <p className="text-sm font-semibold text-[#1A1A1A]">{s["video" + (i + 5) + "_caption"]}</p>
+                        </div>
+                      )}
                     </div>
-                  )}
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
+              </div>
+            </section>
+          ) : null,
 
-      {/* URGENCY */}
-      {s.countdown_end && (
-        <section className="py-12 px-4 bg-red-50 text-center">
-          <h2 className="font-heading text-2xl font-bold text-red-600 mb-4">⚡ Limited Time Offer Ends In:</h2>
-          <CountdownTimer endDate={s.countdown_end} />
-          {s.stock_count && (
-            <p className="mt-4 text-sm font-semibold text-red-600">🔥 Only {s.stock_count} spots remaining!</p>
-          )}
-        </section>
-      )}
+          urgency: s.countdown_end ? (
+            <section key="urgency" className="py-12 px-4 bg-red-50 text-center">
+              <h2 className="font-heading text-2xl font-bold text-red-600 mb-4">⚡ Limited Time Offer Ends In:</h2>
+              <CountdownTimer endDate={s.countdown_end} />
+              {s.stock_count && <p className="mt-4 text-sm font-semibold text-red-600">🔥 Only {s.stock_count} spots remaining!</p>}
+            </section>
+          ) : null,
 
-      {/* TRUST BADGES */}
+          faq: <LandingFAQ key="faq" items={s.faq} title={s.faq_title} />,
+
+          final_cta: (
+            <section key="final_cta" className="py-20 px-4 bg-[#1A1A1A] text-white text-center">
+              <div className="max-w-2xl mx-auto">
+                <h2 className="font-heading text-3xl md:text-4xl font-bold mb-4">
+                  {s.final_cta_headline || "Ready to Get Started?"}
+                </h2>
+                <p className="text-gray-300 mb-8 text-lg">{s.final_cta_subtitle || "Fill in your details and we will contact you right away."}</p>
+                <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
+                {theme.whatsapp_number && (
+                  <p className="mt-4 text-gray-400 text-sm">
+                    Or WhatsApp us:{" "}
+                    <a href={"https://wa.me/" + theme.whatsapp_number.replace(/\D/g, "")} className="text-green-400 hover:text-green-300 font-semibold">
+                      {theme.whatsapp_number}
+                    </a>
+                  </p>
+                )}
+              </div>
+            </section>
+          ),
+        };
+
+        return order.filter(k => k !== "hero").map(k => sectionMap[k] || null);
+      })()}
+
+      {/* TRUST BADGES - always shown */}
+      {/*      {/* TRUST BADGES */}
       <section className="py-8 px-4 border-t border-gray-100">
         <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-6">
           {[
