@@ -99,9 +99,9 @@ function YoutubeEmbed({ url, className = "" }: { url: string; className?: string
   );
 }
 
-function PictureTextSection({ imageUrl, heading, body, imageLeft, onCTA, ctaText }: {
+function PictureTextSection({ imageUrl, heading, body, imageLeft }: {
   imageUrl?: string; heading?: string; body?: string;
-  imageLeft: boolean; onCTA: () => void; ctaText: string;
+  imageLeft: boolean;
 }) {
   const imgBlock = (
     <div className="w-full md:w-1/2">
@@ -120,7 +120,6 @@ function PictureTextSection({ imageUrl, heading, body, imageLeft, onCTA, ctaText
     <div className="w-full md:w-1/2 flex flex-col justify-center space-y-5">
       {heading && <h2 className="font-heading text-2xl md:text-3xl font-bold text-[#1A1A1A] leading-tight">{heading}</h2>}
       {body && <p className="text-gray-600 text-base leading-relaxed whitespace-pre-line">{body}</p>}
-      <div><CTAButton text={ctaText} onClick={onCTA} /></div>
     </div>
   );
   return (
@@ -240,21 +239,21 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
           section1: (s.section1_image_url || s.section1_heading) ? (
             <div key="section1">
               <PictureTextSection imageUrl={s.section1_image_url} heading={s.section1_heading}
-                body={s.section1_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
+                body={s.section1_body} imageLeft={true}  />
             </div>
           ) : null,
 
           section2: (s.section2_image_url || s.section2_heading) ? (
             <div key="section2" className="bg-gray-50">
               <PictureTextSection imageUrl={s.section2_image_url} heading={s.section2_heading}
-                body={s.section2_body} imageLeft={false} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
+                body={s.section2_body} imageLeft={false}  />
             </div>
           ) : null,
 
           section3: (s.section3_image_url || s.section3_heading) ? (
             <div key="section3">
               <PictureTextSection imageUrl={s.section3_image_url} heading={s.section3_heading}
-                body={s.section3_body} imageLeft={true} onCTA={() => setShowPopup(true)} ctaText={ctaText} />
+                body={s.section3_body} imageLeft={true}  />
             </div>
           ) : null,
 
