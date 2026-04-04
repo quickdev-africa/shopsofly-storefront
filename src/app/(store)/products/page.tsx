@@ -30,6 +30,7 @@ export default function ProductsPage() {
   const router       = useRouter();
 
   const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const [products, setProducts]     = useState<Product[]>([]);
   const [taxons,   setTaxons]       = useState<Taxon[]>([]);
   const [pagination, setPagination] = useState({ current_page: 1, total_pages: 1, total_count: 0 });
