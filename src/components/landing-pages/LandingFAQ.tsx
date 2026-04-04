@@ -24,12 +24,12 @@ export default function LandingFAQ({ items, title }: { items?: FAQItem[]; title?
               onClick={() => setOpen(open === i ? null : i)}
               className="w-full flex items-center justify-between px-5 py-4 text-left bg-white hover:bg-gray-50 transition-colors"
             >
-              <span className="font-medium text-[#1A1A1A] text-sm">{faq.question}</span>
+              <span className="font-medium text-[#1A1A1A] text-base">{faq.question}</span>
               <span className="text-gray-400 text-lg ml-4">{open === i ? "−" : "+"}</span>
             </button>
             {open === i && (
               <div className="px-5 pb-4 bg-white">
-                <p className="text-sm text-gray-600 leading-relaxed">{faq.answer}</p>
+                <p className="text-base text-gray-600 leading-relaxed">{faq.answer}</p>
               </div>
             )}
           </div>
