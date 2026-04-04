@@ -1,5 +1,7 @@
 "use client";
 import StarRating from "@/components/StarRating";
+import { useAppDispatch } from "@/lib/hooks/redux";
+import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getProducts, getTaxons } from "@/lib/api";
@@ -27,6 +29,7 @@ export default function ProductsPage() {
   const searchParams = useSearchParams();
   const router       = useRouter();
 
+  const dispatch = useAppDispatch();
   const [products, setProducts]     = useState<Product[]>([]);
   const [taxons,   setTaxons]       = useState<Taxon[]>([]);
   const [pagination, setPagination] = useState({ current_page: 1, total_pages: 1, total_count: 0 });
@@ -73,6 +76,22 @@ export default function ProductsPage() {
     params.delete("page");
     router.push(`/products?${params.toString()}`);
   };
+
+  function handleAddToCart(e: React.MouseEvent, p: Product) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addItem({
+      variantId:    p.id,
+      productId:    p.id,
+      name:         p.name,
+      variantLabel: "",
+      price:        p.price,
+      imageUrl:     p.image_url || "",
+      quantity:     1,
+      slug:         p.slug,
+    }));
+    dispatch(openCart());
+  }
 
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
@@ -153,7 +172,7 @@ export default function ProductsPage() {
               </div>
               <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
               {(p.rating || 0) > 0 && <StarRating rating={p.rating || 0} count={p.review_count} size="sm" />}
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center justify-between gap-2 mt-1">
                 {p.compare_at_price && p.compare_at_price > p.price && (
                   <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
                 )}
@@ -163,6 +182,13 @@ export default function ProductsPage() {
                     -{Math.round((1 - p.price / p.compare_at_price) * 100)}%
                   </span>
                 )}
+                <button onClick={(e) => handleAddToCart(e, p)}
+                  className="bg-[#F97316] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0 ml-auto"
+                  title="Add to Cart">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                </button>
               </div>
             </Link>
           ))}
