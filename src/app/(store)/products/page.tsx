@@ -13,6 +13,8 @@ type Product = {
   price: number;
   compare_at_price: number | null;
   image_url: string | null;
+  rating?: number;
+  review_count?: number;
 };
 
 type Taxon = {
