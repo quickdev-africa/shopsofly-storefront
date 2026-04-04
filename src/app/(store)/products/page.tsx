@@ -1,4 +1,5 @@
 "use client";
+import StarRating from "@/components/StarRating";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { getProducts, getTaxons } from "@/lib/api";
@@ -149,6 +150,7 @@ export default function ProductsPage() {
                 </div>
               </div>
               <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
+              {(p.rating || 0) > 0 && <StarRating rating={p.rating || 0} count={p.review_count} size="sm" />}
               <div className="flex items-center gap-2 mt-1">
                 {p.compare_at_price && p.compare_at_price > p.price && (
                   <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
