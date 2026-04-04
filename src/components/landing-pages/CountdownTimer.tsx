@@ -38,10 +38,10 @@ export default function CountdownTimer({ endDate }: { endDate: string }) {
         { label: "Secs", value: timeLeft.seconds },
       ].map(({ label, value }) => (
         <div key={label} className="text-center">
-          <div className="bg-white text-[#1A1A1A] rounded-xl w-16 h-16 flex items-center justify-center text-2xl font-bold font-heading shadow">
+          <div className="bg-white text-[#1A1A1A] rounded-xl w-20 h-20 flex items-center justify-center text-3xl font-bold font-heading shadow-lg" style={{ backgroundColor: "#F97316", color: "white" }}>
             {String(value).padStart(2, "0")}
           </div>
-          <p className="text-xs text-white mt-1 uppercase tracking-wide">{label}</p>
+          <p className="text-xs mt-1 uppercase tracking-wide font-semibold" style={{ color: "#1A1A1A" }}>{label}</p>
         </div>
       ))}
     </div>
