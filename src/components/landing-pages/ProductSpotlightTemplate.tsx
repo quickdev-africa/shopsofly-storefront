@@ -177,55 +177,58 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
       {/* DYNAMIC SECTION ORDERING */}
       {(() => {
         const order = (s.section_order || "products,section1,videos1,section2,videos2,section3,urgency,faq,final_cta")
-          .split(",").map((x: string) => x.trim()).filter(Boolean);
+          .split(",").map((x: string) => x.trim()).filter((x: string) => Boolean(x) && x !== "hero");
 
         const sectionMap: Record<string, React.ReactNode> = {
           products: products.length > 0 ? (
-            <section key="products" className="py-16 px-4 bg-gray-50">
+            <section key="products" className="py-16 px-6 bg-white">
               <div className="max-w-5xl mx-auto">
-                {s.products_section_title && (
-                  <h2 className="font-heading text-3xl md:text-4xl font-bold text-center text-[#1A1A1A] mb-3">
-                    {s.products_section_title}
-                  </h2>
-                )}
-                {s.products_section_subtitle && (
-                  <p className="text-gray-500 text-center mb-10">{s.products_section_subtitle}</p>
-                )}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-                  {products.map((product: any) => {
-                    const price = product.variants?.[0]?.price || product.price || 0;
-                    const comparePrice = product.variants?.[0]?.compare_at_price || product.compare_at_price;
-                    return (
-                      <div key={product.id} className="bg-white rounded-3xl overflow-hidden shadow-lg border border-gray-100 hover:shadow-xl transition-all hover:-translate-y-1 transform">
-                        {product.image_url && (
-                          <div className="relative" style={{ aspectRatio: "4/3" }}>
-                            <Image src={product.image_url} alt={product.name} fill className="object-cover" />
-                            {comparePrice && comparePrice > price && (
-                              <div className="absolute top-4 right-4 bg-red-500 text-white text-sm font-black px-3 py-1.5 rounded-full shadow-md">
-                                -{Math.round(((comparePrice - price) / comparePrice) * 100)}% OFF
-                              </div>
-                            )}
-                          </div>
-                        )}
-                        <div className="p-6">
-                          <h3 className="font-heading font-bold text-[#1A1A1A] mb-3 text-xl leading-tight">{product.name}</h3>
-                          <div className="mb-2">
-                            {comparePrice && comparePrice > price && (
-                              <span className="text-gray-400 line-through text-base block mb-1">₦{comparePrice.toLocaleString()}</span>
-                            )}
-                            <span className="text-4xl font-black text-[#1A1A1A]">₦{price.toLocaleString()}</span>
-                          </div>
-                          {comparePrice && comparePrice > price && (
-                            <p className="text-green-600 text-sm font-bold mb-4">
-                              You save ₦{(comparePrice - price).toLocaleString()}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+                {/* Title */}
+                <h2 className="font-heading text-3xl md:text-5xl font-black text-center text-[#1A1A1A] mb-12 leading-tight">
+                  {s.products_section_title || ("Discover " + (products[0]?.name || ""))}
+                </h2>
 
+                {/* 3-image showcase */}
+                <div className="flex flex-row gap-4 overflow-x-auto md:overflow-visible items-stretch pb-4 md:pb-0" style={{ scrollSnapType: "x mandatory" }}>
+                  {/* Left small image */}
+                  <div className="flex-shrink-0 w-[45vw] md:w-0 md:flex-1" style={{ scrollSnapAlign: "start" }}>
+                    {s.product_left_image ? (
+                      <div className="relative h-full rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: "260px" }}>
+                        <Image src={s.product_left_image} alt="Product view" fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>
+                        Side image
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Center big product image */}
+                  <div className="flex-shrink-0 w-[70vw] md:w-0 md:flex-[2]" style={{ scrollSnapAlign: "start" }}>
+                    {products[0]?.image_url ? (
+                      <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ minHeight: "380px" }}>
+                        <Image src={products[0].image_url} alt={products[0].name} fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="rounded-2xl bg-gray-200 flex items-center justify-center text-gray-400" style={{ minHeight: "380px" }}>
+                        Product image
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right small image */}
+                  <div className="flex-shrink-0 w-[45vw] md:w-0 md:flex-1" style={{ scrollSnapAlign: "start" }}>
+                    {s.product_right_image ? (
+                      <div className="relative h-full rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: "260px" }}>
+                        <Image src={s.product_right_image} alt="Product detail" fill className="object-cover" />
+                      </div>
+                    ) : (
+                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>
+                        Side image
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </section>
           ) : null,
