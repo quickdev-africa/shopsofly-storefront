@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
+import StarRating from "@/components/StarRating";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 
 interface Variant {
@@ -21,6 +22,8 @@ interface Product {
   image_url: string;
   variants?: Variant[];
   taxons?: Array<{ name: string }>;
+  rating?: number;
+  review_count?: number;
 }
 
 function fmt(p: number | string | null) {
@@ -78,6 +81,9 @@ export default function ProductCard({ product }: { product: Product }) {
           <h3 className="font-bold text-[#1A1A1A] text-sm leading-tight line-clamp-2 group-hover:text-inherit transition-colors">
             {product.name}
           </h3>
+          {(product.rating || 0) > 0 && (
+            <StarRating rating={product.rating || 0} count={product.review_count} size="sm" />
+          )}
           <div className="flex items-center justify-between mt-1">
             <div className="flex items-center gap-2">
               <span className="font-bold text-[#1A1A1A] text-sm">{fmt(product.price)}</span>

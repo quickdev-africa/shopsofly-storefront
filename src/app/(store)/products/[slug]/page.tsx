@@ -1,3 +1,5 @@
+import StarRating from "@/components/StarRating";
+import ReviewForm from "@/components/ReviewForm";
 export const revalidate = 60;
 
 import { getProduct } from "@/lib/api";
@@ -70,6 +72,9 @@ export default async function ProductDetailPage({ params }: Props) {
         <div className="space-y-6">
           <div>
             <h1 className="font-heading text-3xl font-bold text-[#1A1A1A]">{product.name}</h1>
+            {(product.rating || 0) > 0 && (
+              <StarRating rating={product.rating || 0} count={product.review_count} size="lg" />
+            )}
             <div className="flex items-center gap-3 mt-3">
               {discount && (
                 <span className="bg-[#F97316] text-white text-sm font-bold px-3 py-1 rounded-full">
@@ -106,6 +111,11 @@ export default async function ProductDetailPage({ params }: Props) {
 
       {product.testimonials && product.testimonials.length > 0 && (
         <ProductTestimonials testimonials={product.testimonials} />
+      )}
+      {product.testimonials_enabled && (
+        <div className="max-w-2xl mx-auto px-4 py-8">
+          <ReviewForm productSlug={product.slug} />
+        </div>
       )}
       <ProductFAQ />
     </main>
