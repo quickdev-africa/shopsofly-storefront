@@ -18,7 +18,6 @@ const api = axios.create({
   baseURL: `${API_URL}/api/v2/storefront`,
   headers: {
     "Content-Type": "application/json",
-    "X-Store-Subdomain": process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal",
   },
 });
 
