@@ -1,6 +1,7 @@
 export const revalidate = 60;
 
 import { getStore } from "@/lib/api";
+import { headers } from "next/headers";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
