@@ -23,7 +23,7 @@ import {
 } from "@/lib/features/carts/cartsSlice";
 import { validatePromotion } from "@/lib/api";
 
-const fmt = (kobo: number) => `₦${(kobo / 100).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
 
 export default function CartDrawer() {
   const dispatch    = useAppDispatch();
