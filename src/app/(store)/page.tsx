@@ -11,6 +11,12 @@ import ProductCard from "@/components/ProductCard";
 import { headers } from "next/headers";
 
 async function fetchHomeData() {
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const parts = host.split(".");
+  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
+    ? parts[0]
+    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
       getStore(subdomain),
