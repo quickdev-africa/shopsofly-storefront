@@ -10,10 +10,18 @@ import { getWishlistItems, removeWishlistItem } from "@/lib/api";
 interface WishlistItem {
   id: number;
   product_id: number;
-  product_name: string;
-  product_slug: string;
-  product_image_url: string | null;
-  product_price: number;
+  product: {
+    id: number;
+    name: string;
+    slug: string;
+    price: string | number;
+    image: string | null;
+  };
+  // Legacy fields
+  product_name?: string;
+  product_slug?: string;
+  product_image_url?: string | null;
+  product_price?: number;
 }
 
 const fmt = (v: number) => `₦${v?.toLocaleString("en-NG") ?? "—"}`;
@@ -29,7 +37,7 @@ export default function WishlistPage() {
   useEffect(() => {
     if (!isAuthenticated || !token) { setLoading(false); return; }
     getWishlistItems(token)
-      .then((res) => setItems(res.data.wishlist_items ?? []))
+      .then((res) => setItems(res.data.wishlist_items ?? res.data ?? []))
       .catch(() => setItems([]))
       .finally(() => setLoading(false));
   }, [isAuthenticated, token]);
@@ -45,12 +53,12 @@ export default function WishlistPage() {
       addItem({
         variantId:    item.product_id,
         productId:    item.product_id,
-        name:         item.product_name,
+        name:         item.product?.name ?? item.product_name ?? "",
         variantLabel: "",
-        price:        (item.product_price ?? 0),
-        imageUrl:     item.product_image_url ?? "",
+        price:        Number(item.product?.price ?? item.product_price ?? 0),
+        imageUrl:     item.product?.image ?? item.product?.image ?? item.product_image_url ?? "",
         quantity:     1,
-        slug:         item.product_slug,
+        slug:         item.product?.slug ?? item.product_slug ?? "",
       })
     );
     dispatch(openCart());
@@ -95,18 +103,18 @@ export default function WishlistPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {items.map((item) => (
             <div key={item.id} className="bg-white border border-gray-100 rounded-xl overflow-hidden hover:shadow-md transition-shadow">
-              <Link href={`/products/${item.product_slug}`}>
+              <Link href={`/products/${item.product?.slug ?? item.product_slug}`}>
                 <div className="aspect-square bg-[#E8F0E9] relative">
-                  {item.product_image_url ? (
-                    <Image src={item.product_image_url} alt={item.product_name} fill className="object-cover" />
+                  {item.product?.image ?? item.product_image_url ? (
+                    <Image src={item.product?.image ?? item.product_image_url ?? ""} alt={item.product?.name ?? item.product_name ?? ""} fill className="object-cover" />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{item.product_name}</div>
+                    <div className="w-full h-full flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{item.product?.name ?? item.product_name}</div>
                   )}
                 </div>
               </Link>
               <div className="p-3 space-y-2">
-                <p className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{item.product_name}</p>
-                <p className="font-bold text-[#1A1A1A]">{fmt(item.product_price)}</p>
+                <p className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{item.product?.name ?? item.product_name}</p>
+                <p className="font-bold text-[#1A1A1A]">{fmt(Number(item.product?.price ?? item.product_price ?? 0))}</p>
                 <button
                   onClick={() => handleAddToCart(item)}
                   className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-2 rounded-lg text-sm transition-colors"
