@@ -1,4 +1,6 @@
 'use client'
+import { useAppDispatch } from '@/lib/hooks/redux'
+import { addItem, openCart } from '@/lib/features/carts/cartsSlice'
 
 import { useState, useRef } from 'react'
 import Image from 'next/image'
@@ -104,6 +106,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   const [bundleSize, setBundleSize] = useState<BundleSize>(2)
   // selected = products chosen by customer (not counting anchor)
   const [selected, setSelected] = useState<Product[]>([])
+  const dispatch = useAppDispatch()
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [variantSelections, setVariantSelections] = useState<Record<number, number>>({})
@@ -143,8 +146,28 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   }
 
   function handleAddToCart() {
+    // Calculate per-item discounted price
+    const discountedUnitPrice = (price: number) =>
+      Math.round(price * (1 - discountPercent / 100))
+
+    // Add each bundle item to Redux cart
+    allSelected.forEach((product) => {
+      const variantId = variantSelections[product.id] || product.id
+      const unitPrice = discountedUnitPrice(product.price || 0)
+      dispatch(addItem({
+        variantId:    variantId,
+        productId:    product.id,
+        name:         product.name,
+        variantLabel: `Bundle of ${bundleSize} (${Math.round(discountPercent)}% off)`,
+        price:        unitPrice,
+        imageUrl:     product.image_url || '',
+        quantity:     1,
+        slug:         product.slug || '',
+      }))
+    })
+
     setDrawerOpen(false)
-    setTimeout(() => setCartOpen(true), 300)
+    dispatch(openCart())
   }
 
   const sidebarVariants = {
