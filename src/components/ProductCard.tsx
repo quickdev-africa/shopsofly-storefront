@@ -49,7 +49,7 @@ export default function ProductCard({ product }: { product: Product }) {
       productId: product.id,
       name: product.name,
       variantLabel: v ? Object.entries(v.options || {}).map(([k, val]) => `${k}: ${val}`).join(" / ") || "Default" : "Default",
-      price: Number(v?.price ?? product.price),
+      price: Math.round(Number(v?.price ?? product.price) * 100),
       imageUrl: product.image_url,
       quantity: 1,
       slug: product.slug,

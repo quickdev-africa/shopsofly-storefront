@@ -85,7 +85,7 @@ export default function ProductsPage() {
       productId:    p.id,
       name:         p.name,
       variantLabel: "",
-      price:        p.price,
+      price:        Math.round(Number(p.price) * 100),
       imageUrl:     p.image_url || "",
       quantity:     1,
       slug:         p.slug,
