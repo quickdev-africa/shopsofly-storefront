@@ -154,7 +154,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
     // Add each bundle item to Redux cart
     allSelected.forEach((product) => {
       const variantId = variantSelections[product.id] || product.id
-      const unitPrice = discountedUnitPrice(product.price || 0)
+      const unitPrice = discountedUnitPrice(parseFloat(String(product.price || 0)))
       dispatch(addItem({
         variantId:    variantId,
         productId:    product.id,
