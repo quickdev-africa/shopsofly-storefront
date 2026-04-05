@@ -1,10 +1,14 @@
 "use client";
+import { useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import StarRating from "@/components/StarRating";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
+import { useSelector } from "react-redux";
+import { selectToken } from "@/lib/features/auth/authSlice";
+import { addWishlistItem } from "@/lib/api";
 
 interface Variant {
   id: number;
@@ -34,6 +38,21 @@ function fmt(p: number | string | null) {
 
 export default function ProductCard({ product }: { product: Product }) {
   const dispatch = useAppDispatch();
+  const token = useSelector(selectToken);
+  const [wishlisted, setWishlisted] = useState(false);
+  const [wishlistLoading, setWishlistLoading] = useState(false);
+
+  async function handleWishlist(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!token) { window.location.href = "/account/login"; return; }
+    setWishlistLoading(true);
+    try {
+      await addWishlistItem(token, product.id);
+      setWishlisted(true);
+    } catch {}
+    finally { setWishlistLoading(false); }
+  }
   const v = product.variants?.[0];
   const hasDisc = product.compare_at_price && Number(product.compare_at_price) > Number(product.price);
   const discPct = hasDisc
@@ -73,6 +92,10 @@ export default function ProductCard({ product }: { product: Product }) {
               -{discPct}%
             </div>
           )}
+          <button onClick={handleWishlist} disabled={wishlistLoading}
+            className={"absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-base shadow-sm transition-all z-10 " + (wishlisted ? "bg-red-500 text-white" : "bg-white/90 text-gray-400 hover:text-red-500")}>
+            {wishlisted ? "♥" : "♡"}
+          </button>
 
         </div>
 
