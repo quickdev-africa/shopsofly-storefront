@@ -1,10 +1,18 @@
 export const revalidate = 60;
 import { getStore } from "@/lib/api";
 import Link from "next/link";
+import { headers } from "next/headers";
 
 export default async function TermsPage() {
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const parts = host.split(".");
+  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
+    ? parts[0]
+    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+
   let store: any = null;
-  try { const res = await getStore(); store = res.data.store; } catch {}
+  try { const res = await getStore(subdomain); store = res.data.store; } catch {}
   const storeName = store?.name || "Our Store";
 
   return (

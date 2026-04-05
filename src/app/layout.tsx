@@ -6,6 +6,7 @@ import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
 import { getStore } from "@/lib/api";
+import { headers } from "next/headers";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -20,8 +21,15 @@ const inter = Inter({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const parts = host.split(".");
+  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
+    ? parts[0]
+    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+
   try {
-    const res = await getStore();
+    const res = await getStore(subdomain);
     const store = res.data.store;
     const faviconUrl = store?.theme_settings?.favicon_url;
     return {

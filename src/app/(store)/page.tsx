@@ -8,11 +8,12 @@ import BundleBuilder from "@/components/BundleBuilder";
 import StarProduct from "@/components/StarProduct";
 import PopularSection from "@/components/PopularSection";
 import ProductCard from "@/components/ProductCard";
+import { headers } from "next/headers";
 
 async function fetchHomeData() {
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
-      getStore(),
+      getStore(subdomain),
       getProducts({ per_page: 12, sort: "newest" }),
       getTaxons(),
       getBundles(),
@@ -30,6 +31,13 @@ async function fetchHomeData() {
 }
 
 export default async function HomePage() {
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const parts = host.split(".");
+  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
+    ? parts[0]
+    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+
   const { store, products, taxons, bundles, storeProducts } = await fetchHomeData();
   const theme = store?.theme_settings || {};
 

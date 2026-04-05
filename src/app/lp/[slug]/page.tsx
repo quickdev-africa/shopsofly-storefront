@@ -4,12 +4,20 @@ import { notFound } from "next/navigation";
 import { getLandingPage, getStore } from "@/lib/api";
 import ProductSpotlightTemplate from "@/components/landing-pages/ProductSpotlightTemplate";
 import FlashSaleTemplate from "@/components/landing-pages/FlashSaleTemplate";
+import { headers } from "next/headers";
 
-export default async function LandingPageRoute({ params }: { params: { slug: string } }) {
+export default async function LandingPageRoute({
+  const headersList = headers();
+  const host = headersList.get("host") || "";
+  const parts = host.split(".");
+  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
+    ? parts[0]
+    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+ params }: { params: { slug: string } }) {
   try {
     const [pageRes, storeRes] = await Promise.allSettled([
       getLandingPage(params.slug),
-      getStore(),
+      getStore(subdomain),
     ]);
 
     if (pageRes.status === "rejected") return notFound();
