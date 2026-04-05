@@ -147,9 +147,9 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   }
 
   function handleAddToCart() {
-    // Calculate per-item discounted price (cart expects kobo)
+    // Calculate per-item discounted price
     const discountedUnitPrice = (price: number) =>
-      Math.round(price * (1 - discountPercent / 100) * 100) // convert naira to kobo
+      Math.round(price * (1 - discountPercent / 100))
 
     // Add each bundle item to Redux cart
     allSelected.forEach((product) => {
