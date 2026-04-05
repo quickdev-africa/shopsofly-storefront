@@ -6,14 +6,13 @@ import ProductSpotlightTemplate from "@/components/landing-pages/ProductSpotligh
 import FlashSaleTemplate from "@/components/landing-pages/FlashSaleTemplate";
 import { headers } from "next/headers";
 
-export default async function LandingPageRoute({
+export default async function LandingPageRoute({ params }: { params: { slug: string } }) {
   const headersList = headers();
   const host = headersList.get("host") || "";
   const parts = host.split(".");
   const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
     ? parts[0]
     : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
- params }: { params: { slug: string } }) {
   try {
     const [pageRes, storeRes] = await Promise.allSettled([
       getLandingPage(params.slug),
