@@ -57,7 +57,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
       productId: product.id,
       name: product.name,
       variantLabel: "Default",
-      price: Number(v?.price ?? product.price) * 100,
+      price: Number(v?.price ?? product.price),
       imageUrl: product.image_url,
       quantity: 1,
       slug: product.slug,

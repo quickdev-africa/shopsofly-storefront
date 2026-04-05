@@ -13,7 +13,7 @@ import {
   openCart,
 } from "@/lib/features/carts/cartsSlice";
 
-const fmt = (kobo: number) => `₦${(kobo / 100).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
 
 export default function CartPage() {
   const dispatch   = useAppDispatch();

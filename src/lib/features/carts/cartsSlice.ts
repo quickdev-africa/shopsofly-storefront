@@ -7,7 +7,7 @@ export type CartItem = {
   productId: number;
   name: string;
   variantLabel: string;
-  price: number; // in kobo
+  price: number; // in naira
   imageUrl: string;
   quantity: number;
   slug: string;
@@ -19,7 +19,7 @@ interface CartsState {
   couponCode: string;
   couponDiscount: number;
   orderNotes: string;
-  freeShippingThreshold: number; // in kobo, default ₦10,000
+  freeShippingThreshold: number; // in naira, default ₦10,000
 }
 
 const initialState: CartsState = {

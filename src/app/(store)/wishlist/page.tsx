@@ -47,7 +47,7 @@ export default function WishlistPage() {
         productId:    item.product_id,
         name:         item.product_name,
         variantLabel: "",
-        price:        (item.product_price ?? 0) * 100,
+        price:        (item.product_price ?? 0),
         imageUrl:     item.product_image_url ?? "",
         quantity:     1,
         slug:         item.product_slug,

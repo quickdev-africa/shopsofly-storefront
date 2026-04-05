@@ -87,7 +87,7 @@ export default function CheckoutPage() {
         if (methods.length > 0) {
           const cheapest = methods.reduce((a: any, b: any) => (a.price <= b.price ? a : b));
           setShippingMethodId(cheapest.id);
-          setShippingCost(cheapest.price * 100);
+          setShippingCost(cheapest.price);
         }
       })
       .catch(() => {});
@@ -309,7 +309,7 @@ export default function CheckoutPage() {
                     name="shipping"
                     value={m.id}
                     checked={shippingMethodId === m.id}
-                    onChange={() => { setShippingMethodId(m.id); setShippingCost((m.price ?? 0) * 100); }}
+                    onChange={() => { setShippingMethodId(m.id); setShippingCost((m.price ?? 0)); }}
                     className="accent-[#4A7C59]"
                   />
                   <div className="flex-1">
