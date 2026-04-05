@@ -96,7 +96,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
           id:        firstBundle.items[0].product_id,
           name:      firstBundle.items[0].product_name ?? 'Anchor Product',
           slug:      '',
-          price:     firstBundle.items[0].unit_price,
+          price:     effectiveProducts.find(p => p.id === firstBundle.items[0].product_id)?.price ?? firstBundle.items[0].unit_price,
           image_url: firstBundle.items[0].image_url,
         } as Product)
       : effectiveProducts[0]
@@ -146,9 +146,9 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   }
 
   function handleAddToCart() {
-    // Calculate per-item discounted price
+    // Calculate per-item discounted price (cart expects kobo)
     const discountedUnitPrice = (price: number) =>
-      Math.round(price * (1 - discountPercent / 100))
+      Math.round(price * (1 - discountPercent / 100) * 100) // convert naira to kobo
 
     // Add each bundle item to Redux cart
     allSelected.forEach((product) => {
