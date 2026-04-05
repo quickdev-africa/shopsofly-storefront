@@ -90,16 +90,14 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
         }))
 
   const anchorProduct: Product | undefined =
-    firstBundle?.items[0]?.product_id
-      ? effectiveProducts.find((p) => p.id === firstBundle.items[0].product_id) ??
-        ({
-          id:        firstBundle.items[0].product_id,
-          name:      firstBundle.items[0].product_name ?? 'Anchor Product',
-          slug:      '',
-          price:     effectiveProducts.find(p => p.id === firstBundle.items[0].product_id)?.price ?? firstBundle.items[0].unit_price,
-          image_url: firstBundle.items[0].image_url,
-        } as Product)
-      : effectiveProducts[0]
+    firstBundle?.anchor_product_id
+      ? effectiveProducts.find((p) => p.id === firstBundle.anchor_product_id) ??
+        effectiveProducts.find((p) => p.id === firstBundle.items[0]?.product_id) ??
+        effectiveProducts[0]
+      : firstBundle?.items[0]?.product_id
+        ? effectiveProducts.find((p) => p.id === firstBundle.items[0].product_id) ??
+          effectiveProducts[0]
+        : effectiveProducts[0]
 
   const carouselProducts = effectiveProducts.filter((p) => p.id !== anchorProduct?.id)
 
