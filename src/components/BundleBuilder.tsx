@@ -17,7 +17,7 @@ interface Product {
   id: number
   name: string
   slug: string
-  price: number | null
+  price: number | string | null
   compare_at_price?: number | null
   image_url?: string
   variants?: Variant[]
@@ -68,9 +68,11 @@ function ProductImage({ src, alt, size = 64 }: { src?: string; alt: string; size
   )
 }
 
-function fmt(price: number | null | undefined): string {
-  if (price == null || isNaN(price)) return '₦—'
-  return `₦${price.toLocaleString()}`
+function fmt(price: number | string | null | undefined): string {
+  if (price == null) return '₦—'
+  const n = typeof price === 'string' ? parseFloat(price) : price
+  if (isNaN(n)) return '₦—'
+  return `₦${n.toLocaleString()}`
 }
 
 export default function BundleBuilder({ bundles, storeProducts }: Props) {
@@ -123,7 +125,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   const bundleComplete = selected.length === slotsNeeded
 
   const allSelected = [anchorProduct, ...selected]
-  const subtotal = allSelected.reduce((sum, p) => sum + (p.price ?? 0), 0)
+  const subtotal = allSelected.reduce((sum, p) => sum + (parseFloat(String(p.price ?? 0)) || 0), 0)
   const savingsAmount = Math.round(subtotal * (discountPercent / 100))
   const totalAfterDiscount = subtotal - savingsAmount
 
