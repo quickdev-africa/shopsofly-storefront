@@ -17,6 +17,7 @@ export default function Header({ storeName, navLinks }: Props) {
   const [menuProducts, setMenuProducts] = useState<any[]>([]);
   const dispatch   = useAppDispatch();
   const cartCount  = useAppSelector(selectCartCount);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
 
   useEffect(() => {
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v2/storefront/products?per_page=6`, {
