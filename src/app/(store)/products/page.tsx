@@ -1,6 +1,6 @@
 "use client";
 import StarRating from "@/components/StarRating";
-import { useAppDispatch } from "@/lib/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
