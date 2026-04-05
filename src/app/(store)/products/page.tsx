@@ -30,6 +30,18 @@ export default function ProductsPage() {
   const router       = useRouter();
 
   const dispatch = useAppDispatch();
+  const token = useSelector(selectToken);
+  const [wishlisted, setWishlisted] = useState<Record<number, boolean>>({});
+
+  async function handleWishlist(e: React.MouseEvent, productId: number) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!token) { window.location.href = "/account/login"; return; }
+    try {
+      await addWishlistItem(token, productId);
+      setWishlisted(prev => ({ ...prev, [productId]: true }));
+    } catch {}
+  }
   const [products, setProducts]     = useState<Product[]>([]);
   const [taxons,   setTaxons]       = useState<Taxon[]>([]);
   const [pagination, setPagination] = useState({ current_page: 1, total_pages: 1, total_count: 0 });
@@ -169,6 +181,12 @@ export default function ProductsPage() {
                 <div className="absolute bottom-0 left-0 right-0 bg-[#F97316] text-white text-center text-xs font-semibold py-2 translate-y-full group-hover:translate-y-0 transition-transform">
                   Quick View
                 </div>
+              </div>
+              <div className="relative">
+                <button onClick={(e) => handleWishlist(e, p.id)}
+                  className={"absolute -top-10 right-1 w-8 h-8 rounded-full flex items-center justify-center text-base shadow-sm z-10 " + (wishlisted[p.id] ? "bg-red-500 text-white" : "bg-white/90 text-gray-400 hover:text-red-500")}>
+                  {wishlisted[p.id] ? "♥" : "♡"}
+                </button>
               </div>
               <h3 className="font-semibold text-[#1A1A1A] text-sm line-clamp-2">{p.name}</h3>
               {(p.rating || 0) > 0 && <StarRating rating={p.rating || 0} count={p.review_count} size="sm" />}
