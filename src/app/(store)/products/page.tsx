@@ -4,7 +4,8 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { getProducts, getTaxons } from "@/lib/api";
+import { getProducts, getTaxons, addWishlistItem } from "@/lib/api";
+import { selectToken } from "@/lib/features/auth/authSlice";
 import Link from "next/link";
 import Image from "next/image";
 
