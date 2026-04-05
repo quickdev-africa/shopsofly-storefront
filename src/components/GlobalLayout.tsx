@@ -11,7 +11,14 @@ import Script from "next/script";
 
 async function fetchStore() {
   try {
-    const res = await getStore();
+    const headersList = headers();
+    const host = headersList.get("host") || "";
+    const parts = host.split(".");
+    let subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+    if (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")) {
+      subdomain = parts[0];
+    }
+    const res = await getStore(subdomain);
     return res.data.store;
   } catch {
     return null;

@@ -4,13 +4,20 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 // Resolve subdomain dynamically from request hostname at runtime
 function getSubdomain(): string {
+  // Client side - use window.location
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
     const parts = hostname.split(".");
+    // e.g. novanig.shopsofly.com → parts = ["novanig", "shopsofly", "com"]
     if (parts.length >= 3 && !hostname.includes("vercel.app") && !hostname.includes("localhost")) {
       return parts[0];
     }
+    // For vercel preview URLs like shopsofly-storefront.vercel.app
+    if (hostname.includes("vercel.app")) {
+      return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+    }
   }
+  // Server side - read from env
   return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
 }
 
@@ -31,7 +38,12 @@ api.interceptors.request.use((config) => {
 // Auth header helper
 const authHeader = (token: string) => ({ Authorization: `Bearer ${token}` });
 
-export const getStore       = ()              => api.get("/store");
+export const getStore       = (subdomain?: string) => {
+  if (subdomain) {
+    return api.get("/store", { headers: { "X-Store-Subdomain": subdomain } });
+  }
+  return api.get("/store");
+};
 export const getLandingPage = (slug: string)  => api.get(`/landing_pages/${slug}`);
 export const getProducts    = (params = {})   => api.get("/products", { params });
 export const getProduct     = (slug: string)  => api.get(`/products/${slug}`);
