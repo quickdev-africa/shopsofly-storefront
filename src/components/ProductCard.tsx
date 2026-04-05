@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useAppDispatch } from "@/lib/hooks/redux";
 import StarRating from "@/components/StarRating";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
-import { useSelector } from "react-redux";
+import { useAppSelector } from "@/lib/hooks/redux";
 import { selectToken } from "@/lib/features/auth/authSlice";
 import { addWishlistItem } from "@/lib/api";
 
@@ -38,7 +38,7 @@ function fmt(p: number | string | null) {
 
 export default function ProductCard({ product }: { product: Product }) {
   const dispatch = useAppDispatch();
-  const token = useSelector(selectToken);
+  const token = useAppSelector(selectToken);
   const [wishlisted, setWishlisted] = useState(false);
   const [wishlistLoading, setWishlistLoading] = useState(false);
 
