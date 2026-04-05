@@ -37,6 +37,7 @@ interface Bundle {
   slug: string
   description?: string
   discount_percent: number
+  anchor_product_id?: number | null
   items: BundleItem[]
 }
 
