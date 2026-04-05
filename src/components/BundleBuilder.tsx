@@ -72,6 +72,7 @@ function fmt(price: number | null | undefined): string {
 
 export default function BundleBuilder({ bundles, storeProducts }: Props) {
   const firstBundle = bundles[0]
+  const secondBundle = bundles[1] || bundles[0]
 
   // If storeProducts not yet returned by API, derive products from bundle items
   const effectiveProducts: Product[] =
@@ -114,9 +115,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
   const discountPercent =
     bundleSize === 2
       ? firstBundle?.discount_percent ?? 6
-      : (firstBundle?.discount_percent ?? 6) * 2 > 100
-      ? 12
-      : (firstBundle?.discount_percent ?? 6) * 2
+      : secondBundle?.discount_percent ?? (firstBundle?.discount_percent ?? 6)
 
   const slotsNeeded = bundleSize - 1 // anchor fills 1 slot
   const bundleComplete = selected.length === slotsNeeded
@@ -182,7 +181,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                   : 'bg-white text-[#4A7C59] hover:bg-[#E8F0E9]'
               }`}
             >
-              Bundle of {size} — Save {Math.round(size === 2 ? (firstBundle?.discount_percent ?? 6) : Math.min((firstBundle?.discount_percent ?? 6) * 2, 12))}%
+              Bundle of {size} — Save {Math.round(size === 2 ? (firstBundle?.discount_percent ?? 6) : (secondBundle?.discount_percent ?? firstBundle?.discount_percent ?? 6))}%
             </button>
           ))}
         </div>
