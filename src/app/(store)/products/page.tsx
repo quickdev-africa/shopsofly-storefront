@@ -30,7 +30,7 @@ export default function ProductsPage() {
   const router       = useRouter();
 
   const dispatch = useAppDispatch();
-  const token = useSelector(selectToken);
+  const token = useAppSelector(selectToken);
   const [wishlisted, setWishlisted] = useState<Record<number, boolean>>({});
 
   async function handleWishlist(e: React.MouseEvent, productId: number) {
