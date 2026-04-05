@@ -11,6 +11,7 @@ const navLinks = [
   { href: "/account/profile", label: "My Profile", icon: "👤" },
   { href: "/account/orders", label: "My Orders", icon: "📦" },
   { href: "/account/addresses", label: "My Addresses", icon: "📍" },
+  { href: "/wishlist", label: "My Wishlist", icon: "♥" },
 ];
 
 export default function AccountLayout({ children }: { children: React.ReactNode }) {
