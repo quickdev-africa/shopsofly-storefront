@@ -14,7 +14,7 @@ export default async function LandingPageRoute({ params }: { params: { slug: str
   const subdomain = xSubdomain || (
     parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
       ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
   );
   try {
     const [pageRes, storeRes] = await Promise.allSettled([

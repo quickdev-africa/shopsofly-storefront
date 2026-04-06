@@ -28,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const subdomain = xSubdomain || (
     parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
       ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
   );
 
   try {

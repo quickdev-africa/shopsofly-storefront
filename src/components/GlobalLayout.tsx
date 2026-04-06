@@ -32,7 +32,7 @@ async function fetchStore() {
 
     // Final fallback: env var (only for Vercel preview deployments during dev)
     if (!subdomain || subdomain === "www") {
-      subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+      subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
     }
 
     const res = await getStore(subdomain);

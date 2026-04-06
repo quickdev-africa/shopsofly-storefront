@@ -18,7 +18,7 @@ async function fetchHomeData() {
   const subdomain = xSubdomain || (
     parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
       ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
   );
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
@@ -47,7 +47,7 @@ export default async function HomePage() {
   const subdomain = xSubdomain || (
     parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
       ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
   );
 
   const { store, products, taxons, bundles, storeProducts } = await fetchHomeData();

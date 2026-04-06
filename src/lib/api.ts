@@ -9,7 +9,7 @@ function getSubdomain(): string {
     if (parts.length >= 3 && !hostname.includes("vercel.app") && !hostname.includes("localhost")) {
       return parts[0];
     }
-    return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+    return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
   }
   return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
 }
