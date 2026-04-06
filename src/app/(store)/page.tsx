@@ -13,10 +13,13 @@ import { headers } from "next/headers";
 async function fetchHomeData() {
   const headersList = headers();
   const host = headersList.get("host") || "";
+  const xSubdomain = headersList.get("x-subdomain") || "";
   const parts = host.split(".");
-  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
-    ? parts[0]
-    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+  const subdomain = xSubdomain || (
+    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
+      ? parts[0]
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+  );
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
       getStore(subdomain),
@@ -39,10 +42,13 @@ async function fetchHomeData() {
 export default async function HomePage() {
   const headersList = headers();
   const host = headersList.get("host") || "";
+  const xSubdomain = headersList.get("x-subdomain") || "";
   const parts = host.split(".");
-  const subdomain = (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost"))
-    ? parts[0]
-    : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal");
+  const subdomain = xSubdomain || (
+    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
+      ? parts[0]
+      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal")
+  );
 
   const { store, products, taxons, bundles, storeProducts } = await fetchHomeData();
   const theme = store?.theme_settings || {};
