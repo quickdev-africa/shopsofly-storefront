@@ -5,11 +5,18 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 function getSubdomain(): string {
   if (typeof window !== "undefined") {
     const hostname = window.location.hostname;
-    const parts = hostname.split(".");
-    if (parts.length >= 3 && !hostname.includes("vercel.app") && !hostname.includes("localhost")) {
-      return parts[0];
+
+    // Production subdomain — e.g. nova-impact-energy.shopsofly.com
+    if (hostname.endsWith(".shopsofly.com")) {
+      return hostname.replace(".shopsofly.com", "");
     }
-    return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
+
+    // Read from cookie set by middleware (works on vercel.app preview URLs too)
+    const match = document.cookie.match(/(?:^|;\s*)x-subdomain=([^;]+)/);
+    if (match) return decodeURIComponent(match[1]);
+
+    // Local dev fallback
+    return process.env.NEXT_PUBLIC_DEV_SUBDOMAIN || process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
   }
   return process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
 }

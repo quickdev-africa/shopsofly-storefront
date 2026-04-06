@@ -15,18 +15,19 @@ export function middleware(req: NextRequest) {
     subdomain = hostname;
   }
 
-  // CRITICAL: Must rewrite REQUEST headers, not response headers.
-  // Server components read incoming request headers via headers().
-  // Setting response headers does NOT make them visible to server components.
-  const requestHeaders = new Headers(req.headers);
-  requestHeaders.set("x-subdomain", subdomain);
-  requestHeaders.set("x-hostname", hostname);
+  const response = NextResponse.next();
+  response.headers.set("x-subdomain", subdomain);
+  response.headers.set("x-hostname", hostname);
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  // Also set as cookie so client-side JS can read it
+  if (subdomain) {
+    response.cookies.set("x-subdomain", subdomain, {
+      path: "/",
+      sameSite: "lax",
+    });
+  }
+
+  return response;
 }
 
 export const config = {
