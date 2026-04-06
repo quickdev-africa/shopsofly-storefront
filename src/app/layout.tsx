@@ -1,12 +1,10 @@
-export const revalidate = 60;
-
+export const revalidate = 0;
 import type { Metadata, Viewport } from "next";
 import "@/styles/globals.css";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
 import HolyLoader from "holy-loader";
 import Providers from "./providers";
-import { getStore } from "@/lib/api";
-import { headers } from "next/headers";
+import { fetchStore } from "@/lib/fetch-store";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -21,19 +19,8 @@ const inter = Inter({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
-
   try {
-    const res = await getStore(subdomain);
-    const store = res.data.store;
+    const store = await fetchStore();
     const faviconUrl = store?.theme_settings?.favicon_url;
     return {
       title: store?.name || "Shopsofly",

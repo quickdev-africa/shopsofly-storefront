@@ -1,6 +1,6 @@
-export const revalidate = 60;
+export const revalidate = 0;
 
-import { headers } from "next/headers";
+import { fetchStore } from "@/lib/fetch-store";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -8,42 +8,6 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import CookieConsent from "@/components/CookieConsent";
 import CartDrawer from "@/components/CartDrawer";
 import Script from "next/script";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
-
-async function fetchStore() {
-  try {
-    const headersList = headers();
-
-    let subdomain = headersList.get("x-subdomain") || "";
-
-    if (!subdomain) {
-      const host = headersList.get("host") || headersList.get("x-forwarded-host") || "";
-      if (host.endsWith(".shopsofly.com")) {
-        subdomain = host.replace(".shopsofly.com", "");
-      }
-    }
-
-    if (!subdomain || subdomain === "www") return null;
-
-    console.log("[GlobalLayout] fetching store for subdomain:", subdomain);
-
-    const res = await fetch(`${API_URL}/api/v2/storefront/store`, {
-      headers: {
-        "X-Store-Subdomain": subdomain,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
-
-    if (!res.ok) return null;
-    const data = await res.json();
-    return data.store;
-  } catch (e) {
-    console.error("[GlobalLayout] fetchStore error:", e);
-    return null;
-  }
-}
 
 export default async function GlobalLayout({
   children,
