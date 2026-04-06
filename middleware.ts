@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
   const hostname = req.headers.get("host") || "";
+  const url = req.nextUrl.clone();
 
   let subdomain = "";
 
@@ -15,11 +16,19 @@ export function middleware(req: NextRequest) {
     subdomain = hostname;
   }
 
-  const response = NextResponse.next();
+  const requestHeaders = new Headers(req.headers);
+  requestHeaders.set("x-subdomain", subdomain);
+  requestHeaders.set("x-hostname", hostname);
+
+  const response = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+
   response.headers.set("x-subdomain", subdomain);
   response.headers.set("x-hostname", hostname);
 
-  // Also set as cookie so client-side JS can read it
   if (subdomain) {
     response.cookies.set("x-subdomain", subdomain, {
       path: "/",
