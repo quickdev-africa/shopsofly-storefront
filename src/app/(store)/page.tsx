@@ -195,7 +195,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <StarProduct products={products} />
+      <StarProduct products={products} starProductId={store?.theme_settings?.star_product_id} />
 
       {/* Bundle Builder */}
       {bundles.length > 0 && (

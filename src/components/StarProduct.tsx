@@ -37,13 +37,15 @@ function getYTId(url: string) {
   return url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/)?.[1] || null;
 }
 
-export default function StarProduct({ products }: { products: Product[] }) {
+export default function StarProduct({ products, starProductId }: { products: Product[], starProductId?: number | null }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [mediaIdx, setMediaIdx] = useState(0);
   const [qty, setQty] = useState(1);
 
-  const star = [...products].sort((a, b) => Number(b.price) - Number(a.price))[0];
+  const star = starProductId
+    ? products.find(p => p.id === Number(starProductId)) ?? [...products].sort((a, b) => Number(b.price) - Number(a.price))[0]
+    : [...products].sort((a, b) => Number(b.price) - Number(a.price))[0];
   if (!star) return null;
 
   const media: MediaItem[] = [{ type: "image", url: star.image_url, alt: star.name }];
