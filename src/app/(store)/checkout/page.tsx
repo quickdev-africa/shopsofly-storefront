@@ -129,6 +129,7 @@ export default function CheckoutPage() {
     },
     line_items: items.map((i) => ({
       variant_id: i.variantId,
+      product_id: i.productId,
       quantity:   i.quantity,
     })),
     shipping_method_id: deliveryMethod === "delivery" ? shippingMethodId : null,
