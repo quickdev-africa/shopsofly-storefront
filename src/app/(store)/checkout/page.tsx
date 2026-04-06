@@ -94,6 +94,9 @@ export default function CheckoutPage() {
     getPickupLocations()
       .then((r) => setPickupLocations(r.data.pickup_locations ?? []))
       .catch(() => {});
+    getStore()
+      .then((r) => setStoreInfo(r.data.store ?? r.data))
+      .catch(() => {});
   }, []);
 
   const handleApplyCoupon = async () => {
@@ -257,12 +260,12 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold mb-1">Address Line 2</label>
-                  <input type="text" value={address2} onChange={(e) => setAddress2(e.target.value)} className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none" placeholder="Apartment, suite (optional)" />
+                  <input type="text" value={address2} onChange={(e) => setAddress2(e.target.value)} className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none" placeholder="Landmark, Bus Stop (optional)" />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="block text-sm font-semibold mb-1">City *</label>
-                    <input type="text" value={city} onChange={(e) => setCity(e.target.value)} required className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none" />
+                    <label className="block text-sm font-semibold mb-1">City</label>
+                    <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none" />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold mb-1">State *</label>
@@ -272,8 +275,8 @@ export default function CheckoutPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold mb-1">LGA *</label>
-                    <select value={lga} onChange={(e) => setLga(e.target.value)} required className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none bg-white" disabled={!state}>
+                    <label className="block text-sm font-semibold mb-1">LGA</label>
+                    <select value={lga} onChange={(e) => setLga(e.target.value)} className="w-full border-2 border-gray-200 focus:border-[#4A7C59] rounded-lg px-4 py-3 text-sm focus:outline-none bg-white" disabled={!state}>
                       <option value="">Select LGA</option>
                       {lgas.map((l) => <option key={l} value={l}>{l}</option>)}
                     </select>
