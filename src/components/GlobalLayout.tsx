@@ -1,6 +1,5 @@
 export const revalidate = 60;
 
-import { getStore } from "@/lib/api";
 import { headers } from "next/headers";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Header from "@/components/Header";
@@ -10,34 +9,38 @@ import CookieConsent from "@/components/CookieConsent";
 import CartDrawer from "@/components/CartDrawer";
 import Script from "next/script";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+
 async function fetchStore() {
   try {
     const headersList = headers();
 
-    // First try x-subdomain set by middleware.ts (most reliable)
     let subdomain = headersList.get("x-subdomain") || "";
 
-    // Fallback: parse host header directly
     if (!subdomain) {
-      const host = headersList.get("host") || "";
-      const parts = host.split(".");
-      if (
-        parts.length >= 3 &&
-        !host.includes("vercel.app") &&
-        !host.includes("localhost")
-      ) {
-        subdomain = parts[0];
+      const host = headersList.get("host") || headersList.get("x-forwarded-host") || "";
+      if (host.endsWith(".shopsofly.com")) {
+        subdomain = host.replace(".shopsofly.com", "");
       }
     }
 
-    // Final fallback: env var (only for Vercel preview deployments during dev)
-    if (!subdomain || subdomain === "www") {
-      subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "";
-    }
+    if (!subdomain || subdomain === "www") return null;
 
-    const res = await getStore(subdomain);
-    return res.data.store;
-  } catch {
+    console.log("[GlobalLayout] fetching store for subdomain:", subdomain);
+
+    const res = await fetch(`${API_URL}/api/v2/storefront/store`, {
+      headers: {
+        "X-Store-Subdomain": subdomain,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.store;
+  } catch (e) {
+    console.error("[GlobalLayout] fetchStore error:", e);
     return null;
   }
 }
