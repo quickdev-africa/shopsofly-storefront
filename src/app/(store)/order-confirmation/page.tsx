@@ -6,7 +6,7 @@ import { useAppDispatch } from "@/lib/hooks/redux";
 import { clearCart } from "@/lib/features/carts/cartsSlice";
 import { getOrder } from "@/lib/api";
 
-const fmt = (kobo: number) => `₦${(kobo / 100).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
 
 const STATUS_STEPS = [
   { key: "pending",    label: "Order Placed" },

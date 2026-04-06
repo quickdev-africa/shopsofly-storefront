@@ -405,9 +405,9 @@ export default function CheckoutPage() {
                 <div className="space-y-4">
                   <div className="bg-gray-50 rounded-xl p-4 space-y-2 text-sm">
                     <p className="font-bold text-[#1A1A1A]">Transfer to:</p>
-                    <p><span className="text-[#555555]">Bank:</span> <span className="font-semibold">{storeInfo?.settings?.bank_name || "—"}</span></p>
-                    <p><span className="text-[#555555]">Account Name:</span> <span className="font-semibold">{storeInfo?.settings?.bank_account_name || "—"}</span></p>
-                    <p><span className="text-[#555555]">Account Number:</span> <span className="font-semibold">{storeInfo?.settings?.bank_account_number || "—"}</span></p>
+                    <p><span className="text-[#555555]">Bank:</span> <span className="font-semibold">{storeInfo?.theme_settings?.bank_name || "—"}</span></p>
+                    <p><span className="text-[#555555]">Account Name:</span> <span className="font-semibold">{storeInfo?.theme_settings?.bank_account_name || "—"}</span></p>
+                    <p><span className="text-[#555555]">Account Number:</span> <span className="font-semibold">{storeInfo?.theme_settings?.bank_account_number || "—"}</span></p>
                     <p className="text-[#555555] text-xs mt-2">Transfer {fmt(grandTotal)} and click the button below. We'll confirm within 2 hours.</p>
                   </div>
                   <button
