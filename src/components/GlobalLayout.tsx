@@ -13,12 +13,28 @@ import Script from "next/script";
 async function fetchStore() {
   try {
     const headersList = headers();
-    const host = headersList.get("host") || "";
-    const parts = host.split(".");
-    let subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
-    if (parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")) {
-      subdomain = parts[0];
+
+    // First try x-subdomain set by middleware.ts (most reliable)
+    let subdomain = headersList.get("x-subdomain") || "";
+
+    // Fallback: parse host header directly
+    if (!subdomain) {
+      const host = headersList.get("host") || "";
+      const parts = host.split(".");
+      if (
+        parts.length >= 3 &&
+        !host.includes("vercel.app") &&
+        !host.includes("localhost")
+      ) {
+        subdomain = parts[0];
+      }
     }
+
+    // Final fallback: env var (only for Vercel preview deployments during dev)
+    if (!subdomain || subdomain === "www") {
+      subdomain = process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "laserstarglobal";
+    }
+
     const res = await getStore(subdomain);
     return res.data.store;
   } catch {
@@ -38,11 +54,11 @@ export default async function GlobalLayout({
     <>
       <style>{`
         :root {
-          --color-primary: ${theme.primary_color || '#4A7C59'};
-          --color-primary-dark: ${theme.footer_bg_color || '#2D4A32'};
-          --color-accent: ${theme.accent_color || '#F97316'};
-          --color-primary-light: ${theme.primary_color ? theme.primary_color + '20' : '#E8F0E9'};
-          --color-primary-bg: ${theme.background_color || '#F4F7F4'};
+          --color-primary: ${theme.primary_color || "#4A7C59"};
+          --color-primary-dark: ${theme.footer_bg_color || "#2D4A32"};
+          --color-accent: ${theme.accent_color || "#F97316"};
+          --color-primary-light: ${theme.primary_color ? theme.primary_color + "20" : "#E8F0E9"};
+          --color-primary-bg: ${theme.background_color || "#F4F7F4"};
         }
       `}</style>
       <AnnouncementBar
@@ -52,20 +68,29 @@ export default async function GlobalLayout({
         visible={theme.announcement_enabled !== false}
         link={theme.announcement_link}
       />
-      <Header storeName={store?.name || "Shopsofly"} theme={theme} navLinks={store?.header_links || []} />
+      <Header
+        storeName={store?.name || "Shopsofly"}
+        theme={theme}
+        navLinks={store?.header_links || []}
+      />
       <CartDrawer />
-      <main className="min-h-screen">
-        {children}
-      </main>
-      <Footer storeName={store?.name || "Shopsofly"} copyright={theme.footer_copyright || ""} theme={theme} footerLinks={store?.footer_links || []} />
+      <main className="min-h-screen">{children}</main>
+      <Footer
+        storeName={store?.name || "Shopsofly"}
+        copyright={theme.footer_copyright || ""}
+        theme={theme}
+        footerLinks={store?.footer_links || []}
+      />
       <WhatsAppButton
-        phone={theme.whatsapp_number || ""}
+        phone={theme.whatsapp_number || theme.whatsapp_phone || ""}
         message={theme.whatsapp_message || "Hello! I'd like to place an order."}
-        visible={theme.whatsapp_enabled !== false && !!theme.whatsapp_number}
+        visible={
+          theme.whatsapp_enabled !== false &&
+          !!(theme.whatsapp_number || theme.whatsapp_phone)
+        }
       />
       <CookieConsent />
 
-      {/* Google Analytics */}
       {store?.ga_id && (
         <>
           <Script
@@ -83,7 +108,6 @@ export default async function GlobalLayout({
         </>
       )}
 
-      {/* Facebook Pixel */}
       {store?.fb_pixel_id && (
         <Script id="fb-pixel" strategy="afterInteractive">
           {`
@@ -101,7 +125,6 @@ export default async function GlobalLayout({
         </Script>
       )}
 
-      {/* Google Site Verification */}
       {store?.gsc_code && (
         <meta name="google-site-verification" content={store.gsc_code} />
       )}
