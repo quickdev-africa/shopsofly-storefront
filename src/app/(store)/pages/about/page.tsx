@@ -1,21 +1,9 @@
-export const revalidate = 60;
-import { getStore } from "@/lib/api";
+export const revalidate = 0;
+import { fetchStore } from "@/lib/fetch-store";
 import Link from "next/link";
-import { headers } from "next/headers";
 
 export default async function AboutPage() {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
-
-  let store: any = null;
-  try { const res = await getStore(subdomain); store = res.data.store; } catch {}
+  const store = await fetchStore();
   const storeName = store?.name || "Our Store";
 
   return (
@@ -25,9 +13,7 @@ export default async function AboutPage() {
         <span>/</span>
         <span className="text-[#1A1A1A] font-medium">About Us</span>
       </nav>
-
       <h1 className="font-heading text-4xl font-bold text-[#1A1A1A] mb-6">About {storeName}</h1>
-
       <div className="prose prose-lg max-w-none text-[#555555] space-y-6">
         <p>
           Welcome to <strong>{storeName}</strong> — your trusted destination for premium wellness,
@@ -43,7 +29,6 @@ export default async function AboutPage() {
           delivered fast to your doorstep anywhere in Nigeria. We partner with trusted suppliers
           and manufacturers to bring you products that actually work.
         </p>
-
         <h2 className="font-heading text-2xl font-bold text-[#1A1A1A] mt-10">Why Choose Us?</h2>
         <ul className="space-y-3">
           {[
@@ -59,7 +44,6 @@ export default async function AboutPage() {
             </li>
           ))}
         </ul>
-
         <h2 className="font-heading text-2xl font-bold text-[#1A1A1A] mt-10">Our Promise</h2>
         <p>
           Every order placed with {storeName} is handled with care. From the moment you click
@@ -70,7 +54,6 @@ export default async function AboutPage() {
           Have a question? We are always here to help. Reach out to us via WhatsApp or our
           contact form — our team responds within 24 hours.
         </p>
-
         <div className="mt-10 flex gap-4">
           <Link href="/products"
             className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors">

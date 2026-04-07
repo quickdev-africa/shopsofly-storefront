@@ -1,63 +1,46 @@
-export const revalidate = 60;
+export const revalidate = 0;
 
 import Link from "next/link";
 import Image from "next/image";
-import { getStore, getProducts, getTaxons, getBundles } from "@/lib/api";
+import { fetchStore, getSubdomainFromHeaders } from "@/lib/fetch-store";
+import { getProducts, getTaxons, getBundles } from "@/lib/api";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import BundleBuilder from "@/components/BundleBuilder";
 import StarProduct from "@/components/StarProduct";
 import PopularSection from "@/components/PopularSection";
 import ProductCard from "@/components/ProductCard";
-import { headers } from "next/headers";
 
-async function fetchHomeData() {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+
+async function fetchHomeData(subdomain: string) {
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
-      getStore(subdomain),
-      getProducts({ per_page: 12, sort: "newest" }),
-      getTaxons(),
-      getBundles(),
+      fetch(`${API_URL}/api/v2/storefront/store`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/products?per_page=12&sort=newest`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/taxons`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/bundles`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
     ]);
-    return {
-      store:         storeRes.status === "fulfilled"   ? storeRes.value.data.store              : null,
-      products:      productsRes.status === "fulfilled" ? productsRes.value.data.products        : [],
-      taxons:        taxonsRes.status === "fulfilled"   ? taxonsRes.value.data.taxons            : [],
-      bundles:       bundlesRes.status === "fulfilled"  ? bundlesRes.value.data.bundles          : [],
-      storeProducts: bundlesRes.status === "fulfilled"  ? (bundlesRes.value.data.store_products ?? []) : [],
-    };
+
+    const store    = storeRes.status    === "fulfilled" && storeRes.value.ok    ? (await storeRes.value.json()).store       : null;
+    const products = productsRes.status === "fulfilled" && productsRes.value.ok ? (await productsRes.value.json()).products  : [];
+    const taxons   = taxonsRes.status   === "fulfilled" && taxonsRes.value.ok   ? (await taxonsRes.value.json()).taxons      : [];
+    const bundles  = bundlesRes.status  === "fulfilled" && bundlesRes.value.ok  ? (await bundlesRes.value.json()).bundles    : [];
+    const storeProducts = bundlesRes.status === "fulfilled" && bundlesRes.value.ok ? ((await bundlesRes.value.json()).store_products ?? []) : [];
+
+    return { store, products, taxons, bundles, storeProducts };
   } catch {
     return { store: null, products: [], taxons: [], bundles: [], storeProducts: [] };
   }
 }
 
 export default async function HomePage() {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
-
-  const { store, products, taxons, bundles, storeProducts } = await fetchHomeData();
+  const subdomain = getSubdomainFromHeaders();
+  const { store, products, taxons, bundles, storeProducts } = await fetchHomeData(subdomain);
   const theme = store?.theme_settings || {};
-
   const featuredProducts = products.slice(0, 8);
 
   return (
     <div className="min-h-screen font-body">
-
       {/* Hero Banner */}
       <section className="bg-[#E8F0E9] py-12 md:py-20 px-4">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8">
@@ -69,17 +52,10 @@ export default async function HomePage() {
               {theme.hero_subheading || theme.hero_subtext || "Curated products for your health, beauty and lifestyle."}
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Link
-                href="/products"
-                className="inline-block bg-[#F97316] text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors"
-              >
+              <Link href="/products" className="inline-block bg-[#F97316] text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors">
                 {theme.hero_cta_text || "Shop Now"}
               </Link>
-              <Link
-                href="/collections"
-                className="inline-block border-2 font-semibold px-8 py-4 rounded-lg transition-colors hover:text-white"
-                style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}
-              >
+              <Link href="/collections" className="inline-block border-2 font-semibold px-8 py-4 rounded-lg transition-colors hover:text-white" style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}>
                 Browse Collections
               </Link>
             </div>
@@ -96,15 +72,10 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Stats / Trust Bar */}
+      {/* Stats Bar */}
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
-          {[
-            { label: "Happy Customers",    value: "10,000+" },
-            { label: "Products Available", value: "500+"    },
-            { label: "States Delivered",   value: "36"      },
-            { label: "Support Hours",      value: "24/7"    },
-          ].map((stat) => (
+          {[{ label: "Happy Customers", value: "10,000+" },{ label: "Products Available", value: "500+" },{ label: "States Delivered", value: "36" },{ label: "Support Hours", value: "24/7" }].map((stat) => (
             <div key={stat.label}>
               <div className="text-3xl font-heading font-bold text-[#F97316]">{stat.value}</div>
               <div className="text-sm text-gray-300 mt-1">{stat.label}</div>
@@ -118,80 +89,38 @@ export default async function HomePage() {
         <section className="py-16 px-4 max-w-6xl mx-auto">
           <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-8">Featured Products</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((p: any) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
+            {featuredProducts.map((p: any) => <ProductCard key={p.id} product={p} />)}
           </div>
           <div className="text-center mt-10">
-            <Link href="/products" className="inline-block border-2 border-[#1A1A1A] text-[#1A1A1A] font-semibold px-8 py-3 rounded-lg hover:bg-[#1A1A1A] hover:text-white transition-colors">
-              View All Products
-            </Link>
+            <Link href="/products" className="inline-block border-2 border-[#1A1A1A] text-[#1A1A1A] font-semibold px-8 py-3 rounded-lg hover:bg-[#1A1A1A] hover:text-white transition-colors">View All Products</Link>
           </div>
         </section>
       )}
 
-      {/* Shop by Collection — icon grid */}
+      {/* Collections */}
       {taxons && taxons.length > 0 && (
         <section className="py-14 px-4 bg-[#F8FAF8]">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between mb-8">
               <div>
-                <h2 className="text-2xl lg:text-3xl font-bold text-[#1A1A1A]">
-                  Shop by collection
-                </h2>
-                <p className="text-sm text-[#555] mt-1">
-                  Find exactly what you&apos;re looking for
-                </p>
+                <h2 className="text-2xl lg:text-3xl font-bold text-[#1A1A1A]">Shop by collection</h2>
+                <p className="text-sm text-[#555] mt-1">Find exactly what you&apos;re looking for</p>
               </div>
-              <Link
-                href="/collections"
-                className="text-sm font-semibold hover:underline whitespace-nowrap"
-                style={{ color: "var(--color-primary)" }}
-              >
-                View all →
-              </Link>
+              <Link href="/collections" className="text-sm font-semibold hover:underline whitespace-nowrap" style={{ color: "var(--color-primary)" }}>View all →</Link>
             </div>
-
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4">
               {taxons.map((taxon: any) => {
-                const iconMap: Record<string, string> = {
-                  "tableware": "🍽",
-                  "cookware": "🍽",
-                  "wearables": "⌚",
-                  "accessories": "⌚",
-                  "wellness": "💚",
-                  "health": "💚",
-                  "personal": "✨",
-                  "care": "✨",
-                  "eyewear": "👓",
-                };
-                const icon = Object.entries(iconMap).find(([key]) =>
-                  taxon.name.toLowerCase().includes(key)
-                )?.[1] ?? "🛍";
-
+                const iconMap: Record<string, string> = { "tableware": "🍽", "cookware": "🍽", "wearables": "⌚", "accessories": "⌚", "wellness": "💚", "health": "💚", "personal": "✨", "care": "✨", "eyewear": "👓" };
+                const icon = Object.entries(iconMap).find(([key]) => taxon.name.toLowerCase().includes(key))?.[1] ?? "🛍";
                 return (
-                  <Link
-                    key={taxon.id}
-                    href={`/collections/${taxon.slug}`}
-                    className="group block"
-                  >
+                  <Link key={taxon.id} href={`/collections/${taxon.slug}`} className="group block">
                     <div className="border rounded-2xl p-5 transition-all duration-200 flex flex-col gap-3" style={{ backgroundColor: "var(--color-primary-light)", borderColor: "#c8ddd0" }}>
-                      <div className="w-11 h-11 bg-[#E8F0E9] rounded-xl flex items-center justify-center text-xl flex-shrink-0">
-                        {icon}
-                      </div>
+                      <div className="w-11 h-11 bg-[#E8F0E9] rounded-xl flex items-center justify-center text-xl flex-shrink-0">{icon}</div>
                       <div>
-                        <p className="font-bold text-[#1A1A1A] text-sm leading-tight mb-1">
-                          {taxon.name}
-                        </p>
-                        <p className="text-xs text-[#888]">
-                          {taxon.products_count
-                            ? `${taxon.products_count} products`
-                            : "Explore range"}
-                        </p>
+                        <p className="font-bold text-[#1A1A1A] text-sm leading-tight mb-1">{taxon.name}</p>
+                        <p className="text-xs text-[#888]">{taxon.products_count ? `${taxon.products_count} products` : "Explore range"}</p>
                       </div>
-                      <p className="text-xs font-semibold group-hover:underline mt-auto" style={{ color: "var(--color-primary)" }}>
-                        Shop →
-                      </p>
+                      <p className="text-xs font-semibold group-hover:underline mt-auto" style={{ color: "var(--color-primary)" }}>Shop →</p>
                     </div>
                   </Link>
                 );
@@ -203,61 +132,38 @@ export default async function HomePage() {
 
       <StarProduct products={products} starProductId={store?.theme_settings?.star_product_id} />
 
-      {/* Bundle Builder */}
       {bundles.length > 0 && (
         <section className="pt-16 pb-0 px-4 bg-[#F8FAF8]">
           <div className="max-w-6xl mx-auto mb-3 text-center">
             <h2 className="font-heading text-3xl font-bold text-[#1A1A1A] mb-2">Better Living Bundles</h2>
-            <p className="text-[#555555] max-w-2xl mx-auto">
-              Pick your favourite products, bundle them together and save. The more you bundle, the more you save — mix and match any combination.
-            </p>
+            <p className="text-[#555555] max-w-2xl mx-auto">Pick your favourite products, bundle them together and save.</p>
           </div>
           <BundleBuilder bundles={bundles} storeProducts={storeProducts} />
         </section>
       )}
 
-      {/* Promotional Banner */}
       <section className="bg-[#2D4A32] py-20 px-4 text-center">
         <div className="max-w-3xl mx-auto">
           <span className="text-[#F97316] font-semibold uppercase tracking-widest text-sm">Limited Time Offer</span>
-          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mt-3 mb-4">
-            Up to 30% Off Wellness Products
-          </h2>
-          <p className="text-gray-300 text-lg mb-8">
-            Stock up on your favourite health and lifestyle products before the sale ends.
-          </p>
-          <Link
-            href="/products"
-            className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-lg transition-colors text-lg"
-          >
-            Shop the Sale →
-          </Link>
+          <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mt-3 mb-4">Up to 30% Off Wellness Products</h2>
+          <p className="text-gray-300 text-lg mb-8">Stock up on your favourite health and lifestyle products before the sale ends.</p>
+          <Link href="/products" className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-lg transition-colors text-lg">Shop the Sale →</Link>
         </div>
       </section>
 
-      {/* Testimonials Carousel */}
       <TestimonialsCarousel />
-
       <PopularSection products={products} />
 
-      {/* Newsletter */}
       <section className="py-16 px-4 text-white" style={{ backgroundColor: "var(--color-primary)" }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-heading text-3xl font-bold mb-4">Stay in the Loop</h2>
           <p className="text-[#E8F0E9] mb-8">Get exclusive deals and new arrivals straight to your inbox.</p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Your email address"
-              className="flex-1 px-4 py-3 rounded-lg text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#F97316]"
-            />
-            <button className="bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">
-              Subscribe
-            </button>
+            <input type="email" placeholder="Your email address" className="flex-1 px-4 py-3 rounded-lg text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#F97316]" />
+            <button className="bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">Subscribe</button>
           </div>
         </div>
       </section>
-
     </div>
   );
 }
