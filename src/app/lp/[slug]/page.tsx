@@ -18,7 +18,7 @@ export default async function LandingPageRoute({ params }: { params: { slug: str
   );
   try {
     const [pageRes, storeRes] = await Promise.allSettled([
-      getLandingPage(params.slug),
+      getLandingPage(params.slug, subdomain),
       getStore(subdomain),
     ]);
 
