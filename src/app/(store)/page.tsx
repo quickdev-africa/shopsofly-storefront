@@ -24,8 +24,9 @@ async function fetchHomeData(subdomain: string) {
     const store    = storeRes.status    === "fulfilled" && storeRes.value.ok    ? (await storeRes.value.json()).store       : null;
     const products = productsRes.status === "fulfilled" && productsRes.value.ok ? (await productsRes.value.json()).products  : [];
     const taxons   = taxonsRes.status   === "fulfilled" && taxonsRes.value.ok   ? (await taxonsRes.value.json()).taxons      : [];
-    const bundles  = bundlesRes.status  === "fulfilled" && bundlesRes.value.ok  ? (await bundlesRes.value.json()).bundles    : [];
-    const storeProducts = bundlesRes.status === "fulfilled" && bundlesRes.value.ok ? ((await bundlesRes.value.json()).store_products ?? []) : [];
+    const bundlesJson   = bundlesRes.status === "fulfilled" && bundlesRes.value.ok ? await bundlesRes.value.json() : null;
+    const bundles       = bundlesJson?.bundles        ?? [];
+    const storeProducts = bundlesJson?.store_products ?? [];
 
     return { store, products, taxons, bundles, storeProducts };
   } catch {
