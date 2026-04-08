@@ -1,32 +1,26 @@
-export const revalidate = 60;
-
+export const revalidate = 0;
 import { notFound } from "next/navigation";
-import { getLandingPage, getStore } from "@/lib/api";
 import ProductSpotlightTemplate from "@/components/landing-pages/ProductSpotlightTemplate";
 import FlashSaleTemplate from "@/components/landing-pages/FlashSaleTemplate";
-import { headers } from "next/headers";
+import { fetchStore, getSubdomainFromHeaders } from "@/lib/fetch-store";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
 
 export default async function LandingPageRoute({ params }: { params: { slug: string } }) {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
+  const subdomain = getSubdomainFromHeaders();
+
   try {
-    const [pageRes, storeRes] = await Promise.allSettled([
-      getLandingPage(params.slug, subdomain),
-      getStore(subdomain),
+    const [pageRes, store] = await Promise.all([
+      fetch(`${API_URL}/api/v2/storefront/landing_pages/${params.slug}`, {
+        headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" },
+        cache: "no-store",
+      }),
+      fetchStore(),
     ]);
 
-    if (pageRes.status === "rejected") return notFound();
-
-    const page = (pageRes as any).value.data.landing_page;
-    const store = storeRes.status === "fulfilled" ? (storeRes as any).value.data.store : null;
-
+    if (!pageRes.ok) return notFound();
+    const data = await pageRes.json();
+    const page = data.landing_page;
     if (!page) return notFound();
 
     switch (page.template_key) {
