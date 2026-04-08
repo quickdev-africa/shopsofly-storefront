@@ -13,16 +13,12 @@ function LeadPopup({ onClose, slug, ctaText }: { onClose: () => void; slug: stri
 
   async function handleSubmit() {
     if (!form.name || !form.phone) { setError("Please enter your name and phone number."); return; }
-    setLoading(true);
-    setError("");
+    setLoading(true); setError("");
     try {
       await sendLandingPageLead({ ...form, slug });
       setSuccess(true);
-    } catch {
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    } catch { setError("Something went wrong. Please try again."); }
+    finally { setLoading(false); }
   }
 
   return (
@@ -41,7 +37,7 @@ function LeadPopup({ onClose, slug, ctaText }: { onClose: () => void; slug: stri
               <h3 className="font-heading text-xl font-bold text-[#1A1A1A]">{ctaText || "Get More Details"}</h3>
               <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-3xl leading-none">&times;</button>
             </div>
-            <p className="text-gray-500 text-sm mb-5">Fill in your details and we will contact you shortly with all the information you need.</p>
+            <p className="text-gray-500 text-sm mb-5">Fill in your details and we will contact you shortly.</p>
             <div className="space-y-3">
               <input type="text" placeholder="Full Name *" value={form.name}
                 onChange={(e) => setForm(s => ({ ...s, name: e.target.value }))}
@@ -54,8 +50,7 @@ function LeadPopup({ onClose, slug, ctaText }: { onClose: () => void; slug: stri
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#4A7C59]" />
               <textarea placeholder="Any specific questions? (optional)" value={form.notes}
                 onChange={(e) => setForm(s => ({ ...s, notes: e.target.value }))}
-                rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#4A7C59] resize-none" />
+                rows={3} className="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#4A7C59] resize-none" />
             </div>
             {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <button onClick={handleSubmit} disabled={loading}
@@ -100,8 +95,7 @@ function YoutubeEmbed({ url, className = "" }: { url: string; className?: string
 }
 
 function PictureTextSection({ imageUrl, heading, body, imageLeft }: {
-  imageUrl?: string; heading?: string; body?: string;
-  imageLeft: boolean;
+  imageUrl?: string; heading?: string; body?: string; imageLeft: boolean;
 }) {
   const imgBlock = (
     <div className="w-full md:w-1/2">
@@ -110,9 +104,7 @@ function PictureTextSection({ imageUrl, heading, body, imageLeft }: {
           <Image src={imageUrl} alt={heading || "Section"} fill className="object-cover" />
         </div>
       ) : (
-        <div className="bg-gray-100 rounded-2xl h-72 flex items-center justify-center text-gray-300 text-sm">
-          Image coming soon
-        </div>
+        <div className="bg-gray-100 rounded-2xl h-72 flex items-center justify-center text-gray-300 text-sm">Image coming soon</div>
       )}
     </div>
   );
@@ -131,6 +123,68 @@ function PictureTextSection({ imageUrl, heading, body, imageLeft }: {
   );
 }
 
+// NEW: Benefit/Checklist Section — "Imagine..." style
+function BenefitsSection({ heading, items, bgColor = "white", textColor = "#1A1A1A", checkColor = "#4A7C59", onClick, ctaText }: {
+  heading?: string;
+  items: string[];
+  bgColor?: string;
+  textColor?: string;
+  checkColor?: string;
+  onClick: () => void;
+  ctaText: string;
+}) {
+  if (!heading && items.length === 0) return null;
+  return (
+    <section className="py-16 px-4" style={{ backgroundColor: bgColor }}>
+      <div className="max-w-3xl mx-auto">
+        {heading && (
+          <h2 className="font-heading text-3xl md:text-4xl font-black mb-10 text-center leading-tight" style={{ color: textColor }}>
+            {heading}
+          </h2>
+        )}
+        <div className="space-y-4 mb-10">
+          {items.map((item, i) => (
+            item.trim() ? (
+              <div key={i} className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-6 h-6 rounded border-2 flex items-center justify-center mt-0.5"
+                  style={{ borderColor: checkColor, backgroundColor: checkColor + "20" }}>
+                  <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                    <path d="M1 5l3.5 3.5L11 1" stroke={checkColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </div>
+                <p className="text-lg leading-relaxed" style={{ color: textColor === "#FFFFFF" ? "#E5E7EB" : "#374151" }}>{item.trim()}</p>
+              </div>
+            ) : null
+          ))}
+        </div>
+        <div className="text-center">
+          <CTAButton text={ctaText} onClick={onClick} />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// NEW: Inline Countdown Timer Section
+function UrgencySection({ label, endDate, stockCount, bgColor, textColor }: {
+  label?: string; endDate?: string; stockCount?: string; bgColor?: string; textColor?: string;
+}) {
+  if (!endDate) return null;
+  return (
+    <section className="py-12 px-4 text-center" style={{ backgroundColor: bgColor || "#FEF2F2" }}>
+      <h2 className="font-heading text-2xl font-bold mb-4" style={{ color: textColor || "#DC2626" }}>
+        ⚡ {label || "Limited Time Offer Ends In:"}
+      </h2>
+      <CountdownTimer endDate={endDate} />
+      {stockCount && (
+        <p className="mt-4 text-sm font-semibold" style={{ color: textColor || "#DC2626" }}>
+          🔥 Only {stockCount} spots remaining!
+        </p>
+      )}
+    </section>
+  );
+}
+
 export default function ProductSpotlightTemplate({ page, store }: { page: any; store: any }) {
   const s = page.settings || {};
   const products = page.products || [];
@@ -138,6 +192,9 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
   const [showPopup, setShowPopup] = useState(false);
   const ctaText = s.cta_text || "Get More Details";
   const slug = page.slug || "";
+
+  // Parse benefit items from textarea (one per line)
+  const parseBenefits = (text: string) => (text || "").split("\n").filter((l: string) => l.trim());
 
   return (
     <div className="min-h-screen bg-white">
@@ -172,85 +229,137 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
         </div>
       </section>
 
-
+      {/* SOCIAL PROOF BAR */}
+      {(s.rating || s.customer_count || s.orders_today) && (
+        <section className="bg-[#4A7C59] text-white py-6 px-4">
+          <div className="max-w-3xl mx-auto flex flex-wrap justify-center gap-8 text-center">
+            {s.rating && (
+              <div>
+                <div className="text-2xl font-bold">⭐ {s.rating}</div>
+                <div className="text-xs text-green-200 mt-1">Average Rating</div>
+              </div>
+            )}
+            {s.customer_count && (
+              <div>
+                <div className="text-2xl font-bold">{s.customer_count}</div>
+                <div className="text-xs text-green-200 mt-1">Happy Customers</div>
+              </div>
+            )}
+            {s.orders_today && (
+              <div>
+                <div className="text-2xl font-bold">{s.orders_today}</div>
+                <div className="text-xs text-green-200 mt-1">Enquiries Today</div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* DYNAMIC SECTION ORDERING */}
       {(() => {
-        const order = (s.section_order || "products,section1,videos1,section2,videos2,section3,urgency,faq,final_cta")
+        const order = (s.section_order || "products,benefits1,section1,videos1,urgency_mid,section2,benefits2,videos2,section3,benefits3,urgency,faq,final_cta,urgency_bottom")
           .split(",").map((x: string) => x.trim()).filter((x: string) => Boolean(x) && x !== "hero");
 
         const sectionMap: Record<string, React.ReactNode> = {
+
           products: products.length > 0 ? (
             <section key="products" className="py-16 px-6 bg-white">
               <div className="max-w-5xl mx-auto">
-                {/* Title */}
                 <h2 className="font-heading text-3xl md:text-5xl font-black text-center text-[#1A1A1A] mb-12 leading-tight">
                   {s.products_section_title || ("Discover " + (products[0]?.name || ""))}
                 </h2>
-
-                {/* 3-image showcase */}
                 <div className="flex flex-row gap-4 overflow-x-auto md:overflow-visible items-stretch pb-4 md:pb-0" style={{ scrollSnapType: "x mandatory" }}>
-                  {/* Left small image */}
                   <div className="flex-shrink-0 w-[45vw] md:w-0 md:flex-1" style={{ scrollSnapAlign: "start" }}>
                     {s.product_left_image ? (
                       <div className="relative h-full rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: "260px" }}>
                         <Image src={s.product_left_image} alt="Product view" fill className="object-cover" />
                       </div>
                     ) : (
-                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>
-                        Side image
-                      </div>
+                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>Side image</div>
                     )}
                   </div>
-
-                  {/* Center big product image */}
                   <div className="flex-shrink-0 w-[70vw] md:w-0 md:flex-[2]" style={{ scrollSnapAlign: "start" }}>
                     {products[0]?.image_url ? (
                       <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ minHeight: "380px" }}>
                         <Image src={products[0].image_url} alt={products[0].name} fill className="object-cover" />
                       </div>
                     ) : (
-                      <div className="rounded-2xl bg-gray-200 flex items-center justify-center text-gray-400" style={{ minHeight: "380px" }}>
-                        Product image
-                      </div>
+                      <div className="rounded-2xl bg-gray-200 flex items-center justify-center text-gray-400" style={{ minHeight: "380px" }}>Product image</div>
                     )}
                   </div>
-
-                  {/* Right small image */}
                   <div className="flex-shrink-0 w-[45vw] md:w-0 md:flex-1" style={{ scrollSnapAlign: "start" }}>
                     {s.product_right_image ? (
                       <div className="relative h-full rounded-2xl overflow-hidden shadow-lg" style={{ minHeight: "260px" }}>
                         <Image src={s.product_right_image} alt="Product detail" fill className="object-cover" />
                       </div>
                     ) : (
-                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>
-                        Side image
-                      </div>
+                      <div className="h-full rounded-2xl bg-gray-100 flex items-center justify-center text-gray-300 text-sm" style={{ minHeight: "260px" }}>Side image</div>
                     )}
                   </div>
+                </div>
+                {s.products_section_subtitle && (
+                  <p className="text-center text-gray-500 mt-6 text-lg">{s.products_section_subtitle}</p>
+                )}
+                <div className="text-center mt-10">
+                  <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
                 </div>
               </div>
             </section>
           ) : null,
 
+          // BENEFIT SECTIONS — "Imagine..." style
+          benefits1: parseBenefits(s.benefits1_items).length > 0 ? (
+            <BenefitsSection key="benefits1"
+              heading={s.benefits1_heading}
+              items={parseBenefits(s.benefits1_items)}
+              bgColor="#F8FAF8"
+              checkColor="#4A7C59"
+              onClick={() => setShowPopup(true)}
+              ctaText={ctaText}
+            />
+          ) : null,
+
+          benefits2: parseBenefits(s.benefits2_items).length > 0 ? (
+            <BenefitsSection key="benefits2"
+              heading={s.benefits2_heading}
+              items={parseBenefits(s.benefits2_items)}
+              bgColor="#1A1A1A"
+              textColor="#FFFFFF"
+              checkColor="#F97316"
+              onClick={() => setShowPopup(true)}
+              ctaText={ctaText}
+            />
+          ) : null,
+
+          benefits3: parseBenefits(s.benefits3_items).length > 0 ? (
+            <BenefitsSection key="benefits3"
+              heading={s.benefits3_heading}
+              items={parseBenefits(s.benefits3_items)}
+              bgColor="#FFF7ED"
+              checkColor="#F97316"
+              onClick={() => setShowPopup(true)}
+              ctaText={ctaText}
+            />
+          ) : null,
+
           section1: (s.section1_image_url || s.section1_heading) ? (
             <div key="section1">
               <PictureTextSection imageUrl={s.section1_image_url} heading={s.section1_heading}
-                body={s.section1_body} imageLeft={true}  />
+                body={s.section1_body} imageLeft={true} />
             </div>
           ) : null,
 
           section2: (s.section2_image_url || s.section2_heading) ? (
             <div key="section2" className="bg-gray-50">
               <PictureTextSection imageUrl={s.section2_image_url} heading={s.section2_heading}
-                body={s.section2_body} imageLeft={false}  />
+                body={s.section2_body} imageLeft={false} />
             </div>
           ) : null,
 
           section3: (s.section3_image_url || s.section3_heading) ? (
             <div key="section3">
               <PictureTextSection imageUrl={s.section3_image_url} heading={s.section3_heading}
-                body={s.section3_body} imageLeft={true}  />
+                body={s.section3_body} imageLeft={true} />
             </div>
           ) : null,
 
@@ -302,12 +411,35 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
             </section>
           ) : null,
 
+          // URGENCY TIMERS — top, mid, bottom
           urgency: s.countdown_end ? (
-            <section key="urgency" className="py-12 px-4 bg-red-50 text-center">
-              <h2 className="font-heading text-2xl font-bold text-red-600 mb-4">⚡ Limited Time Offer Ends In:</h2>
-              <CountdownTimer endDate={s.countdown_end} />
-              {s.stock_count && <p className="mt-4 text-sm font-semibold text-red-600">🔥 Only {s.stock_count} spots remaining!</p>}
-            </section>
+            <UrgencySection key="urgency"
+              label={s.urgency_label}
+              endDate={s.countdown_end}
+              stockCount={s.stock_count}
+              bgColor="#FEF2F2"
+              textColor="#DC2626"
+            />
+          ) : null,
+
+          urgency_mid: s.countdown_end ? (
+            <UrgencySection key="urgency_mid"
+              label={s.urgency_mid_label || "Don't Miss Out — Offer Ends In:"}
+              endDate={s.countdown_end}
+              stockCount={undefined}
+              bgColor="#1A1A1A"
+              textColor="#F97316"
+            />
+          ) : null,
+
+          urgency_bottom: s.countdown_end ? (
+            <UrgencySection key="urgency_bottom"
+              label={s.urgency_bottom_label || "Last Chance — This Offer Expires In:"}
+              endDate={s.countdown_end}
+              stockCount={s.stock_count}
+              bgColor="#4A7C59"
+              textColor="#FFFFFF"
+            />
           ) : null,
 
           faq: <LandingFAQ key="faq" items={s.faq} title={s.faq_title} />,
@@ -346,10 +478,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
         <p>{store?.name} — Secured by Paystack 🔒</p>
       </footer>
 
-      {/* POPUP */}
-      {showPopup && (
-        <LeadPopup onClose={() => setShowPopup(false)} slug={slug} ctaText={ctaText} />
-      )}
+      {showPopup && <LeadPopup onClose={() => setShowPopup(false)} slug={slug} ctaText={ctaText} />}
     </div>
   );
 }

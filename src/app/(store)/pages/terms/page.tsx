@@ -1,21 +1,9 @@
-export const revalidate = 60;
-import { getStore } from "@/lib/api";
+export const revalidate = 0;
+import { fetchStore } from "@/lib/fetch-store";
 import Link from "next/link";
-import { headers } from "next/headers";
 
 export default async function TermsPage() {
-  const headersList = headers();
-  const host = headersList.get("host") || "";
-  const xSubdomain = headersList.get("x-subdomain") || "";
-  const parts = host.split(".");
-  const subdomain = xSubdomain || (
-    parts.length >= 3 && !host.includes("vercel.app") && !host.includes("localhost")
-      ? parts[0]
-      : (process.env.NEXT_PUBLIC_STORE_SUBDOMAIN || "")
-  );
-
-  let store: any = null;
-  try { const res = await getStore(subdomain); store = res.data.store; } catch {}
+  const store = await fetchStore();
   const storeName = store?.name || "Our Store";
 
   return (
