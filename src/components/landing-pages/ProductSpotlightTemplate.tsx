@@ -130,9 +130,8 @@ function PictureTextSection({ imageUrl, heading, body, imageLeft, dark }: {
   const imgBlock = (
     <div className="w-full md:w-1/2">
       {imageUrl ? (
-        <div className="relative rounded-2xl overflow-hidden shadow-2xl" style={{ minHeight: "340px" }}>
-          <Image src={imageUrl} alt={heading || "Section"} fill className="object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(0,0,0,0.2), rgba(0,0,0,0))" }} />
+        <div className="rounded-2xl overflow-hidden shadow-2xl" style={{ minHeight: "340px" }}>
+          <img src={imageUrl} alt={heading || "Section"} className="w-full h-full object-cover" style={{ minHeight: "340px" }} />
         </div>
       ) : (
         <div className="rounded-2xl h-72 flex items-center justify-center text-gray-600 text-sm" style={{ background: dark ? "#1A1A1A" : "#F3F4F6" }}>Image coming soon</div>
@@ -212,7 +211,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
       <section className="relative py-20 px-4 overflow-hidden" style={{ backgroundColor: heroBg }}>
         {s.hero_image_url && (
           <>
-            <div className="absolute inset-0"><Image src={s.hero_image_url} alt="Hero" fill className="object-cover" priority /></div>
+            <div className="absolute inset-0"><img src={s.hero_image_url} alt="Hero" className="w-full h-full object-cover absolute inset-0" /></div>
             <div className="absolute inset-0" style={{ background: isDark ? "rgba(0,0,0,0.78)" : "rgba(0,0,0,0.5)" }} />
           </>
         )}
@@ -227,7 +226,13 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
             <div className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-6 tracking-widest uppercase" style={{ backgroundColor: "#F97316", color: "#FFFFFF" }}>
               ⚡ {s.badge_text || "LIMITED TIME OFFER"}
             </div>
-            <h1 className="font-heading text-4xl md:text-6xl font-black mb-6 leading-tight text-white drop-shadow-lg">{s.hero_headline || page.title}</h1>
+            <h1 className="font-heading text-4xl md:text-6xl font-black mb-8 leading-tight text-white drop-shadow-lg">{s.hero_headline || page.title}</h1>
+            {s.hero_video_url && (
+              <div className="max-w-3xl mx-auto mb-8">
+                <YoutubeEmbed url={s.hero_video_url} className="w-full shadow-2xl rounded-2xl" />
+                <p className="text-center text-sm mt-3" style={{ color: "#9CA3AF" }}>▶ Watch — Real testimony from a Nigerian customer</p>
+              </div>
+            )}
             <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-2xl mx-auto" style={{ color: "#E5E7EB" }}>
               {s.hero_subheadline || "Discover the difference. Get in touch today."}
             </p>
@@ -240,12 +245,6 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
               </div>
             )}
           </div>
-          {s.hero_video_url && (
-            <div className="max-w-3xl mx-auto mt-10">
-              <YoutubeEmbed url={s.hero_video_url} className="w-full shadow-2xl rounded-2xl" />
-              <p className="text-center text-sm mt-3" style={{ color: "#9CA3AF" }}>▶ Watch — Real testimony from a Nigerian customer</p>
-            </div>
-          )}
         </div>
       </section>
 
@@ -262,7 +261,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
 
       {/* DYNAMIC SECTIONS */}
       {(() => {
-        const order = (s.section_order || "products,benefits1,section1,videos1,urgency_mid,section2,benefits2,videos2,section3,benefits3,urgency,faq,final_cta,urgency_bottom")
+        const order = (s.section_order || "products,benefits1,section1,videos1,urgency_mid,section2,benefits2,videos2,section3,benefits3,urgency,faq,urgency_bottom,final_cta")
           .split(",").map((x: string) => x.trim()).filter((x: string) => Boolean(x) && x !== "hero" && x !== "social_proof");
 
         const sectionMap: Record<string, React.ReactNode> = {
@@ -277,8 +276,8 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
                   {[s.product_left_image, products[0]?.image_url, s.product_right_image].map((imgUrl, i) => (
                     <div key={i} className={`flex-shrink-0 rounded-2xl overflow-hidden shadow-2xl ${i === 1 ? "w-[70vw] md:flex-[2]" : "w-[45vw] md:flex-1"}`} style={{ minHeight: i === 1 ? "400px" : "260px", scrollSnapAlign: "start" }}>
                       {imgUrl ? (
-                        <div className="relative w-full h-full" style={{ minHeight: i === 1 ? "400px" : "260px" }}>
-                          <Image src={imgUrl} alt="Product" fill className="object-cover" />
+                        <div className="w-full h-full" style={{ minHeight: i === 1 ? "400px" : "260px" }}>
+                          <img src={imgUrl} alt="Product" className="w-full h-full object-cover" style={{ minHeight: i === 1 ? "400px" : "260px" }} />
                         </div>
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-gray-600 text-sm" style={{ minHeight: i === 1 ? "400px" : "260px", background: isDark ? "#1A1A1A" : "#E5E7EB" }}>
