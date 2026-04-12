@@ -99,6 +99,7 @@ function YoutubeEmbed({ url, className = "" }: { url: string; className?: string
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
     </div>
+  );
 }
 
 function BenefitsSection({ heading, items, bg, fg, checkColor, onClick, ctaText }: {
