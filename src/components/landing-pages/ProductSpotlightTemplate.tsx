@@ -94,8 +94,7 @@ function YoutubeEmbed({ url, className = "" }: { url: string; className?: string
   if (!id) return <div className={"bg-gray-900 rounded-2xl flex items-center justify-center text-gray-600 text-sm aspect-video " + className}>Video coming soon</div>;
   return (
     <div className={"relative rounded-2xl overflow-hidden bg-black " + className}>
-      <div className="aspect-video">
-        <iframe src={"https://www.youtube.com/embed/" + id} className="absolute inset-0 w-full h-full"
+        <iframe src={"https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id + "&controls=1&rel=0"} className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
     </div>
@@ -197,7 +196,9 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
   const products = page.products || [];
   const theme = store?.theme_settings || {};
   const [showPopup, setShowPopup] = useState(false);
-  const ctaText = s.cta_text || "Get More Details";
+  const ctaText = s.cta_text || "I Want to Know More - Contact Me Now";
+  const ctaText2 = s.cta_text_2 || "Yes - Send Me Full Details Now";
+  const ctaText3 = s.cta_text_3 || "I Am Ready - Contact Me Today";
   const slug = page.slug || "";
   const isDark = s.dark_mode !== false;
   const productPrice = products[0]?.price || null;
@@ -346,7 +347,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
                     </div>
                   ))}
                 </div>
-                <div className="text-center"><CTAButton text={ctaText} onClick={() => setShowPopup(true)} /></div>
+                <div className="text-center"><CTAButton text={ctaText2} onClick={() => setShowPopup(true)} /></div>
               </div>
             </section>
           ) : null,
@@ -380,7 +381,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
               <div className="relative max-w-2xl mx-auto">
                 <h2 className="font-heading text-3xl md:text-5xl font-black text-white mb-4 leading-tight">{s.final_cta_headline || "Ready to Transform Your Health?"}</h2>
                 <p className="text-gray-400 mb-10 text-lg">{s.final_cta_subtitle || "Fill in your details and our team will contact you right away."}</p>
-                <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
+                <CTAButton text={ctaText3} onClick={() => setShowPopup(true)} />
                 {theme.whatsapp_number && (
                   <p className="mt-6 text-gray-500 text-sm">Prefer WhatsApp?{" "}
                     <a href={"https://wa.me/" + theme.whatsapp_number.replace(/\D/g, "")} className="text-green-400 hover:text-green-300 font-semibold">Chat with us here →</a>
