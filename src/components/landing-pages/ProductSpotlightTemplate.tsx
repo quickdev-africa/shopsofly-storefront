@@ -94,11 +94,11 @@ function YoutubeEmbed({ url, className = "" }: { url: string; className?: string
   if (!id) return <div className={"bg-gray-900 rounded-2xl flex items-center justify-center text-gray-600 text-sm aspect-video " + className}>Video coming soon</div>;
   return (
     <div className={"relative rounded-2xl overflow-hidden bg-black " + className}>
+      <div className="aspect-video">
         <iframe src={"https://www.youtube.com/embed/" + id + "?autoplay=1&mute=1&loop=1&playlist=" + id + "&controls=1&rel=0"} className="absolute inset-0 w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
       </div>
     </div>
-  );
 }
 
 function BenefitsSection({ heading, items, bg, fg, checkColor, onClick, ctaText }: {
