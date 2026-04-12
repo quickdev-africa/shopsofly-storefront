@@ -368,7 +368,7 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
             </section>
           ) : null,
 
-          urgency: s.countdown_end ? <UrgencySection key="urgency" label={s.urgency_label} endDate={s.countdown_end} stockCount={s.stock_count} bg="#DC2626" fg="#FFFFFF" /> : null,
+          urgency: s.countdown_end ? <UrgencySection key="urgency" label={s.urgency_label} endDate={s.countdown_end} stockCount={s.stock_count} bg="#0D0D0D" fg="#F97316" /> : null,
           urgency_mid: s.countdown_end ? <UrgencySection key="urgency_mid" label={s.urgency_mid_label || "Don't Miss Out — Offer Ends In:"} endDate={s.countdown_end} bg={isDark ? "#1A1A1A" : "#111827"} fg="#F97316" /> : null,
           urgency_bottom: s.countdown_end ? <UrgencySection key="urgency_bottom" label={s.urgency_bottom_label || "Last Chance — This Offer Expires In:"} endDate={s.countdown_end} stockCount={s.stock_count} bg="#F97316" fg="#FFFFFF" /> : null,
 
