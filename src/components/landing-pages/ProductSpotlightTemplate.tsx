@@ -223,13 +223,12 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
           </>
         )}
         <div className="relative max-w-5xl mx-auto">
-          {s.hero_video_url && <YoutubeEmbed url={s.hero_video_url} className="w-full max-w-3xl mx-auto mb-12" />}
-          <div className="text-center max-w-4xl mx-auto">
+          <div className="text-center max-w-4xl mx-auto mb-10">
             <div className="inline-block px-4 py-1.5 rounded-full text-xs font-bold mb-6 tracking-widest uppercase" style={{ backgroundColor: "#F97316", color: "#FFFFFF" }}>
               ⚡ {s.badge_text || "LIMITED TIME OFFER"}
             </div>
             <h1 className="font-heading text-4xl md:text-6xl font-black mb-6 leading-tight text-white drop-shadow-lg">{s.hero_headline || page.title}</h1>
-            <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-2xl mx-auto" style={{ color: s.hero_image_url ? "#E5E7EB" : mutedText }}>
+            <p className="text-lg md:text-xl mb-10 leading-relaxed max-w-2xl mx-auto" style={{ color: "#E5E7EB" }}>
               {s.hero_subheadline || "Discover the difference. Get in touch today."}
             </p>
             <CTAButton text={ctaText} onClick={() => setShowPopup(true)} />
@@ -241,6 +240,12 @@ export default function ProductSpotlightTemplate({ page, store }: { page: any; s
               </div>
             )}
           </div>
+          {s.hero_video_url && (
+            <div className="max-w-3xl mx-auto mt-10">
+              <YoutubeEmbed url={s.hero_video_url} className="w-full shadow-2xl rounded-2xl" />
+              <p className="text-center text-sm mt-3" style={{ color: "#9CA3AF" }}>▶ Watch — Real testimony from a Nigerian customer</p>
+            </div>
+          )}
         </div>
       </section>
 
