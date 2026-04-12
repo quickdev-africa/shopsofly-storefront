@@ -33,7 +33,7 @@ function LeadPopup({ onClose, slug, ctaText, productPrice, dark }: {
     : "w-full px-4 py-3 border border-gray-300 rounded-xl text-sm outline-none focus:ring-2 focus:ring-[#F97316]";
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ backgroundColor: "rgba(0,0,0,0.85)" }}>
-      <div className="w-full max-w-md p-6 shadow-2xl rounded-2xl overflow-y-auto" style={{ backgroundColor: bg, maxHeight: "90vh" }}>
+      <div className="w-full max-w-md shadow-2xl rounded-2xl" style={{ backgroundColor: "#FFFFFF" }}>
         {success ? (
           <div className="text-center py-6">
             <div className="text-5xl mb-4">🎉</div>
@@ -43,32 +43,36 @@ function LeadPopup({ onClose, slug, ctaText, productPrice, dark }: {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-heading text-xl font-bold" style={{ color: fg }}>{ctaText || "Get More Details"}</h3>
-              <button onClick={onClose} className="text-gray-400 hover:text-gray-300 text-3xl leading-none">&times;</button>
+            <div className="p-5">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-heading text-lg font-bold text-gray-900">{ctaText || "Get More Details"}</h3>
+              <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">&times;</button>
             </div>
-            <p className="text-sm mb-5" style={{ color: dark ? "#9CA3AF" : "#6B7280" }}>Fill in your details and our team will reach out shortly.</p>
-            <div className="space-y-3 mb-4">
-              <input type="text" placeholder="Full Name *" value={form.name} onChange={(e) => setForm(s => ({ ...s, name: e.target.value }))} className={inputCls} />
-              <input type="tel" placeholder="Phone Number (WhatsApp) *" value={form.phone} onChange={(e) => setForm(s => ({ ...s, phone: e.target.value }))} className={inputCls} />
-              <input type="email" placeholder="Email Address (optional)" value={form.email} onChange={(e) => setForm(s => ({ ...s, email: e.target.value }))} className={inputCls} />
+            <p className="text-xs text-gray-500 mb-3">Fill in your details and our team will reach out shortly.</p>
+            <div className="space-y-2 mb-3">
+              <input type="text" placeholder="Full Name *" value={form.name} onChange={(e) => setForm(s => ({ ...s, name: e.target.value }))}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#F97316]" />
+              <input type="tel" placeholder="Phone Number (WhatsApp) *" value={form.phone} onChange={(e) => setForm(s => ({ ...s, phone: e.target.value }))}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#F97316]" />
+              <input type="email" placeholder="Email Address (optional)" value={form.email} onChange={(e) => setForm(s => ({ ...s, email: e.target.value }))}
+                className="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm outline-none focus:ring-2 focus:ring-[#F97316]" />
             </div>
-            <p className="text-sm font-semibold mb-3" style={{ color: fg }}>Please select one:</p>
-            <div className="space-y-2 mb-4">
+            <p className="text-xs font-semibold text-gray-700 mb-2">Please select one:</p>
+            <div className="space-y-1.5 mb-3">
               {intentOptions.map((opt) => (
                 <button key={opt.value} type="button" onClick={() => setForm(s => ({ ...s, intent: opt.value }))}
-                  className="w-full text-left px-4 py-3 rounded-xl text-sm transition-all border"
-                  style={{ backgroundColor: form.intent === opt.value ? "#F97316" : (dark ? "#1A1A1A" : "#F9FAFB"), borderColor: form.intent === opt.value ? "#F97316" : (dark ? "#374151" : "#E5E7EB"), color: form.intent === opt.value ? "#FFFFFF" : fg, fontWeight: form.intent === opt.value ? "600" : "400" }}>
+                  className="w-full text-left px-3 py-2.5 rounded-lg text-sm transition-all border"
+                  style={{ backgroundColor: form.intent === opt.value ? "#F97316" : "#F9FAFB", borderColor: form.intent === opt.value ? "#F97316" : "#E5E7EB", color: form.intent === opt.value ? "#FFFFFF" : "#1A1A1A", fontWeight: form.intent === opt.value ? "600" : "400" }}>
                   {opt.label}
                 </button>
               ))}
             </div>
-            <textarea placeholder="Any specific questions? (optional)" value={form.notes} onChange={(e) => setForm(s => ({ ...s, notes: e.target.value }))} rows={2} className={inputCls + " resize-none"} />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            <button onClick={handleSubmit} disabled={loading} className="mt-4 w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-xl text-base transition-colors disabled:opacity-60">
+            {error && <p className="text-red-500 text-xs mb-2">{error}</p>}
+            <button onClick={handleSubmit} disabled={loading} className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-sm transition-colors disabled:opacity-60">
               {loading ? "Sending..." : "Send My Details →"}
             </button>
-            <p className="text-xs text-gray-500 text-center mt-3">🔒 Your details are safe with us. No spam, ever.</p>
+            <p className="text-xs text-gray-400 text-center mt-2">🔒 Your details are safe. No spam, ever.</p>
+            </div>
           </>
         )}
       </div>
