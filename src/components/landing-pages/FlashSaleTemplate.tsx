@@ -380,7 +380,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
 
       {/* ── DELIVERY BAR ───────────────────────────────────────── */}
       <div className="py-3.5 text-center text-base font-bold text-white" style={{ background: "#F97316" }}>
-        🚚 {s.delivery_bar || "FREE DELIVERY on orders above ₦10,000 · Nationwide · Pay on delivery available"}
+        🚚 {s.delivery_bar || "FREE DELIVERY on orders above ₦40,000 · Nationwide Delivery!"}
       </div>
 
       {/* ── TRUST BAR ──────────────────────────────────────────── */}
@@ -539,7 +539,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
       {/* ── BENEFITS ───────────────────────────────────────────── */}
       <section className="py-10" style={{ background: "#111" }}>
         <div className="max-w-2xl mx-auto px-4">
-          <h2 className="text-2xl font-black text-white text-center mb-1">{s.benefits_title || "Why Nigerians Love Double Plus"}</h2>
+          <h2 className="text-2xl font-black text-white text-center mb-1">{s.benefits_title || "Why People Love the Double Plus Multipurpose Liquid Laundry Soap"}</h2>
           <p className="text-base text-gray-400 text-center mb-6">{s.benefits_subtitle || "Real results in every wash"}</p>
           <ul className="flex flex-col divide-y" style={{ borderColor: "#2D2D2D" }}>
             {(s.benefits_items || "Removes Tough Stains|Grease, oil, Ankara stains gone in one wash\nWhiter Whites|Brilliant whites and brighter colours every time\nGentle on Fabric|Safe for all fabrics including delicates\nSaves Water|Less rinsing needed — saves time and money\nHand or Machine|Works perfectly in both\nLong Lasting|One bottle goes 3x further than regular soap")
