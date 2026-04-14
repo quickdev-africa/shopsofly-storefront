@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/lib/hooks/redux";
-import { addItem } from "@/lib/features/carts/cartsSlice";
+import { addItem, clearCart } from "@/lib/features/carts/cartsSlice";
 import LandingFAQ from "./LandingFAQ";
 
 const DEFAULT_VIDEO_URL = "https://youtube.com/shorts/BJom5Fud0iI";
@@ -179,6 +179,65 @@ function LandingFooter({ store }: { store: any }) {
   );
 }
 
+// ─── Abandonment Modal ───────────────────────────────────────────────────────
+function AbandonmentModal({ lowestBundle, productName, productImages, whatsapp, onTakeDeal, onClose }: {
+  lowestBundle: any;
+  productName: string;
+  productImages: string[];
+  whatsapp?: string;
+  onTakeDeal: () => void;
+  onClose: () => void;
+}) {
+  const fmt = (n: number) => "₦" + Math.round(n).toLocaleString("en-NG");
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center px-4" style={{ backgroundColor: "rgba(0,0,0,0.92)" }}>
+      <div className="w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden">
+        {/* Red urgency bar */}
+        <div className="bg-red-600 px-5 py-3 text-center">
+          <p className="text-white font-black text-base tracking-wide">⚠️ WAIT — Don't Miss Out!</p>
+        </div>
+        <div className="p-5 text-center">
+          {productImages[0] && (
+            <img src={productImages[0]} alt={productName} className="w-20 h-20 rounded-xl object-cover mx-auto mb-4" />
+          )}
+          <p className="text-lg font-black text-gray-900 mb-1">Still thinking?</p>
+          <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+            Flash sale prices disappear when the timer ends. Start with just <strong>{lowestBundle.label}</strong> and see the results yourself.
+          </p>
+
+          {/* Lowest bundle offer */}
+          <div className="rounded-xl p-4 mb-4 text-left" style={{ background: "#FFF7ED", border: "2px solid #F97316" }}>
+            <p className="text-xs text-orange-500 font-bold uppercase mb-1">Special Offer</p>
+            <p className="text-base font-black text-gray-900">{lowestBundle.label}</p>
+            <div className="flex items-center justify-between mt-1">
+              <span className="text-2xl font-black text-orange-600">{fmt(lowestBundle.price)}</span>
+              <span className="text-sm line-through text-gray-400">{fmt(lowestBundle.originalPrice)}</span>
+            </div>
+          </div>
+
+          <button onClick={onTakeDeal}
+            className="w-full font-black py-4 rounded-xl text-white text-base mb-3"
+            style={{ background: "linear-gradient(135deg,#F97316,#ea580c)" }}>
+            Yes — I'll Take This Deal →
+          </button>
+
+          {whatsapp && (
+            <a href={`https://wa.me/${whatsapp.replace(/\D/g, "")}?text=Hi%2C%20I%20want%20to%20order%20${encodeURIComponent(productName)}`}
+              className="flex items-center justify-center gap-2 w-full py-3.5 rounded-xl font-bold text-base mb-3"
+              style={{ background: "#25D366", color: "#fff" }}>
+              💬 Order on WhatsApp Instead
+            </a>
+          )}
+
+          <button onClick={onClose} className="text-sm text-gray-400 underline">
+            No thanks, I don't want the discount
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Main Template ────────────────────────────────────────────────────────────
 export default function FlashSaleTemplate({ page, store }: { page: any; store: any }) {
   const s = page.settings || {};
@@ -188,6 +247,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [showBundlePicker, setShowBundlePicker] = useState(false);
+  const [showAbandonModal, setShowAbandonModal] = useState(false);
   const [selectedBundle, setSelectedBundle] = useState(1);
   const [mainImg, setMainImg] = useState(0);
 
@@ -223,22 +283,29 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
 
   function openBundlePicker() { setShowBundlePicker(true); }
 
+  function handleBundleClose() {
+    setShowBundlePicker(false);
+    setShowAbandonModal(true);
+  }
+
   function handleConfirmBundle(idx: number) {
     const bundle = bundles[idx];
     setSelectedBundle(idx);
     const variant = product?.variants?.[0];
-    // Pass the full bundle price as quantity=1 so checkout displays the exact total
+    // Clear cart first so bundle price is never stale-merged with a previous item
+    dispatch(clearCart());
     dispatch(addItem({
-      variantId:    variant?.id || `bundle-${idx}`,
-      productId:    product?.id || 0,
-      name:         product?.name || productName,
+      variantId:    variant?.id ?? (product?.id ?? idx + 1),
+      productId:    product?.id ?? 0,
+      name:         product?.name ?? productName,
       variantLabel: bundle.label,
-      price:        bundle.price,   // total bundle price — checkout shows this directly
-      imageUrl:     product?.image_url || productImages[0] || "",
+      price:        bundle.price,
+      imageUrl:     product?.image_url ?? productImages[0] ?? "",
       quantity:     1,
-      slug:         product?.slug || slug,
+      slug:         product?.slug ?? slug,
     }));
     setShowBundlePicker(false);
+    setShowAbandonModal(false);
     router.push("/checkout");
   }
 
@@ -523,7 +590,19 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
           productName={productName}
           productImages={productImages}
           onConfirm={handleConfirmBundle}
-          onClose={() => setShowBundlePicker(false)}
+          onClose={handleBundleClose}
+        />
+      )}
+
+      {/* ── Abandonment Modal ────────────────────────────────── */}
+      {showAbandonModal && (
+        <AbandonmentModal
+          lowestBundle={bundles[0]}
+          productName={productName}
+          productImages={productImages}
+          whatsapp={theme.whatsapp_number}
+          onTakeDeal={() => handleConfirmBundle(0)}
+          onClose={() => setShowAbandonModal(false)}
         />
       )}
     </div>
