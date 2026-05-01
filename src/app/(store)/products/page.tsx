@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks/redux";
 import { addItem, openCart } from "@/lib/features/carts/cartsSlice";
 import { useEffect, useState, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Suspense } from "react";
 import { getProducts, getTaxons, addWishlistItem } from "@/lib/api";
 import { selectToken } from "@/lib/features/auth/authSlice";
 import Link from "next/link";
@@ -26,7 +27,7 @@ type Taxon = {
   slug: string;
 };
 
-export default function ProductsPage() {
+function ProductsPageInner() {
   const searchParams = useSearchParams();
   const router       = useRouter();
 
@@ -233,5 +234,17 @@ export default function ProductsPage() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#4A7C59] border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <ProductsPageInner />
+    </Suspense>
   );
 }
