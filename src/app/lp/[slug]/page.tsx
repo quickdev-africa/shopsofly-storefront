@@ -7,7 +7,7 @@ import { fetchStore, getSubdomainFromHeaders } from "@/lib/fetch-store";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
 
 export default async function LandingPageRoute({ params }: { params: { slug: string } }) {
-  const subdomain = getSubdomainFromHeaders();
+  const { subdomain, customDomain } = getSubdomainFromHeaders();
 
   try {
     const [pageRes, store] = await Promise.all([

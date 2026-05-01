@@ -35,7 +35,7 @@ async function fetchHomeData(subdomain: string) {
 }
 
 export default async function HomePage() {
-  const subdomain = getSubdomainFromHeaders();
+  const { subdomain, customDomain } = getSubdomainFromHeaders();
   const { store, products, taxons, bundles, storeProducts } = await fetchHomeData(subdomain);
   const theme = store?.theme_settings || {};
   const featuredProducts = products.slice(0, 8);
