@@ -6,7 +6,7 @@ import { useAppSelector } from "@/lib/hooks/redux";
 import { selectToken } from "@/lib/features/auth/authSlice";
 import { getOrder } from "@/lib/api";
 
-const fmt = (kobo: number) => `₦${(kobo / 100).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
 
 const STATUS_STEPS = ["pending", "confirmed", "processing", "shipped", "delivered"];
 const STATUS_LABELS: Record<string, string> = {
