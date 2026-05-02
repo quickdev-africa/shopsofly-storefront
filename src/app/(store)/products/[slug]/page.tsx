@@ -19,8 +19,17 @@ export default async function ProductDetailPage({ params }: Props) {
   let product: any;
 
   try {
-    const res = await getProduct(params.slug);
-    product = res.data.product;
+    const store = await fetchStore();
+    if (!store) notFound();
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    const res = await fetch(`${API_URL}/api/v2/storefront/products/${params.slug}`, {
+      headers: { "X-Store-Subdomain": store.subdomain, "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) notFound();
+    const data = await res.json();
+    product = data.product;
+    if (!product) notFound();
   } catch {
     notFound();
   }
