@@ -92,8 +92,17 @@ export default function CheckoutPage() {
         }
       })
       .catch(() => {});
-    getPickupLocations()
-      .then((r) => setPickupLocations(r.data.pickup_locations ?? []))
+    // Get subdomain directly from hostname for reliable pickup location fetch
+    const hostname = window.location.hostname;
+    const subdomain = hostname.endsWith(".shopsofly.com")
+      ? hostname.replace(".shopsofly.com", "")
+      : hostname;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    fetch(`${API_URL}/api/v2/storefront/pickup_locations`, {
+      headers: { "X-Store-Subdomain": subdomain }
+    })
+      .then(r => r.json())
+      .then(data => setPickupLocations(data ?? []))
       .catch(() => {});
     getStore()
       .then((r) => setStoreInfo(r.data.store ?? r.data))
