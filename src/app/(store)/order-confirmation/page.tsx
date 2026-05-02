@@ -35,8 +35,16 @@ function OrderConfirmationContent() {
       router.push("/");
       return;
     }
-    getOrder(orderNumber)
-      .then((r) => setOrder(r.data.order ?? r.data))
+    const hostname = window.location.hostname;
+    const subdomain = hostname.endsWith(".shopsofly.com")
+      ? hostname.replace(".shopsofly.com", "")
+      : hostname;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    fetch(`${API_URL}/api/v2/storefront/orders/${orderNumber}`, {
+      headers: { "X-Store-Subdomain": subdomain }
+    })
+      .then(r => r.json())
+      .then(data => setOrder(data.order ?? data))
       .catch(() => setError("Could not load order details."))
       .finally(() => setLoading(false));
   }, [orderNumber, router]);

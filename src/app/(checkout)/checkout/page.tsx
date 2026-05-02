@@ -158,7 +158,7 @@ export default function CheckoutPage() {
       const PaystackPop = (await import("@paystack/inline-js")).default;
       const handler = new PaystackPop();
       handler.newTransaction({
-        key:      process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY ?? "",
+        key:      storeInfo?.theme_settings?.paystack_public_key || process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
         email,
         amount:   order.total_kobo,
         ref:      order.paystack_reference,
@@ -360,11 +360,11 @@ export default function CheckoutPage() {
             <h2 className="font-heading font-bold text-lg text-[#1A1A1A]">Payment Method</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {([
-                { key: "paystack", label: "Paystack" },
-                { key: "stripe",   label: "Stripe" },
-                { key: "paypal",   label: "PayPal" },
+                ...(storeInfo?.theme_settings?.paystack_public_key || storeInfo?.theme_settings?.paystack_enabled ? [{ key: "paystack", label: "Paystack" }] : []),
+                ...(storeInfo?.theme_settings?.stripe_publishable_key || storeInfo?.theme_settings?.stripe_enabled ? [{ key: "stripe", label: "Stripe" }] : []),
+                ...(storeInfo?.theme_settings?.paypal_client_id || storeInfo?.theme_settings?.paypal_enabled ? [{ key: "paypal", label: "PayPal" }] : []),
                 { key: "bank_transfer", label: "Bank Transfer" },
-                { key: "cod",      label: "Cash on Delivery" },
+                { key: "cod", label: "Cash on Delivery" },
               ] as { key: PaymentMethod; label: string }[]).map(({ key, label }) => (
                 <button
                   key={key}
