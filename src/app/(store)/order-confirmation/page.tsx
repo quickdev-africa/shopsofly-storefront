@@ -114,10 +114,10 @@ function OrderConfirmationContent() {
       <section className="bg-white border border-gray-100 rounded-xl p-6 grid sm:grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-xs font-semibold text-[#555555] uppercase tracking-wide mb-1">Deliver To</p>
-          <p className="font-semibold">{order.first_name} {order.last_name}</p>
-          <p className="text-[#555555]">{order.address1}{order.address2 ? `, ${order.address2}` : ""}</p>
-          <p className="text-[#555555]">{order.city}, {order.state_name}</p>
-          <p className="text-[#555555]">{order.lga}</p>
+          <p className="font-semibold">{order.first_name || order.address?.first_name} {order.last_name || order.address?.last_name}</p>
+          <p className="text-[#555555]">{order.address1 || order.address?.address1}{(order.address2 || order.address?.address2) ? `, ${order.address2 || order.address?.address2}` : ""}</p>
+          <p className="text-[#555555]">{order.city || order.address?.city}, {order.state_name || order.address?.state_name}</p>
+          <p className="text-[#555555]">{order.lga || order.address?.lga}</p>
         </div>
         <div>
           <p className="text-xs font-semibold text-[#555555] uppercase tracking-wide mb-1">Order Info</p>
