@@ -3,6 +3,7 @@ import ReviewForm from "@/components/ReviewForm";
 export const revalidate = 60;
 
 import { getProduct } from "@/lib/api";
+import { fetchStore } from "@/lib/fetch-store";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ProductActions from "@/components/product-page/ProductActions";
