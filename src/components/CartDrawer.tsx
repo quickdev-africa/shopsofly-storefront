@@ -23,7 +23,7 @@ import {
 } from "@/lib/features/carts/cartsSlice";
 import { validatePromotion } from "@/lib/api";
 
-const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export default function CartDrawer() {
   const dispatch    = useAppDispatch();

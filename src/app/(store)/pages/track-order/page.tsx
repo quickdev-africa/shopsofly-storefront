@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { getOrder } from "@/lib/api";
 
-const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG")}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 const STATUS_STEPS = [
   { key: "pending",    label: "Order Placed",  icon: "📦", description: "We've received your order." },
