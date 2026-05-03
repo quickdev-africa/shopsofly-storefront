@@ -194,9 +194,9 @@ function ProductsPageInner() {
               {(p.rating || 0) > 0 && <StarRating rating={p.rating || 0} count={p.review_count} size="sm" />}
               <div className="flex items-center justify-between gap-2 mt-1">
                 {p.compare_at_price && p.compare_at_price > p.price && (
-                  <span className="text-gray-400 line-through text-sm">₦{p.compare_at_price?.toLocaleString()}</span>
+                  <span className="text-gray-400 line-through text-sm">₦{Number(p.compare_at_price).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 )}
-                <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
+                <span className="font-bold text-[#1A1A1A]">₦{Number(p.price).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                 {p.compare_at_price && p.compare_at_price > p.price && (
                   <span className="text-xs bg-[var(--color-accent)] text-white px-1.5 py-0.5 rounded">
                     -{Math.round((1 - p.price / p.compare_at_price) * 100)}%

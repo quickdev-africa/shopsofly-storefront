@@ -34,7 +34,7 @@ const PayPalSection = dynamic(() => import("@/components/checkout/PayPalSection"
 type PaymentMethod = "paystack" | "stripe" | "paypal" | "bank_transfer" | "cod";
 type DeliveryMethod = "delivery" | "pickup";
 
-const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+const fmt = (naira: number) => `₦${Number(naira).toLocaleString("en-NG", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export default function CheckoutPage() {
   const dispatch        = useAppDispatch();
@@ -332,7 +332,7 @@ export default function CheckoutPage() {
                     <p className="font-semibold text-sm">{m.name}</p>
                     {m.description && <p className="text-xs text-[#555555]">{m.description}</p>}
                   </div>
-                  <span className="font-bold text-sm">{m.price === 0 ? "Free" : fmt((m.price ?? 0) * 100)}</span>
+                  <span className="font-bold text-sm">{m.price === 0 ? "Free" : fmt(m.price ?? 0)}</span>
                 </label>
               ))}
             </section>
