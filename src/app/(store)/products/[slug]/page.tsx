@@ -18,7 +18,6 @@ type Props = {
 
 export default async function ProductDetailPage({ params }: Props) {
   let product: any;
-  let product: any;
   let store: any;
   try {
     store = await fetchStore();
