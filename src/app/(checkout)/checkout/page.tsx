@@ -92,20 +92,21 @@ export default function CheckoutPage() {
         }
       })
       .catch(() => {});
-    // Get subdomain directly from hostname for reliable pickup location fetch
+    // Get subdomain or custom domain from hostname
     const hostname = window.location.hostname;
-    const subdomain = hostname.endsWith(".shopsofly.com")
-      ? hostname.replace(".shopsofly.com", "")
-      : hostname;
+    const isCustomDomain = !hostname.endsWith(".shopsofly.com") && !hostname.includes("localhost") && !hostname.includes("vercel.app");
+    const subdomain = hostname.endsWith(".shopsofly.com") ? hostname.replace(".shopsofly.com", "") : "";
+    const storeHeaders: Record<string, string> = isCustomDomain
+      ? { "X-Custom-Domain": hostname }
+      : { "X-Store-Subdomain": subdomain };
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
-    fetch(`${API_URL}/api/v2/storefront/pickup_locations`, {
-      headers: { "X-Store-Subdomain": subdomain }
-    })
+    fetch(`${API_URL}/api/v2/storefront/pickup_locations`, { headers: storeHeaders })
       .then(r => r.json())
       .then(data => setPickupLocations(data ?? []))
       .catch(() => {});
-    getStore()
-      .then((r) => setStoreInfo(r.data.store ?? r.data))
+    fetch(`${API_URL}/api/v2/storefront/store`, { headers: storeHeaders })
+      .then(r => r.json())
+      .then(data => setStoreInfo(data.store ?? data))
       .catch(() => {});
   }, []);
 
