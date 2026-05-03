@@ -32,8 +32,16 @@ function TrackOrderContent() {
     setOrder(null);
     setSearched(true);
     try {
-      const res = await getOrder(num.trim());
-      setOrder(res.data.order ?? res.data);
+      const hostname = window.location.hostname;
+      const isCustomDomain = !hostname.endsWith(".shopsofly.com") && !hostname.includes("localhost") && !hostname.includes("vercel.app");
+      const subdomain = hostname.endsWith(".shopsofly.com") ? hostname.replace(".shopsofly.com", "") : "";
+      const storeHeaders: Record<string, string> = isCustomDomain
+        ? { "X-Custom-Domain": hostname }
+        : { "X-Store-Subdomain": subdomain };
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+      const res = await fetch(`${API_URL}/api/v2/storefront/orders/${num.trim()}`, { headers: storeHeaders });
+      const data = await res.json();
+      setOrder(data.order ?? data);
     } catch {
       setError("Order not found. Please check the order number and try again.");
     } finally {

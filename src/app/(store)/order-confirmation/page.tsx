@@ -36,12 +36,14 @@ function OrderConfirmationContent() {
       return;
     }
     const hostname = window.location.hostname;
-    const subdomain = hostname.endsWith(".shopsofly.com")
-      ? hostname.replace(".shopsofly.com", "")
-      : hostname;
+    const isCustomDomain = !hostname.endsWith(".shopsofly.com") && !hostname.includes("localhost") && !hostname.includes("vercel.app");
+    const subdomain = hostname.endsWith(".shopsofly.com") ? hostname.replace(".shopsofly.com", "") : "";
+    const storeHeaders: Record<string, string> = isCustomDomain
+      ? { "X-Custom-Domain": hostname }
+      : { "X-Store-Subdomain": subdomain };
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
     fetch(`${API_URL}/api/v2/storefront/orders/${orderNumber}`, {
-      headers: { "X-Store-Subdomain": subdomain }
+      headers: storeHeaders
     })
       .then(r => r.json())
       .then(data => setOrder(data.order ?? data))
