@@ -89,6 +89,7 @@ export default function CheckoutPage() {
       ? { "X-Custom-Domain": hostname }
       : { "X-Store-Subdomain": subdomain };
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    console.log("CHECKOUT DEBUG:", { hostname, isCustomDomain, subdomain, storeHeaders, API_URL });
     fetch(`${API_URL}/api/v2/storefront/shipping_methods`, { headers: storeHeaders })
       .then(r => r.json())
       .then(data => {
