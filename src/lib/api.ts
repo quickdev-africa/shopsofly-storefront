@@ -28,7 +28,13 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const subdomain = getSubdomain();
-  if (subdomain) config.headers["X-Store-Subdomain"] = subdomain;
+  if (subdomain) {
+    config.headers["X-Store-Subdomain"] = subdomain;
+  } else if (typeof window !== "undefined") {
+    const hostname = window.location.hostname;
+    const isCustomDomain = !hostname.endsWith(".shopsofly.com") && !hostname.includes("localhost") && !hostname.includes("vercel.app");
+    if (isCustomDomain) config.headers["X-Custom-Domain"] = hostname;
+  }
   return config;
 });
 
