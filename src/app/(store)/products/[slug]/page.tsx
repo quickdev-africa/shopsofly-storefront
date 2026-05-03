@@ -18,9 +18,10 @@ type Props = {
 
 export default async function ProductDetailPage({ params }: Props) {
   let product: any;
-
+  let product: any;
+  let store: any;
   try {
-    const store = await fetchStore();
+    store = await fetchStore();
     if (!store) notFound();
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
     const res = await fetch(`${API_URL}/api/v2/storefront/products/${params.slug}`, {
