@@ -24,7 +24,7 @@ export default async function ProductDetailPage({ params }: Props) {
     if (!store) notFound();
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
     const res = await fetch(`${API_URL}/api/v2/storefront/products/${params.slug}`, {
-      headers: { "X-Store-Subdomain": store.subdomain, "Content-Type": "application/json" },
+      headers: { ...(store.domain ? { "X-Custom-Domain": store.domain } : { "X-Store-Subdomain": store.subdomain }), "Content-Type": "application/json" },
       cache: "no-store",
     });
     if (!res.ok) notFound();

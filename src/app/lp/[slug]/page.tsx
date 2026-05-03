@@ -12,7 +12,7 @@ export default async function LandingPageRoute({ params }: { params: { slug: str
   try {
     const [pageRes, store] = await Promise.all([
       fetch(`${API_URL}/api/v2/storefront/landing_pages/${params.slug}`, {
-        headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" },
+        headers: { ...(customDomain ? { "X-Custom-Domain": customDomain } : { "X-Store-Subdomain": subdomain }), "Content-Type": "application/json" },
         cache: "no-store",
       }),
       fetchStore(),

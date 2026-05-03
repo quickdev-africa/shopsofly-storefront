@@ -12,13 +12,16 @@ import ProductCard from "@/components/ProductCard";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
 
-async function fetchHomeData(subdomain: string) {
+async function fetchHomeData(subdomain: string, customDomain?: string) {
+  const storeHeaders: Record<string, string> = { "Content-Type": "application/json" };
+  if (customDomain) storeHeaders["X-Custom-Domain"] = customDomain;
+  else if (subdomain) storeHeaders["X-Store-Subdomain"] = subdomain;
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
-      fetch(`${API_URL}/api/v2/storefront/store`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
-      fetch(`${API_URL}/api/v2/storefront/products?per_page=12&sort=newest`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
-      fetch(`${API_URL}/api/v2/storefront/taxons`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
-      fetch(`${API_URL}/api/v2/storefront/bundles`, { headers: { "X-Store-Subdomain": subdomain, "Content-Type": "application/json" }, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/store`, { headers: storeHeaders, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/products?per_page=12&sort=newest`, { headers: storeHeaders, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/taxons`, { headers: storeHeaders, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/bundles`, { headers: storeHeaders, cache: "no-store" }),
     ]);
 
     const store    = storeRes.status    === "fulfilled" && storeRes.value.ok    ? (await storeRes.value.json()).store       : null;
@@ -36,7 +39,7 @@ async function fetchHomeData(subdomain: string) {
 
 export default async function HomePage() {
   const { subdomain, customDomain } = getSubdomainFromHeaders();
-  const { store, products, taxons, bundles, storeProducts } = await fetchHomeData(subdomain);
+  const { store, products, taxons, bundles, storeProducts } = await fetchHomeData(subdomain, customDomain);
   const theme = store?.theme_settings || {};
   const featuredProducts = products.slice(0, 8);
 
