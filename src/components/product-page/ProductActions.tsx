@@ -99,8 +99,8 @@ export default function ProductActions({ product }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Variant Select */}
-      {product.variants?.length > 0 && (
+      {/* Variant Select — hide if only default auto-created variant */}
+      {product.variants?.length > 0 && !(product.variants.length === 1 && product.variants[0].sku?.endsWith("-default")) && (
         <div>
           <h3 className="font-semibold text-[#1A1A1A] mb-3">Options</h3>
           <div className="flex flex-wrap gap-2">

@@ -111,9 +111,8 @@ export default async function ProductDetailPage({ params }: Props) {
 
           <details className="border rounded-lg p-4">
             <summary className="font-semibold text-[#1A1A1A] cursor-pointer">Delivery & Returns</summary>
-            <p className="text-sm text-[#555555] mt-3">
-              Standard delivery 2–5 business days. Express delivery available at checkout.
-              Returns accepted within 7 days of delivery for unopened items.
+            <p className="text-sm text-[#555555] mt-3 whitespace-pre-line">
+              {store?.theme_settings?.delivery_returns || "Standard delivery 2–5 business days. Express delivery available at checkout. Returns accepted within 7 days of delivery for unopened items."}
             </p>
           </details>
         </div>
