@@ -24,7 +24,7 @@ export default function StickyBuyNow({ price, onBuy, whatsappNumber }: Props) {
       )}
       <button
         onClick={onBuy}
-        className="flex-1 bg-[#F97316] text-white py-3 rounded-lg font-bold text-sm"
+        className="flex-1 bg-[var(--color-accent)] text-white py-3 rounded-lg font-bold text-sm"
       >
         Buy Now
       </button>

@@ -17,7 +17,7 @@ export default function LandingFAQ({ items, title, dark = true }: { items?: FAQI
   const cardBorder = dark ? "#2D2D2D" : "#E5E7EB";
   const questionColor = dark ? "#FFFFFF" : "#1A1A1A";
   const answerColor = dark ? "#9CA3AF" : "#6B7280";
-  const chevronColor = "#F97316";
+  const chevronColor = "var(--color-accent)";
   return (
     <section className="py-20 px-4" style={{ backgroundColor: bg }}>
       <div className="max-w-3xl mx-auto">

@@ -41,7 +41,7 @@ export default async function FAQPage() {
       <div className="mt-16 bg-[#F8FAF8] rounded-2xl p-8 text-center">
         <h2 className="font-heading text-2xl font-bold text-[#1A1A1A] mb-3">Still have questions?</h2>
         <p className="text-[#555555] mb-6">Our team is happy to help. Reach out and we will get back to you within 24 hours.</p>
-        <Link href="/contact" className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl transition-colors inline-block">Contact Us</Link>
+        <Link href="/contact" className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-xl transition-colors inline-block">Contact Us</Link>
       </div>
     </main>
   );

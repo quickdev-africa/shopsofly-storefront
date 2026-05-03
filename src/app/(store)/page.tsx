@@ -56,7 +56,7 @@ export default async function HomePage() {
               {theme.hero_subheading || theme.hero_subtext || "Curated products for your health, beauty and lifestyle."}
             </p>
             <div className="flex gap-4 flex-wrap">
-              <Link href="/products" className="inline-block bg-[#F97316] text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors">
+              <Link href="/products" className="inline-block bg-[var(--color-accent)] text-white font-semibold px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors">
                 {theme.hero_cta_text || "Shop Now"}
               </Link>
               <Link href="/collections" className="inline-block border-2 font-semibold px-8 py-4 rounded-lg transition-colors hover:text-white" style={{ borderColor: "var(--color-primary)", color: "var(--color-primary)" }}>
@@ -81,7 +81,7 @@ export default async function HomePage() {
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
           {[{ label: "Happy Customers", value: "10,000+" },{ label: "Products Available", value: "500+" },{ label: "States Delivered", value: "36" },{ label: "Support Hours", value: "24/7" }].map((stat) => (
             <div key={stat.label}>
-              <div className="text-3xl font-heading font-bold text-[#F97316]">{stat.value}</div>
+              <div className="text-3xl font-heading font-bold text-[var(--color-accent)]">{stat.value}</div>
               <div className="text-sm text-gray-300 mt-1">{stat.label}</div>
             </div>
           ))}
@@ -148,10 +148,10 @@ export default async function HomePage() {
 
       <section className="bg-[#2D4A32] py-20 px-4 text-center">
         <div className="max-w-3xl mx-auto">
-          <span className="text-[#F97316] font-semibold uppercase tracking-widest text-sm">Limited Time Offer</span>
+          <span className="text-[var(--color-accent)] font-semibold uppercase tracking-widest text-sm">Limited Time Offer</span>
           <h2 className="font-heading text-4xl md:text-5xl font-bold text-white mt-3 mb-4">Up to 30% Off Wellness Products</h2>
           <p className="text-gray-300 text-lg mb-8">Stock up on your favourite health and lifestyle products before the sale ends.</p>
-          <Link href="/products" className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-lg transition-colors text-lg">Shop the Sale →</Link>
+          <Link href="/products" className="inline-block bg-[var(--color-accent)] hover:bg-orange-600 text-white font-semibold px-10 py-4 rounded-lg transition-colors text-lg">Shop the Sale →</Link>
         </div>
       </section>
 
@@ -163,8 +163,8 @@ export default async function HomePage() {
           <h2 className="font-heading text-3xl font-bold mb-4">Stay in the Loop</h2>
           <p className="text-[#E8F0E9] mb-8">Get exclusive deals and new arrivals straight to your inbox.</p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-            <input type="email" placeholder="Your email address" className="flex-1 px-4 py-3 rounded-lg text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#F97316]" />
-            <button className="bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">Subscribe</button>
+            <input type="email" placeholder="Your email address" className="flex-1 px-4 py-3 rounded-lg text-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]" />
+            <button className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-semibold px-6 py-3 rounded-lg transition-colors">Subscribe</button>
           </div>
         </div>
       </section>

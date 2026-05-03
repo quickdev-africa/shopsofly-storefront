@@ -82,7 +82,7 @@ export default function CartDrawer() {
           <div className="flex items-center gap-3">
             <h2 className="font-heading font-bold text-xl text-[#1A1A1A]">Your Cart</h2>
             {items.length > 0 && (
-              <span className="bg-[#F97316] text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="bg-[var(--color-accent)] text-white text-xs font-bold px-2 py-0.5 rounded-full">
                 {items.reduce((s, i) => s + i.quantity, 0)}
               </span>
             )}
@@ -108,7 +108,7 @@ export default function CartDrawer() {
               <p className="text-[#555555] font-medium mb-4">Your cart is empty</p>
               <button
                 onClick={() => { dispatch(closeCart()); router.push("/products"); }}
-                className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg transition-colors"
+                className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg transition-colors"
               >
                 Continue Shopping
               </button>
@@ -242,12 +242,12 @@ export default function CartDrawer() {
               )}
               <div className="flex justify-between text-base font-bold pt-1 border-t border-gray-100 mt-1">
                 <span>Total</span>
-                <span className="text-[#F97316]">{fmt(finalTotal)}</span>
+                <span className="text-[var(--color-accent)]">{fmt(finalTotal)}</span>
               </div>
             </div>
             <button
               onClick={handleCheckout}
-              className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors text-base"
+              className="w-full bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors text-base"
             >
               Proceed to Checkout →
             </button>

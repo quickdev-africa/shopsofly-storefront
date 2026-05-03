@@ -95,7 +95,7 @@ export default function WishlistPage() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
           </svg>
           <p className="text-[#555555] text-lg mb-4">Your wishlist is empty</p>
-          <Link href="/products" className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-lg transition-colors">
+          <Link href="/products" className="inline-block bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-lg transition-colors">
             Browse Products
           </Link>
         </div>
@@ -117,7 +117,7 @@ export default function WishlistPage() {
                 <p className="font-bold text-[#1A1A1A]">{fmt(Number(item.product?.price ?? item.product_price ?? 0))}</p>
                 <button
                   onClick={() => handleAddToCart(item)}
-                  className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold py-2 rounded-lg text-sm transition-colors"
+                  className="w-full bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-2 rounded-lg text-sm transition-colors"
                 >
                   Add to Cart
                 </button>

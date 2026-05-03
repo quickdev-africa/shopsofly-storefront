@@ -30,7 +30,7 @@ export default function CartPage() {
         </svg>
         <h1 className="font-heading text-2xl font-bold text-[#1A1A1A] mb-2">Your cart is empty</h1>
         <p className="text-[#555555] mb-6">Add some products to get started.</p>
-        <Link href="/products" className="inline-block bg-[#F97316] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-lg transition-colors">
+        <Link href="/products" className="inline-block bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-lg transition-colors">
           Continue Shopping
         </Link>
       </main>
@@ -88,10 +88,10 @@ export default function CartPage() {
             <hr />
             <div className="flex justify-between text-base font-bold">
               <span>Total</span>
-              <span className="text-[#F97316]">{fmt(finalTotal)}</span>
+              <span className="text-[var(--color-accent)]">{fmt(finalTotal)}</span>
             </div>
           </div>
-          <Link href="/checkout" className="block bg-[#F97316] hover:bg-orange-600 text-white font-bold text-center py-4 rounded-lg transition-colors">
+          <Link href="/checkout" className="block bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold text-center py-4 rounded-lg transition-colors">
             Proceed to Checkout →
           </Link>
           <button onClick={() => dispatch(openCart())} className="w-full border-2 border-[#4A7C59] text-[#4A7C59] font-semibold py-3 rounded-lg hover:bg-[#4A7C59] hover:text-white transition-colors text-sm">

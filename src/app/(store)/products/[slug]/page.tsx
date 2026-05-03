@@ -87,7 +87,7 @@ export default async function ProductDetailPage({ params }: Props) {
             )}
             <div className="flex items-center gap-3 mt-3">
               {discount && (
-                <span className="bg-[#F97316] text-white text-sm font-bold px-3 py-1 rounded-full">
+                <span className="bg-[var(--color-accent)] text-white text-sm font-bold px-3 py-1 rounded-full">
                   Save {discount}%
                 </span>
               )}

@@ -324,7 +324,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
               <div className="flex items-center gap-3 md:justify-end flex-wrap">
                 <span className="text-gray-400 line-through text-sm">{fmt(subtotal)}</span>
                 {bundleComplete && (
-                  <span className="bg-[#F97316] text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  <span className="bg-[var(--color-accent)] text-white text-xs font-bold px-2 py-0.5 rounded-full">
                     Save {fmt(savingsAmount)} ({Math.round(discountPercent)}%)
                   </span>
                 )}
@@ -440,7 +440,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                 </div>
                 <button
                   onClick={handleAddToCart}
-                  className="w-full min-h-[48px] bg-[#F97316] hover:bg-orange-600 text-white font-bold rounded-lg transition-colors"
+                  className="w-full min-h-[48px] bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold rounded-lg transition-colors"
                 >
                   Add Bundle to Cart
                 </button>
@@ -496,7 +496,7 @@ export default function BundleBuilder({ bundles, storeProducts }: Props) {
                 <div className="w-full space-y-3">
                   <a
                     href="/cart"
-                    className="block w-full min-h-[48px] bg-[#F97316] hover:bg-orange-600 text-white font-bold rounded-lg flex items-center justify-center transition-colors"
+                    className="block w-full min-h-[48px] bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold rounded-lg flex items-center justify-center transition-colors"
                   >
                     View Cart
                   </a>

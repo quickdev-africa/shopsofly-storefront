@@ -133,7 +133,7 @@ export default function StarProduct({ products, starProductId }: { products: Pro
               />
             )}
             {hasDisc && (
-              <div className="absolute top-4 left-4 bg-[#F97316] text-white text-xs font-bold px-3 py-1.5 rounded-full">
+              <div className="absolute top-4 left-4 bg-[var(--color-accent)] text-white text-xs font-bold px-3 py-1.5 rounded-full">
                 Save {discPct}%
               </div>
             )}
@@ -177,7 +177,7 @@ export default function StarProduct({ products, starProductId }: { products: Pro
             <div className="flex gap-3">
               <button
                 onClick={handleAdd}
-                className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
+                className="flex-1 bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-4 rounded-xl text-sm transition-colors shadow-md"
               >
                 Add To Cart
               </button>

@@ -145,7 +145,7 @@ export default function ProfilePage() {
           <button
             type="submit"
             disabled={saving}
-            className="bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors disabled:opacity-50"
+            className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Changes"}
           </button>

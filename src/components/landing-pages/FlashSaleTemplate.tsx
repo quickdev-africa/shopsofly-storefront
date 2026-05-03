@@ -41,7 +41,7 @@ function BundlePickerModal({ bundles, initialBundle, productName, productImages,
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center" style={{ backgroundColor: "rgba(0,0,0,0.88)" }}>
       <div className="w-full sm:max-w-md bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl overflow-hidden" style={{ maxHeight: "92vh", overflowY: "auto" }}>
-        <div className="bg-[#F97316] px-5 py-4 flex items-center justify-between sticky top-0 z-10">
+        <div className="bg-[var(--color-accent)] px-5 py-4 flex items-center justify-between sticky top-0 z-10">
           <div>
             <p className="text-white font-black text-lg">Choose Your Bundle</p>
             <p className="text-orange-100 text-sm mt-0.5">Flash sale prices — pick your pack</p>
@@ -63,12 +63,12 @@ function BundlePickerModal({ bundles, initialBundle, productName, productImages,
                 style={{ background: selected === i ? "#1A0800" : "#F9FAFB", border: selected === i ? "2px solid #F97316" : "1.5px solid #E5E7EB" }}>
                 {b.tag && (
                   <div className="absolute px-2 py-0.5 rounded text-white font-bold"
-                    style={{ top: "-9px", left: "12px", background: "#F97316", fontSize: "10px", letterSpacing: "1px" }}>
+                    style={{ top: "-9px", left: "12px", background: "var(--color-accent)", fontSize: "10px", letterSpacing: "1px" }}>
                     {b.tag}
                   </div>
                 )}
                 <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: selected === i ? "#F97316" : "transparent", border: selected === i ? "2px solid #F97316" : "2px solid #9CA3AF" }}>
+                  style={{ background: selected === i ? "var(--color-accent)" : "transparent", border: selected === i ? "2px solid #F97316" : "2px solid #9CA3AF" }}>
                   {selected === i && <div className="w-2 h-2 rounded-full bg-white" />}
                 </div>
                 <div className="flex-1">
@@ -76,7 +76,7 @@ function BundlePickerModal({ bundles, initialBundle, productName, productImages,
                   <p className="text-sm mt-0.5" style={{ color: selected === i ? "#fdba74" : "#9CA3AF" }}>{fmt(b.perUnit)}/bottle</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-base font-bold" style={{ color: "#F97316" }}>{fmt(b.price)}</p>
+                  <p className="text-base font-bold" style={{ color: "var(--color-accent)" }}>{fmt(b.price)}</p>
                   <p className="text-sm line-through" style={{ color: selected === i ? "#9CA3AF" : "#D1D5DB" }}>{fmt(b.originalPrice)}</p>
                   <p className="text-sm font-bold text-green-600">Save {fmt(b.savings)}</p>
                 </div>
@@ -94,7 +94,7 @@ function BundlePickerModal({ bundles, initialBundle, productName, productImages,
             </div>
           </div>
           <button onClick={() => onConfirm(selected)}
-            className="w-full bg-[#F97316] hover:bg-orange-600 text-white font-black py-4 rounded-xl text-lg transition-all">
+            className="w-full bg-[var(--color-accent)] hover:bg-orange-600 text-white font-black py-4 rounded-xl text-lg transition-all">
             I Want This Deal! →
           </button>
           <p className="text-sm text-gray-400 text-center mt-3">🔒 Secure checkout · Pay on delivery available</p>
@@ -105,7 +105,7 @@ function BundlePickerModal({ bundles, initialBundle, productName, productImages,
 }
 
 // ─── Flash Countdown ──────────────────────────────────────────────────────────
-function FlashCountdown({ endDate, fg = "#F97316", bg = "#1A1A1A", large = false }: { endDate: string; fg?: string; bg?: string; large?: boolean }) {
+function FlashCountdown({ endDate, fg = "var(--color-accent)", bg = "#1A1A1A", large = false }: { endDate: string; fg?: string; bg?: string; large?: boolean }) {
   const [secs, setSecs] = useState(0);
   useEffect(() => {
     const end = new Date(endDate).getTime();
@@ -357,13 +357,13 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
           </>
         )}
         <div className="relative max-w-2xl mx-auto px-4">
-          <div className="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-5 tracking-widest uppercase" style={{ background: "#F97316" }}>
+          <div className="inline-block px-4 py-1.5 rounded-full text-sm font-bold mb-5 tracking-widest uppercase" style={{ background: "var(--color-accent)" }}>
             ⚡ {s.badge_text || "FLASH SALE — LIMITED TIME ONLY"}
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-white mb-4 leading-tight">{s.hero_headline || productName}</h1>
           <p className="text-gray-300 text-lg mb-5 leading-relaxed">{s.hero_subheadline || "Buy more and save up to 40%. Nigeria's most powerful stain-fighting soap."}</p>
           <div className="flex items-center justify-center gap-2 mb-4">
-            <span className="text-lg font-bold text-[#F97316]">★★★★★</span>
+            <span className="text-lg font-bold text-[var(--color-accent)]">★★★★★</span>
             <span className="text-base text-gray-300">{s.rating || "4.9"} · {s.review_count || "1,240+"} verified reviews</span>
           </div>
         </div>
@@ -379,7 +379,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
       </section>
 
       {/* ── DELIVERY BAR ───────────────────────────────────────── */}
-      <div className="py-3.5 text-center text-base font-bold text-white" style={{ background: "#F97316" }}>
+      <div className="py-3.5 text-center text-base font-bold text-white" style={{ background: "var(--color-accent)" }}>
         🚚 {s.delivery_bar || "FREE DELIVERY on orders above ₦40,000 · Nationwide Delivery!"}
       </div>
 
@@ -389,7 +389,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
       {/* ── COUNTDOWN + FIRST CTA ──────────────────────────────── */}
       <section className="py-10" style={{ background: "#0D0D0D" }}>
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <p className="text-sm font-bold mb-3 uppercase tracking-widest" style={{ color: "#F97316" }}>
+          <p className="text-sm font-bold mb-3 uppercase tracking-widest" style={{ color: "var(--color-accent)" }}>
             ⚡ {s.urgency_label || "FLASH SALE ENDS IN:"}
           </p>
           <FlashCountdown endDate={countdownEnd} large />
@@ -462,12 +462,12 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
                   }}>
                   {b.tag && (
                     <div className="absolute font-bold text-white"
-                      style={{ top: "-9px", left: "12px", background: "#F97316", fontSize: "10px", letterSpacing: "1px", padding: "1px 7px", borderRadius: "4px" }}>
+                      style={{ top: "-9px", left: "12px", background: "var(--color-accent)", fontSize: "10px", letterSpacing: "1px", padding: "1px 7px", borderRadius: "4px" }}>
                       {b.tag}
                     </div>
                   )}
                   <div className="w-5 h-5 rounded-full flex-shrink-0 flex items-center justify-center"
-                    style={{ background: selectedBundle === i ? "#F97316" : "transparent", border: selectedBundle === i ? "2px solid #F97316" : "2px solid #374151" }}>
+                    style={{ background: selectedBundle === i ? "var(--color-accent)" : "transparent", border: selectedBundle === i ? "2px solid #F97316" : "2px solid #374151" }}>
                     {selectedBundle === i && <div className="w-2 h-2 rounded-full bg-white" />}
                   </div>
                   <div className="flex-1">
@@ -475,7 +475,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
                     <p className="text-sm text-gray-500 mt-0.5">{fmt(b.perUnit)}/bottle</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-lg font-bold text-[#F97316]">{fmt(b.price)}</p>
+                    <p className="text-lg font-bold text-[var(--color-accent)]">{fmt(b.price)}</p>
                     <p className="text-xs line-through text-gray-600">{fmt(b.originalPrice)}</p>
                     <p className="text-xs font-bold text-green-500">Save {fmt(b.savings)}</p>
                   </div>
@@ -497,7 +497,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
                   {productImages[0] && (
                     <img src={productImages[0]} alt={productName} className="w-14 h-14 rounded-xl object-cover mb-3" />
                   )}
-                  <p className="text-3xl font-black text-[#F97316]">{fmt(current.price)}</p>
+                  <p className="text-3xl font-black text-[var(--color-accent)]">{fmt(current.price)}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <p className="text-sm line-through text-gray-600">{fmt(current.originalPrice)}</p>
                     <span className="text-xs font-black px-2 py-0.5 rounded-full text-white" style={{ background: "#16a34a" }}>
@@ -548,7 +548,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
                 return (
                   <li key={i} className="flex items-start gap-4 py-4">
                     <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ background: "#F9731620", border: "1.5px solid #F97316" }}>
-                      <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.2 3.2L11 1" stroke="#F97316" strokeWidth="1.8" strokeLinecap="round" fill="none" /></svg>
+                      <svg width="12" height="10" viewBox="0 0 12 10"><path d="M1 5l3.2 3.2L11 1" stroke="var(--color-accent)" strokeWidth="1.8" strokeLinecap="round" fill="none" /></svg>
                     </div>
                     <div>
                       <p className="text-base font-bold text-white">{title?.trim()}</p>
@@ -585,11 +585,11 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
                 border: "1px solid #2D2D2D",
               }}>
               <div>
-                <div className="text-base mb-3 text-[#F97316]">★★★★★</div>
+                <div className="text-base mb-3 text-[var(--color-accent)]">★★★★★</div>
                 <p className="text-sm text-gray-200 italic leading-relaxed mb-4">&ldquo;{t.text}&rdquo;</p>
               </div>
               <div className="flex items-center gap-2 mt-auto pt-3 border-t" style={{ borderColor: "#2D2D2D" }}>
-                <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-black text-sm text-white" style={{ background: "#F97316" }}>
+                <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center font-black text-sm text-white" style={{ background: "var(--color-accent)" }}>
                   {t.author[0]}
                 </div>
                 <div>
@@ -625,7 +625,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
               { n: "3", t: s.step3 || "Receive your order in 1–5 days. Pay on delivery or track online." },
             ].map((step, i) => (
               <div key={i} className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-black text-white text-lg" style={{ background: "#F97316" }}>
+                <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center font-black text-white text-lg" style={{ background: "var(--color-accent)" }}>
                   {step.n}
                 </div>
                 <p className="text-base pt-2.5 text-gray-300" style={{ lineHeight: "1.6" }}>{step.t}</p>
@@ -649,10 +649,10 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
 
           {/* Prominent countdown — always visible */}
           <div className="rounded-2xl px-6 py-5 mb-6 inline-block" style={{ background: "#1A1A1A", border: "2px solid #F97316" }}>
-            <p className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: "#F97316" }}>
+            <p className="text-sm font-bold uppercase tracking-widest mb-2" style={{ color: "var(--color-accent)" }}>
               ⚡ {s.urgency_label || "SALE ENDS IN:"}
             </p>
-            <FlashCountdown endDate={countdownEnd} fg="#F97316" bg="#0A0A0A" large />
+            <FlashCountdown endDate={countdownEnd} fg="var(--color-accent)" bg="#0A0A0A" large />
           </div>
 
           {/* Selected bundle recap */}
@@ -663,7 +663,7 @@ export default function FlashSaleTemplate({ page, store }: { page: any; store: a
               <p className="text-sm text-gray-400">{productName}</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-black text-[#F97316]">{fmt(current.price)}</p>
+              <p className="text-2xl font-black text-[var(--color-accent)]">{fmt(current.price)}</p>
               <p className="text-sm font-bold text-green-500">Save {fmt(current.savings)}</p>
             </div>
           </div>

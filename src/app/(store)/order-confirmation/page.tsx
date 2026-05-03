@@ -132,7 +132,7 @@ function OrderConfirmationContent() {
           <p><span className="text-[#555555]">Email: </span>{order.email}</p>
           <p><span className="text-[#555555]">Phone: </span>{order.phone}</p>
           <p><span className="text-[#555555]">Payment: </span>{order.payment_method?.replace("_", " ")}</p>
-          <p><span className="text-[#555555]">Total: </span><strong className="text-[#F97316]">{fmt(order.total ?? 0)}</strong></p>
+          <p><span className="text-[#555555]">Total: </span><strong className="text-[var(--color-accent)]">{fmt(order.total ?? 0)}</strong></p>
         </div>
       </section>
 

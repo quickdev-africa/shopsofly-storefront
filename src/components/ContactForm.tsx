@@ -73,7 +73,7 @@ export default function ContactForm() {
       <button
         onClick={handleSubmit}
         disabled={status === "sending"}
-        className="w-full bg-[#F97316] hover:bg-orange-600 disabled:opacity-50 text-white font-bold py-4 rounded-xl transition-colors"
+        className="w-full bg-[var(--color-accent)] hover:bg-orange-600 disabled:opacity-50 text-white font-bold py-4 rounded-xl transition-colors"
       >
         {status === "sending" ? "Sending..." : "Send Message"}
       </button>

@@ -103,7 +103,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
           </div>
           {discounted.length > 0 && (
             <div className="mx-4 mb-4 bg-[#FFF7ED] rounded-2xl p-4 border border-orange-100">
-              <p className="text-xs font-bold text-[#F97316] uppercase tracking-wider mb-3">🔥 Special Offers</p>
+              <p className="text-xs font-bold text-[var(--color-accent)] uppercase tracking-wider mb-3">🔥 Special Offers</p>
               <div className="space-y-2">
                 {discounted.map((product) => {
                   const pct = Math.round((1 - Number(product.price) / Number(product.compare_at_price)) * 100);
@@ -117,7 +117,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
                         <div className="flex items-center gap-1.5 mt-0.5">
                           <span className="text-xs font-bold text-[#1A1A1A]">{fmt(product.price)}</span>
                           <span className="text-xs text-[#888] line-through">{fmt(product.compare_at_price!)}</span>
-                          <span className="text-[10px] bg-[#F97316] text-white px-1.5 py-0.5 rounded font-bold">-{pct}%</span>
+                          <span className="text-[10px] bg-[var(--color-accent)] text-white px-1.5 py-0.5 rounded font-bold">-{pct}%</span>
                         </div>
                       </div>
                       <button onClick={(e) => handleAdd(product, e)}
@@ -161,7 +161,7 @@ export default function MobileMenu({ isOpen, onClose, navLinks = DEFAULT_NAV, fe
                       </p>
                       <button
                         onClick={(e) => handleAdd(product, e)}
-                        className="w-7 h-7 bg-[#F97316] hover:bg-orange-600 text-white rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
+                        className="w-7 h-7 bg-[var(--color-accent)] hover:bg-orange-600 text-white rounded-lg flex items-center justify-center flex-shrink-0 transition-colors"
                         aria-label="Add to cart"
                       >
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

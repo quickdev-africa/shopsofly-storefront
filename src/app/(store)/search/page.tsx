@@ -64,7 +64,7 @@ export default function SearchPage() {
         />
         <button
           type="submit"
-          className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg transition-colors"
+          className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-lg transition-colors"
         >
           Search
         </button>

@@ -48,7 +48,7 @@ export default async function CollectionsPage() {
                 {t.description && (
                   <span className="text-white/80 text-sm mt-1 line-clamp-2">{t.description}</span>
                 )}
-                <span className="mt-3 text-[#F97316] font-semibold text-sm group-hover:underline">Shop Now →</span>
+                <span className="mt-3 text-[var(--color-accent)] font-semibold text-sm group-hover:underline">Shop Now →</span>
               </div>
             </Link>
             );

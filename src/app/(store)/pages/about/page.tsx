@@ -31,7 +31,7 @@ export default async function AboutPage() {
             ))}
           </ul>
           <div className="mt-10 flex gap-4 flex-wrap">
-            <Link href="/products" className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors">Shop Now</Link>
+            <Link href="/products" className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors">Shop Now</Link>
             <Link href="/contact" className="border-2 border-[#4A7C59] text-[#4A7C59] hover:bg-[#4A7C59] hover:text-white font-bold px-6 py-3 rounded-xl transition-colors">Contact Us</Link>
           </div>
         </div>

@@ -103,7 +103,7 @@ function TrackOrderContent() {
               </div>
               <div className="text-right">
                 <p className="text-sm text-[#555555]">Total</p>
-                <p className="font-bold text-[#F97316] text-lg">{fmt(order.total ?? 0)}</p>
+                <p className="font-bold text-[var(--color-accent)] text-lg">{fmt(order.total ?? 0)}</p>
               </div>
             </div>
           </div>
@@ -174,7 +174,7 @@ function TrackOrderContent() {
             </Link>
             <Link
               href="/products"
-              className="flex-1 text-center bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors text-sm"
+              className="flex-1 text-center bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-3 rounded-lg transition-colors text-sm"
             >
               Continue Shopping
             </Link>

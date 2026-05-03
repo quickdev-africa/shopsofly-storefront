@@ -180,7 +180,7 @@ function ProductsPageInner() {
                   <div className="w-full h-full bg-[#E8F0E9] flex items-center justify-center text-[#4A7C59] font-semibold text-sm px-4 text-center">{p.name}</div>
                 )}
                 {/* Quick Buy */}
-                <div className="absolute bottom-0 left-0 right-0 bg-[#F97316] text-white text-center text-xs font-semibold py-2 translate-y-full group-hover:translate-y-0 transition-transform">
+                <div className="absolute bottom-0 left-0 right-0 bg-[var(--color-accent)] text-white text-center text-xs font-semibold py-2 translate-y-full group-hover:translate-y-0 transition-transform">
                   Quick View
                 </div>
               </div>
@@ -198,12 +198,12 @@ function ProductsPageInner() {
                 )}
                 <span className="font-bold text-[#1A1A1A]">₦{p.price?.toLocaleString() ?? ""}</span>
                 {p.compare_at_price && p.compare_at_price > p.price && (
-                  <span className="text-xs bg-[#F97316] text-white px-1.5 py-0.5 rounded">
+                  <span className="text-xs bg-[var(--color-accent)] text-white px-1.5 py-0.5 rounded">
                     -{Math.round((1 - p.price / p.compare_at_price) * 100)}%
                   </span>
                 )}
                 <button onClick={(e) => handleAddToCart(e, p)}
-                  className="bg-[#F97316] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0 ml-auto"
+                  className="bg-[var(--color-accent)] hover:bg-orange-600 text-white rounded-lg p-2 transition-colors flex-shrink-0 ml-auto"
                   title="Add to Cart">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />

@@ -83,7 +83,7 @@ export default function OrdersPage() {
         <p className="text-[#555555] mb-6">When you place an order, it will appear here.</p>
         <Link
           href="/products"
-          className="bg-[#F97316] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors"
+          className="bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-lg transition-colors"
         >
           Start Shopping
         </Link>

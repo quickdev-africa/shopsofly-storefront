@@ -142,7 +142,7 @@ export default function ProductActions({ product }: Props) {
         </div>
         <button
           onClick={handleAddToCart}
-          className="flex-1 bg-[#F97316] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors active:scale-95"
+          className="flex-1 bg-[var(--color-accent)] hover:bg-orange-600 text-white font-bold py-4 rounded-lg transition-colors active:scale-95"
         >
           Add to Cart
         </button>

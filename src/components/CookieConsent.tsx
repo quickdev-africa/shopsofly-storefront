@@ -23,7 +23,7 @@ export default function CookieConsent() {
             localStorage.setItem("cookie_consent", "true");
             setVisible(false);
           }}
-          className="shrink-0 bg-[#F97316] hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
+          className="shrink-0 bg-[var(--color-accent)] hover:bg-orange-600 text-white font-semibold px-5 py-2 rounded-lg transition-colors text-sm"
         >
           Accept
         </button>
