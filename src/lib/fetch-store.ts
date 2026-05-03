@@ -4,9 +4,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-lase
 export function getSubdomainFromHeaders(): { subdomain: string; customDomain: string } {
   const headersList = headers();
   let subdomain = headersList.get("x-subdomain") || "";
+  let customDomain = headersList.get("x-custom-domain") || "";
   const host = headersList.get("x-forwarded-host") || headersList.get("host") || "";
-  let customDomain = "";
-  if (!subdomain) {
+
+  if (!subdomain && !customDomain) {
     if (host.endsWith(".shopsofly.com")) {
       subdomain = host.replace(".shopsofly.com", "");
     } else if (host && !host.includes("shopsofly.com") && !host.includes("localhost") && !host.includes("vercel.app")) {

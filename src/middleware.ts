@@ -7,6 +7,7 @@ export function middleware(req: NextRequest) {
     "";
 
   let subdomain = "";
+  let customDomain = "";
 
   if (hostname.includes("localhost") || hostname.includes("127.0.0.1")) {
     subdomain = process.env.NEXT_PUBLIC_DEV_SUBDOMAIN || "laserstarglobal";
@@ -14,13 +15,15 @@ export function middleware(req: NextRequest) {
     subdomain = hostname.replace(".shopsofly.com", "");
   } else if (hostname === "shopsofly.com" || hostname === "www.shopsofly.com") {
     subdomain = "";
-  } else {
-    subdomain = hostname;
+  } else if (hostname && !hostname.includes("vercel.app")) {
+    // Custom domain e.g. www.quantumliving.store
+    customDomain = hostname.split(":")[0];
   }
 
   const requestHeaders = new Headers(req.headers);
   requestHeaders.set("x-subdomain", subdomain);
   requestHeaders.set("x-hostname", hostname);
+  if (customDomain) requestHeaders.set("x-custom-domain", customDomain);
 
   const response = NextResponse.next({
     request: { headers: requestHeaders },
@@ -28,9 +31,16 @@ export function middleware(req: NextRequest) {
 
   response.headers.set("x-subdomain", subdomain);
   response.headers.set("x-hostname", hostname);
+  if (customDomain) response.headers.set("x-custom-domain", customDomain);
 
   if (subdomain) {
     response.cookies.set("x-subdomain", subdomain, {
+      path: "/",
+      sameSite: "lax",
+    });
+  }
+  if (customDomain) {
+    response.cookies.set("x-custom-domain", customDomain, {
       path: "/",
       sameSite: "lax",
     });
@@ -44,4 +54,3 @@ export const config = {
     "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml).*)",
   ],
 };
-// middleware refresh Tue Apr  7 00:25:32 WAT 2026
