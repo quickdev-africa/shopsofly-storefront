@@ -81,17 +81,6 @@ export default function CheckoutPage() {
   const lgas = getLGAs(state);
 
   useEffect(() => {
-    getShippingMethods()
-      .then((r) => {
-        const methods = r.data.shipping_methods ?? [];
-        setShippingMethods(methods);
-        if (methods.length > 0) {
-          const cheapest = methods.reduce((a: any, b: any) => (a.price <= b.price ? a : b));
-          setShippingMethodId(cheapest.id);
-          setShippingCost(cheapest.price);
-        }
-      })
-      .catch(() => {});
     // Get subdomain or custom domain from hostname
     const hostname = window.location.hostname;
     const isCustomDomain = !hostname.endsWith(".shopsofly.com") && !hostname.includes("localhost") && !hostname.includes("vercel.app");
@@ -100,6 +89,18 @@ export default function CheckoutPage() {
       ? { "X-Custom-Domain": hostname }
       : { "X-Store-Subdomain": subdomain };
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    fetch(`${API_URL}/api/v2/storefront/shipping_methods`, { headers: storeHeaders })
+      .then(r => r.json())
+      .then(data => {
+        const methods = data.shipping_methods ?? [];
+        setShippingMethods(methods);
+        if (methods.length > 0) {
+          const cheapest = methods.reduce((a: any, b: any) => (a.price <= b.price ? a : b));
+          setShippingMethodId(cheapest.id);
+          setShippingCost(cheapest.price);
+        }
+      })
+      .catch(() => {});
     fetch(`${API_URL}/api/v2/storefront/pickup_locations`, { headers: storeHeaders })
       .then(r => r.json())
       .then(data => setPickupLocations(data ?? []))
