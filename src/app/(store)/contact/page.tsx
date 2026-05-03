@@ -7,6 +7,12 @@ export default async function ContactPage() {
   const store = await fetchStore();
   const theme = store?.theme_settings || {};
   const whatsapp = theme.whatsapp_number || theme.whatsapp_phone || "";
+  const contactInfo = theme.contact_info || "";
+
+  // Parse contact_info lines into key-value pairs
+  const infoLines = contactInfo
+    ? contactInfo.split("\n").filter((l: string) => l.trim())
+    : [];
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-16">
@@ -19,12 +25,26 @@ export default async function ContactPage() {
       <p className="text-[#555555] mb-12">Have a question or need help? We are here for you.</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         <div><ContactForm /></div>
-        <div className="space-y-8">
+        <div className="space-y-6">
           {whatsapp && (
             <div className="bg-[#F8FAF8] rounded-2xl p-6">
               <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-2">WhatsApp</h3>
               <p className="text-[#555555] text-sm mb-4">Chat with us directly for the fastest response.</p>
-              <a href={"https://wa.me/" + whatsapp.replace(/\D/g, "") + "?text=Hello"} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-3 rounded-xl transition-colors">Chat on WhatsApp</a>
+              <a href={"https://wa.me/" + whatsapp.replace(/\D/g, "") + "?text=Hello"}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-3 rounded-xl transition-colors">
+                Chat on WhatsApp
+              </a>
+            </div>
+          )}
+          {infoLines.length > 0 && (
+            <div className="bg-[#F8FAF8] rounded-2xl p-6">
+              <h3 className="font-heading font-bold text-lg text-[#1A1A1A] mb-4">Our Details</h3>
+              <div className="space-y-2">
+                {infoLines.map((line: string, i: number) => (
+                  <p key={i} className="text-sm text-[#555555]">{line}</p>
+                ))}
+              </div>
             </div>
           )}
           <div className="bg-[#F8FAF8] rounded-2xl p-6">
