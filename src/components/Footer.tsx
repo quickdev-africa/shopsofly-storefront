@@ -28,11 +28,13 @@ export default function Footer({ storeName, copyright, theme, footerLinks }: Pro
 
         {/* Brand */}
         <div>
-          <h3 className="font-heading font-bold text-xl text-white mb-3">
-            {storeName}
-          </h3>
+          {theme?.logo_url ? (
+            <img src={theme.logo_url} alt={storeName} className="h-10 mb-3 object-contain" />
+          ) : (
+            <h3 className="font-heading font-bold text-xl text-white mb-3">{storeName}</h3>
+          )}
           <p className="text-[#E8F0E9] text-sm leading-relaxed">
-            Premium wellness and lifestyle products delivered across Nigeria.
+            {theme?.footer_description || "Premium wellness and lifestyle products delivered across Nigeria."}
           </p>
           {/* Social Icons */}
           <div className="flex gap-3 mt-4">
