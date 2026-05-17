@@ -19,7 +19,7 @@ async function fetchHomeData(subdomain: string, customDomain?: string) {
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
       fetch(`${API_URL}/api/v2/storefront/store`, { headers: storeHeaders, cache: "no-store" }),
-      fetch(`${API_URL}/api/v2/storefront/products?per_page=200&sort=newest`, { headers: storeHeaders, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/products?per_page=12&sort=newest`, { headers: storeHeaders, cache: "no-store" }),
       fetch(`${API_URL}/api/v2/storefront/taxons`, { headers: storeHeaders, cache: "no-store" }),
       fetch(`${API_URL}/api/v2/storefront/bundles`, { headers: storeHeaders, cache: "no-store" }),
     ]);
@@ -79,12 +79,7 @@ export default async function HomePage() {
       {/* Stats Bar */}
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
-          {[
-            { label: theme.stat_1_label || "Happy Customers", value: theme.stat_1_value || "10,000+" },
-            { label: theme.stat_2_label || "Products Available", value: theme.stat_2_value || "500+" },
-            { label: theme.stat_3_label || "States Delivered", value: theme.stat_3_value || "36" },
-            { label: theme.stat_4_label || "Support Hours", value: theme.stat_4_value || "24/7" },
-          ].map((stat) => (
+          {[{ label: "Happy Customers", value: "10,000+" },{ label: "Products Available", value: "500+" },{ label: "States Delivered", value: "36" },{ label: "Support Hours", value: "24/7" }].map((stat) => (
             <div key={stat.label}>
               <div className="text-3xl font-heading font-bold text-[var(--color-accent)]">{stat.value}</div>
               <div className="text-sm text-gray-300 mt-1">{stat.label}</div>
