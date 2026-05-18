@@ -80,10 +80,10 @@ export default async function HomePage() {
       <section className="bg-[#1A1A1A] text-white py-8">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center px-4">
           {[
-            { label: theme.stat_1_label || "Happy Customers", value: theme.stat_1_value || "10,000+" },
-            { label: theme.stat_2_label || "Products Available", value: theme.stat_2_value || "500+" },
-            { label: theme.stat_3_label || "States Delivered", value: theme.stat_3_value || "36" },
-            { label: theme.stat_4_label || "Support Hours", value: theme.stat_4_value || "24/7" },
+            { label: theme?.stat_1_label || "Happy Customers", value: theme?.stat_1_value || "10,000+" },
+            { label: theme?.stat_2_label || "Products Available", value: theme?.stat_2_value || "500+" },
+            { label: theme?.stat_3_label || "States Delivered", value: theme?.stat_3_value || "36" },
+            { label: theme?.stat_4_label || "Support Hours", value: theme?.stat_4_value || "24/7" },
           ].map((stat) => (
             <div key={stat.label}>
               <div className="text-3xl font-heading font-bold text-[var(--color-accent)]">{stat.value}</div>
