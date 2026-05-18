@@ -16,7 +16,6 @@ export default async function GlobalLayout({
 }) {
   const store = await fetchStore();
   const theme = store?.theme_settings || {};
-  if (!store) return null;
 
   return (
     <>
