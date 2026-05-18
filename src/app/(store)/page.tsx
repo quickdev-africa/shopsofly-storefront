@@ -19,7 +19,7 @@ async function fetchHomeData(subdomain: string, customDomain?: string) {
   try {
     const [storeRes, productsRes, taxonsRes, bundlesRes] = await Promise.allSettled([
       fetch(`${API_URL}/api/v2/storefront/store`, { headers: storeHeaders, cache: "no-store" }),
-      fetch(`${API_URL}/api/v2/storefront/products?per_page=12&sort=newest`, { headers: storeHeaders, cache: "no-store" }),
+      fetch(`${API_URL}/api/v2/storefront/products?per_page=200&sort=newest`, { headers: storeHeaders, cache: "no-store" }),
       fetch(`${API_URL}/api/v2/storefront/taxons`, { headers: storeHeaders, cache: "no-store" }),
       fetch(`${API_URL}/api/v2/storefront/bundles`, { headers: storeHeaders, cache: "no-store" }),
     ]);

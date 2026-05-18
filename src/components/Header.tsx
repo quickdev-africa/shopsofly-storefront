@@ -12,7 +12,7 @@ interface Props {
   theme?: any;
 }
 
-export default function Header({ storeName, navLinks }: Props) {
+export default function Header({ storeName, navLinks, theme }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [menuProducts, setMenuProducts] = useState<any[]>([]);
   const dispatch   = useAppDispatch();
@@ -43,7 +43,11 @@ export default function Header({ storeName, navLinks }: Props) {
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="font-heading font-bold text-xl" style={{ color: "var(--color-primary)" }}>
-          {storeName || "Shopsofly"}
+          {theme?.logo_url ? (
+            <img src={theme.logo_url} alt={storeName || "Shopsofly"} className="h-10 w-auto object-contain" />
+          ) : (
+            storeName || "Shopsofly"
+          )}
         </Link>
 
         {/* Desktop Nav */}
