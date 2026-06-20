@@ -117,7 +117,34 @@ export default function CheckoutPage() {
     setCouponError("");
     try {
       const res = await validatePromotion(couponInput.trim());
-      dispatch(setCoupon({ code: couponInput.trim(), discount: res.data.discount_amount ?? 0 }));
+      const promo = res.data;
+      const productIds: number[] = promo.product_ids || [];
+
+      // Determine which line items the promo applies to
+      const eligibleItems = productIds.length > 0
+        ? items.filter((i) => productIds.includes(i.productId))
+        : items;
+
+      if (productIds.length > 0 && eligibleItems.length === 0) {
+        setCouponError("This coupon only applies to specific products not in your cart");
+        setCouponLoading(false);
+        return;
+      }
+
+      const eligibleSubtotal = eligibleItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
+      const minOrder = Number(promo.min_order_value) || 0;
+      if (minOrder > 0 && subtotal < minOrder) {
+        setCouponError(`Minimum order of ${"₦"}${minOrder.toLocaleString("en-NG")} required for this coupon`);
+        setCouponLoading(false);
+        return;
+      }
+
+      const discountValue = Number(promo.discount_value) || 0;
+      const calculatedDiscount = promo.discount_type === "percent"
+        ? Math.round((eligibleSubtotal * discountValue / 100) * 100) / 100
+        : Math.min(discountValue, eligibleSubtotal);
+
+      dispatch(setCoupon({ code: couponInput.trim(), discount: calculatedDiscount }));
       setCouponInput("");
     } catch {
       setCouponError("Invalid or expired coupon code");
@@ -152,6 +179,11 @@ export default function CheckoutPage() {
   });
 
   const handlePaystack = async () => {
+    if (!storeInfo?.theme_settings?.paystack_public_key) {
+      setCouponError("");
+      alert("Paystack is not configured for this store. Please choose another payment method.");
+      return;
+    }
     setLoading(true);
     try {
       const res = await createOrder(buildOrderPayload({ payment_method: "paystack" }), token ?? undefined);
@@ -160,7 +192,7 @@ export default function CheckoutPage() {
       const PaystackPop = (await import("@paystack/inline-js")).default;
       const handler = new PaystackPop();
       handler.newTransaction({
-        key:      storeInfo?.theme_settings?.paystack_public_key || process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || "",
+        key:      storeInfo?.theme_settings?.paystack_public_key || "",
         email,
         amount:   order.total_kobo,
         ref:      order.paystack_reference,
@@ -362,7 +394,7 @@ export default function CheckoutPage() {
             <h2 className="font-heading font-bold text-lg text-[#1A1A1A]">Payment Method</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {([
-                ...(storeInfo?.theme_settings?.paystack_public_key || storeInfo?.theme_settings?.paystack_enabled ? [{ key: "paystack", label: "Paystack" }] : []),
+                ...(storeInfo?.theme_settings?.paystack_public_key ? [{ key: "paystack", label: "Paystack" }] : []),
                 ...(storeInfo?.theme_settings?.stripe_publishable_key || storeInfo?.theme_settings?.stripe_enabled ? [{ key: "stripe", label: "Stripe" }] : []),
                 ...(storeInfo?.theme_settings?.paypal_client_id || storeInfo?.theme_settings?.paypal_enabled ? [{ key: "paypal", label: "PayPal" }] : []),
                 { key: "bank_transfer", label: "Bank Transfer" },
@@ -495,7 +527,7 @@ export default function CheckoutPage() {
               )}
               {discount > 0 && (
                 <div className="flex justify-between text-[#22C55E]">
-                  <span>Discount</span>
+                  <span>Discount{couponCode ? ` (${couponCode})` : ""}</span>
                   <span>-{fmt(discount)}</span>
                 </div>
               )}
