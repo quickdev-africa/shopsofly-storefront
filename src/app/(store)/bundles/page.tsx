@@ -1,6 +1,30 @@
 import Link from "next/link";
 import { getBundles } from "@/lib/api";
 import BundleBuilder from "@/components/BundleBuilder";
+import type { Metadata } from "next";
+import { fetchStore } from "@/lib/fetch-store";
+export async function generateMetadata(): Promise<Metadata> {
+  const store = await fetchStore();
+  const title = "Bundles | " + (store?.name || "Shopsofly");
+  const description = "Pick your favourite products, bundle them together and save at " + (store?.name || "our store") + ".";
+  const image = store?.theme_settings?.logo_url || store?.theme_settings?.hero_image_url;
+  return {
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: image ? [{ url: image }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title,
+      description: description,
+      images: image ? [image] : [],
+    },
+  };
+}
 
 export default async function BundlesPage() {
   let bundles: any[] = [];

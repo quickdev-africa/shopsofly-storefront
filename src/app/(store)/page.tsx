@@ -9,6 +9,30 @@ import BundleBuilder from "@/components/BundleBuilder";
 import StarProduct from "@/components/StarProduct";
 import PopularSection from "@/components/PopularSection";
 import ProductCard from "@/components/ProductCard";
+import type { Metadata } from "next";
+export async function generateMetadata(): Promise<Metadata> {
+  const store = await fetchStore();
+  const theme = store?.theme_settings || {};
+  const title = store?.name || "Shopsofly";
+  const description = theme.hero_subheadline || ("Shop quality products at " + (store?.name || "our store") + ". Fast delivery across Nigeria.");
+  const image = theme.hero_image_url || theme.logo_url;
+  return {
+    title: title,
+    description: description,
+    openGraph: {
+      title: title,
+      description: description,
+      images: image ? [{ url: image }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: title,
+      description: description,
+      images: image ? [image] : [],
+    },
+  };
+}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
 

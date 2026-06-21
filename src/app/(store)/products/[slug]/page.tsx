@@ -11,6 +11,49 @@ import Image from "next/image";
 import ProductGallery from "@/components/ProductGallery";
 import ProductTestimonials from "@/components/ProductTestimonials";
 import ProductFAQ from "@/components/ProductFAQ";
+import type { Metadata } from "next";
+async function fetchProductForMeta(slug: string) {
+  try {
+    const store = await fetchStore();
+    if (!store) return null;
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://robust-annmaria-laserstarglobal-813df33a.koyeb.app";
+    const res = await fetch(`${API_URL}/api/v2/storefront/products/${slug}`, {
+      headers: { ...(store.domain ? { "X-Custom-Domain": store.domain } : { "X-Store-Subdomain": store.subdomain }), "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return { product: data.product, store };
+  } catch {
+    return null;
+  }
+}
+export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+  const result = await fetchProductForMeta(params.slug);
+  if (!result || !result.product) {
+    return { title: "Product Not Found" };
+  }
+  const product = result.product;
+  const store = result.store;
+  const image = product.product_images?.[0]?.url || product.images?.[0]?.url || product.image_url;
+  const description = (product.description || "").replace(/<[^>]*>/g, "").slice(0, 160) || ("Buy " + product.name + " at " + (store?.name || "our store") + ".");
+  return {
+    title: product.name + " | " + (store?.name || "Shopsofly"),
+    description: description,
+    openGraph: {
+      title: product.name,
+      description: description,
+      images: image ? [{ url: image }] : [],
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: product.name,
+      description: description,
+      images: image ? [image] : [],
+    },
+  };
+}
 
 type Props = {
   params: { slug: string };
